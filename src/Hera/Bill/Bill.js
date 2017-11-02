@@ -22,16 +22,25 @@ class Bill extends Component {
         super(props);
 
         let data = this.props.data; // 数据
-        let meta = this.props.meta; // 列数据
+        let meta = this.props.headMeta; // 列数据
         
         const keys = Object.keys(meta);
-        let columns = [];
+        let columns = []; // 列表态的表头
         keys.forEach((key) => {
             var tempField = meta[key];
             columns.push({
+                key: key,
                 title: tempField.desc,
                 dataIndex: key,
             })
+        });
+        // 最后一列为动作列
+        columns.push({
+            title: '操作',
+            key: 'hera-bill-operation',
+            fixed: 'right',
+            width: 100,
+            render: (text, record, index) =>   <a onClick={() => BTN_ACTION.head.edit(index)}>修改</a>
         });
         this.columns = columns;
 
@@ -104,40 +113,6 @@ class Bill extends Component {
         };
         this.rowSelection = rowSelection;
         const VIEW_ACTION = {
-            // 单击
-            onRowClick: (record, index) => {
-                let waitDblEvent = (index) => {
-                    self.setState({
-                        waitDblClick: true,
-                        firClickIndex: index
-                    });
-                };
-                // 取消等待双击
-                let resetDblEvent = () => {
-                    self.setState({
-                        waitDblClick: false,
-                        firClickIndex: -1
-                    })
-                };
-                if (index === self.state.firClickIndex && self.state.waitDblClick === true) {
-                    VIEW_ACTION.onRowDblClick(record, index);
-                    resetDblEvent();
-                } else {
-                    waitDblEvent(index);
-                    setTimeout(resetDblEvent, 500); // 只有500秒内的双击才算是
-                }
-            },
-            // 双击事件
-            onRowDblClick: (record, index) => {
-                VIEW_ACTION.toCard();
-                VIEW_ACTION.canEditable(false);
-                self.setState({
-                    cardData: record,
-                    cardBodyData: record.bodyData,
-                    editData: record,
-                    editBodyData: record.bodyData,
-                });
-            },
             // 设置是否可编辑
             canEditable: (editable) => {
                 self.setState({
@@ -157,21 +132,6 @@ class Bill extends Component {
                     isList: false
                 })
             },
-            reloadAllData: () => {
-                let allData = self.state.allData;
-                let cardData = self.state.cardData;
-                let cardBodyData = self.state.cardBodyData;
-                let editHeadPk = cardData[PK];
-                allData.forEach((value, index) => {
-                    if(value[PK] === editHeadPk) {
-                        cardData["bodyData"] = cardBodyData;
-                        allData[index] =   cardData;
-                    }
-                });
-                self.setState({
-                    allData: allData
-                });
-            },
             onBodySelected: (selectedRowKeys, selectedRows) => {
                 this.setState({
                     bodySelectedRowKeys: selectedRowKeys,
@@ -190,15 +150,29 @@ class Bill extends Component {
                     VIEW_ACTION.toCard();
                     VIEW_ACTION.canEditable(true);
                 },
+                edit: (index) => {
+                    let selectedData = [];
+                    let editData = this.state.allData[index];
+                    selectedData.push(editData);
+                    this.setState({
+                        selectedData: selectedData,
+                        cardData: editData,
+                        // cardBodyData: self.cardBodyData,
+                        // editBodyData: self.cardBodyData
+                    }, BTN_ACTION.modify);
+                },
                 delete: ()=> {
                     let deletedData = this.state.selectedData;
                     if (deletedData.length > 0) {
                         const hide = message.loading('删除中', 0);
+
+                        self.props.onDelete && self.props.onDelete(deletedData);
+
                         setTimeout(() => {
                             hide();
-                            VIEW_ACTION.reloadAllData();
-                            message.success('删除成功');
+                            message.success('保存成功');
                         }, AJAX_TIME);
+
                     } else {
                         message.warning('操作错误: 请选择至少一条数据');
                     }
@@ -217,6 +191,7 @@ class Bill extends Component {
                         cardData: this.state.editData,
                         cardBodyData: this.state.editBodyData
                     });
+
                     setTimeout(() => {
                         hide();
                         message.success('保存成功');
@@ -266,18 +241,10 @@ class Bill extends Component {
             // 返回
             back: () => {
                 VIEW_ACTION.toTemplate();
-                VIEW_ACTION.reloadAllData();
-            },
-            listModify: () => {
-                self.setState({
-                    cardBodyData: self.cardBodyData,
-                    editBodyData: self.cardBodyData
-                })
-                BTN_ACTION.modify();
             },
             // 修改
             modify: () => {
-                let cardData = self.state.cardData;
+                let cardData = this.state.cardData;
                 if (cardData && cardData[PK]) {
                     VIEW_ACTION.toCard();
                     VIEW_ACTION.canEditable(true);
@@ -290,22 +257,21 @@ class Bill extends Component {
         self.BTN_ACTION = BTN_ACTION;
     }
 
-
     // 渲染视图
     render() {
-        let meta = this.props.meta;
+        let meta = this.props.headMeta;
         let keys = Object.keys(meta);
+        let isEditable = this.state.editable;
+        let bodyData = isEditable ? this.state.editBodyData : this.state.cardBodyData;
         return (
             <div className="bill">
-                <Row type="flex" justify="end">
+                <Row type="flex" justify="end" style={{ marginBottom: 16 }}>
                     {
                         this.state.isList
                             // 列表-编辑态按钮组
                             ? (
                             <Button.Group>
                                 <Button onClick={this.BTN_ACTION.head.add}>新增</Button>
-                                <Button onClick={this.BTN_ACTION.listModify}>修改</Button>
-                                {/*<Button>复制</Button>*/}
                                 <Button onClick={this.BTN_ACTION.head.delete}>删除</Button>
                             </Button.Group>
                         )
@@ -333,6 +299,7 @@ class Bill extends Component {
                     this.state.isList
                         ? (<div className="list-panel">
                         <Table
+                            scroll={{ x: 1000, y: 500 }}
                             rowSelection={this.rowSelection}
                             columns={this.columns}
                             dataSource={this.state.allData}
@@ -343,20 +310,28 @@ class Bill extends Component {
                         <div className="card-panel">
                             <Row gutter={16}>
                                 {
+
                                     keys.map((key) => {
-                                        return <Meta key={key} field={key} meta={meta[key]} cardValue={this.state.cardData[key]}
-                                                     editable={this.state.editable} editValue={ this.state.editData[key]}
+                                        let value = this.state.editable ? this.state.cardData[key] : this.state.editData[key];
+                                        return <Meta key={key}
+                                                     field={key}
+                                                     meta={meta[key]}
+                                                     value={ value }
+                                                     editable={ isEditable }
                                                      onChange={this.DATA_ACTION.onHeadFieldChanged}/>
                                     })
                                 }
                             </Row>
                             {
+
                                 this.props.bodyMeta &&
-                                <Body meta={this.props.bodyMeta} editable={this.state.editable}
-                                      cardData={this.state.cardBodyData} editData={this.state.editBodyData}
+                                <Body meta={this.props.bodyMeta}
+                                      editable={ isEditable }
+                                      data={ bodyData }
                                       selected={this.VIEW_ACTION.onBodySelected}
                                       onBodyFieldChanged={this.DATA_ACTION.onBodyFieldChanged}
-                                      add={this.BTN_ACTION.body.onBodyAdd} delete={this.BTN_ACTION.body.onBodyDelete}
+                                      add={this.BTN_ACTION.body.onBodyAdd}
+                                      delete={this.BTN_ACTION.body.onBodyDelete}
                                 />
                             }
                         </div>

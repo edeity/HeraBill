@@ -17,7 +17,7 @@ class User extends Component {
         // 基本描述
         const userMeta = {
             name: {
-                type: 'string',
+                type: 'str',
                 desc: '姓名',
                 editable: true,
                 validate: {
@@ -28,21 +28,25 @@ class User extends Component {
                     required: true,
                 },
             },
-            phone: { type: 'phone', desc: '联系电话' }
+            phone: { type: 'str', desc: '联系电话' },
+            age: {type: 'num', desc: '年龄'},
+            mail: {type: 'mail', desc: '邮箱地址'}
         };
-        
+
+
         const bodyMeta = {
-            post: { type: 'ref', desc: '职位' },
+            post: { type: 'refer', desc: '职位' },
             date: { type: 'date', desc: '担任时间' },
-            point: { type: 'number', desc: '分数' }
+            point: { type: 'num', desc: '分数' }
         };
-        
+
         this.meta = {
             headMeta: userMeta,
             bodyMeta: bodyMeta
         };
 
-        let pk1BodyData = [ { post: '逗逼', date: '2017-10-16', point: '10', key: 'b1',pk: 'b1', headPk: 'pk1' },
+        let pk1BodyData = [
+            { post: '逗逼', date: '2017-10-16', point: '10', key: 'b1',pk: 'b1', headPk: 'pk1' },
             { post: 'fe', date: '2017-10-16', point: '6', key: 'b2', pk: 'b2', headPk: 'pk1' }
         ];
         let pk2BodyData = [
@@ -51,25 +55,39 @@ class User extends Component {
         ];
         // 基本数据
         let data = [
-            { name: '李健乐', phone: '18410225473', key: 'pk1', pk: 'pk1', bodyData: pk1BodyData},
-            { name: '张琳', phone: '18366116120', key: 'pk2', pk: 'pk2', bodyData: pk2BodyData}
+            { name: '李健乐', phone: '18410225473', age: '18', mail: 'lijle@yonyou.com', key: 'pk1', pk: 'pk1', bodyData: pk1BodyData},
+            { name: '张琳', phone: '18366116120', age: '25', key: 'pk2', pk: 'pk2', bodyData: pk2BodyData},
+            { name: '3', phone: '3', key: 'pk3', pk: 'pk3' },
+            { name: '4', phone: '4', key: 'pk4', pk: 'pk4' },
+            { name: '5', phone: '5', key: 'pk5', pk: 'pk5' },
+            { name: '6', phone: '6', key: 'pk6', pk: 'pk6' },
+            { name: '7', phone: '7', key: 'pk7', pk: 'pk7' },
+            { name: '8', phone: '8', key: 'pk8', pk: 'pk8' },
+            { name: '9', phone: '9', key: 'pk9', pk: 'pk9' },
+            { name: '10', phone: '10', key: 'pk10', pk: 'pk10' },
+            { name: '11', phone: '11', key: 'pk11', pk: 'pk11' },
+            { name: '12', phone: '12', key: 'pk12', pk: 'pk12' },
         ];
         this.data = data;
     };
 
-    onSave = (editData) => {
-        // console.log(editData);
+    onSave = (data) => {
+        // console.log(data);
+    };
+
+    onDelete = (data) => {
+
     };
 
     render() {
         return (
-            <div>
-                <Bill tableId={this.tableId} 
-                      meta={this.meta.headMeta} 
-                      bodyMeta={this.meta.bodyMeta} 
-                      data={this.data}
-                      onSave={this.onSave}/>
-            </div>
+            <Bill tableId={this.tableId}
+                  headMeta={this.meta.headMeta}
+                  bodyMeta={this.meta.bodyMeta}
+                  data={this.data}
+
+                  onDelete={this.onDelete}
+                  onSave={this.onSave}/>
         )
     }
 }

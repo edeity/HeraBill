@@ -16,19 +16,21 @@ class Body extends Component {
     constructor(props) {
         super(props);
 
+        let self = this;
+
         // 初始化渲染
         let meta = this.props.meta;
         const keys = Object.keys(meta);
 
+        // 构建列
         let cardColumns = [];
         let editColumns = [];
-        let self = this;
         keys.forEach((key) => {
-            var tempField = meta[key];
+            let tempField = meta[key];
             cardColumns.push({
                 title: tempField.desc,
                 dataIndex: key,
-            });
+            })
             editColumns.push({
                 title: tempField.desc,
                 dataIndex: key,
@@ -58,8 +60,8 @@ class Body extends Component {
                       field={key}
                       meta={meta}
                       editable={this.props.editable}
-                      isTableMode={true}
-                      value={this.props.editData[index][key]}
+                      isSimMode={true}
+                      value={this.props.data[index][key]}
                       onChange={this.onFieldChange(index, key)}
         />);
     }
@@ -73,7 +75,7 @@ class Body extends Component {
                             <Table
                                 rowSelection={this.rowSelection}
                                 columns={this.editColumns}
-                                dataSource={this.props.editData || []}
+                                dataSource={this.props.data || []}
                                 bordered
                                 title={() => {
                                 return <Row type="flex" justify="end">
@@ -81,13 +83,9 @@ class Body extends Component {
                                         <Tooltip placement="top" title="新增">
                                             <Button icon="plus" onClick={this.props.add}/>
                                         </Tooltip>
-                                        <Tooltip placement="top" title="复制">
-                                            <Button icon="copy"/>
-                                        </Tooltip>
                                         <Tooltip placement="top" title="删除" onClick={this.props.delete}>
                                             <Button icon="delete"/>
                                         </Tooltip>
-
                                     </Button.Group>
                                 </Row>
                                 }
@@ -95,7 +93,7 @@ class Body extends Component {
                             :
                             <Table
                                 columns={this.cardColumns}
-                                dataSource={this.props.cardData || []}
+                                dataSource={this.props.data || []}
                                 bordered/>
                     }
                 </Row>
