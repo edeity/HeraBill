@@ -12,7 +12,7 @@ import $ from 'jquery';
 
 const KEY = 'key';
 const PK = 'pk';
-const AJAX_TIME = '500';
+const BODY_DATA = "bodyData";
 
 /**
  * 单据表头
@@ -21,9 +21,8 @@ class Bill extends Component {
     constructor(props) {
         super(props);
 
-        let data = this.props.data; // 数据
+        // 构建表头列
         let meta = this.props.headMeta; // 列数据
-        
         const keys = Object.keys(meta);
         let columns = []; // 列表态的表头
         keys.forEach((key) => {
@@ -40,7 +39,7 @@ class Bill extends Component {
             key: 'hera-bill-operation',
             fixed: 'right',
             width: 100,
-            render: (text, record, index) =>   <a onClick={() => BTN_ACTION.head.edit(index)}>修改</a>
+            render: (text, record, index) => <a onClick={() => BTN_ACTION.head.edit(index)}>修改</a>
         });
         this.columns = columns;
 
@@ -49,7 +48,7 @@ class Bill extends Component {
             editable: false, // 编辑态是否可编辑
             isList: true, // 是否属于列表态
 
-            allData: data, // 列表态的数据
+            allData: [], // 列表态的数据
 
             selectedData: [], // 模板态勾选的数据
             bodySelectedRowKeys: [], // 卡片态勾选的表体数据key
@@ -72,8 +71,8 @@ class Bill extends Component {
             view2Edit: () => {
                 self.setState({
                     editData: $.extend(true, {}, self.state.cardData),
-                    cardBodyData: $.extend(true, [], self.state.cardData["bodyData"]),
-                    editBodyData: $.extend(true, [], self.state.cardData["bodyData"])
+                    cardBodyData: $.extend(true, [], self.state.cardData[BODY_DATA]),
+                    editBodyData: $.extend(true, [], self.state.cardData[BODY_DATA])
                 })
             },
             emptyData: () => {
@@ -143,6 +142,28 @@ class Bill extends Component {
 
         // 基本按钮操作
         const BTN_ACTION = {
+            query: (queryCondition) => {
+                const hide = message.loading('查询中', 0);
+                this.props.onQuery(queryCondition, (res) => {
+                    if (res.success) {
+                        hide();
+                        if (res.data) {
+                            var resData = res.data;
+                            resData.forEach((eachData) => {
+                                eachData[KEY] = eachData[PK];
+                            });
+                            self.setState({
+                                allData: resData
+                            });
+                        } else {
+                            message.success('后台暂无数据');
+                        }
+                    } else {
+                        hide();
+                        message.error('查询失败: ' + res.error);
+                    }
+                });
+            },
             head: {
                 // 添加
                 add: () => {
@@ -166,13 +187,16 @@ class Bill extends Component {
                     if (deletedData.length > 0) {
                         const hide = message.loading('删除中', 0);
 
-                        self.props.onDelete && self.props.onDelete(deletedData);
-
-                        setTimeout(() => {
-                            hide();
-                            message.success('保存成功');
-                        }, AJAX_TIME);
-
+                        self.props.onDelete && self.props.onDelete(deletedData,
+                            (res)=> {
+                                hide();
+                                if (res.success) {
+                                    message.success(res.data);
+                                } else {
+                                    message.success(res.error);
+                                }
+                                self.BTN_ACTION.query();
+                            });
                     } else {
                         message.warning('操作错误: 请选择至少一条数据');
                     }
@@ -182,27 +206,32 @@ class Bill extends Component {
                     const hide = message.loading('保存中', 0);
                     VIEW_ACTION.canEditable(false);
 
-                    /*********** S ****************/
-                    self.props.onSave && self.props.onSave(self.state.editData);
-                    /*********** E ****************/
+                    var editData = self.state.editData;
+                    var editBodyData = this.state.editBodyData;
+                    editData[BODY_DATA] = editBodyData;
 
-                    // 测试(注意,这部分应该从后台获取,现为测试,暂时默认为editData)
-                    self.setState({
-                        cardData: this.state.editData,
-                        cardBodyData: this.state.editBodyData
-                    });
+                    self.props.onSave && self.props.onSave(editData,
+                        (res)=> {
+                            if (res.success) {
+                                hide();
+                                message.success('保存成功');
+                                self.setState({
+                                    cardData: this.state.editData,
+                                    cardBodyData: this.state.editBodyData
+                                });
 
-                    setTimeout(() => {
-                        hide();
-                        message.success('保存成功');
-                    }, AJAX_TIME);
+                            } else {
+                                hide();
+                                message.error(res.error);
+                            }
+                        });
                 },
             },
             body: {
                 onBodyAdd: () => {
                     let editData = self.state.editData;
                     let editBodyData = self.state.editBodyData;
-                    if(!editBodyData) {
+                    if (!editBodyData) {
                         editBodyData = [];
                     }
                     let newBodyData = {};
@@ -241,6 +270,7 @@ class Bill extends Component {
             // 返回
             back: () => {
                 VIEW_ACTION.toTemplate();
+                self.BTN_ACTION.query();
             },
             // 修改
             modify: () => {
@@ -257,6 +287,11 @@ class Bill extends Component {
         self.BTN_ACTION = BTN_ACTION;
     }
 
+    componentDidMount =() =>{
+        if(this.props.isQuery) {
+            this.BTN_ACTION.query();
+        }
+    }
     // 渲染视图
     render() {
         let meta = this.props.headMeta;
@@ -271,6 +306,7 @@ class Bill extends Component {
                             // 列表-编辑态按钮组
                             ? (
                             <Button.Group>
+                                <Button onClick={this.BTN_ACTION.query}>查询</Button>
                                 <Button onClick={this.BTN_ACTION.head.add}>新增</Button>
                                 <Button onClick={this.BTN_ACTION.head.delete}>删除</Button>
                             </Button.Group>

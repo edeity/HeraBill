@@ -17,6 +17,8 @@
   "dependencies": {
     "antd": "^2.13.3",
     "babel-plugin-import": "^1.5.0",
+    "jquery": "^3.2.1",
+    "localforage": "^1.5.3",
     "mock": "^0.1.1",
     "mongoose": "^4.12.3",
     "mongoskin": "^2.1.0",
@@ -31,7 +33,7 @@
     "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
     "start-js": "react-scripts start",
     "express": "node --experimental-modules ./test/app.mjs",
-    "start": "npm-run-all -p watch-css start-js express",
+    "start": "npm-run-all -p watch-css start-js",
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

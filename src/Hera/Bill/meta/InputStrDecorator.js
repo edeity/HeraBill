@@ -24,8 +24,9 @@ class InputStr extends Component {
     };
 
     onValueChange = (e) => {
-        this.setState({ value: e.target.value });
-        this.props.onChange && this.props.onChange(this.state.value);
+        this.setState({ value: e.target.value }, ()=> {
+            this.props.onChange && this.props.onChange(this.state.value);
+        });
     };
 
     render() {

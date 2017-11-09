@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import './layout.css'
 import './hera.css'
 
+import Home from './Comp/Home';
 import User from './Comp/User';
 import MetaList from './Comp/MetaList';
 
@@ -12,6 +13,12 @@ class Hera extends Component {
         super();
 
         const menuData = [{
+            key: 'home',
+            url: '/home',
+            iconType: 'home',
+            comp: <Home/>,
+            title: '首页'
+        },{
             key: 'user',
             url: '/user',
             iconType: 'user',
@@ -23,11 +30,13 @@ class Hera extends Component {
             title: 'meta类型'
         }];
 
+        this.indexMenuData = menuData[0];
+
         this.menuData = menuData;
 
         this.state = {
             collapse: true, // 是否收缩
-            title: this.getTitle('user'),
+            title: this.indexMenuData.title,
         };
     }
 
@@ -37,26 +46,53 @@ class Hera extends Component {
         })
     };
 
+    getIndex = () => {
+        return this.indexMenuData.comp;
+    };
+
+    getComp = (routeObj) => {
+        let comp = routeObj.match.params.comp;
+        switch(comp) {
+            case 'user': return <User/>;
+            case 'meta': return <MetaList/>;
+            case 'home': return <Home/>;
+            default: return <Home/>;
+        }
+    };
+
+    getMenuData = (key) => {
+        let currentMenuData = null;
+        if(key === '') {
+            return this.indexMenuData;
+        } else {
+            this.menuData.some(function (eachMenuData) {
+                if(eachMenuData.key === key) {
+                    currentMenuData = eachMenuData;
+                    return true;
+                }
+                return false;
+            });
+            return currentMenuData;
+        }
+    };
+
     getCurrentMenuSelectedKeys = () => {
         let currKey = document.location.pathname.split('/')[1];
-        return [currKey];
+        let currentMenuData = this.getMenuData(currKey);
+        return currentMenuData ? [currentMenuData.key] : [this.indexMenuData.key];
     };
 
     getTitle = (key) => {
-        let currentMenuData = null;
         let currentKey = this.getCurrentMenuSelectedKeys()[0];
-        this.menuData.some(function (eachMenuData) {
-            if(eachMenuData.key === currentKey) {
-                currentMenuData = eachMenuData;
-                return true;
-            }
-        });
-        return currentMenuData.title;
+        let currentMenuData = this.getMenuData(currentKey);
+        return currentMenuData ? currentMenuData.title : this.indexMenuData.title;
     };
 
+
     onMenuSelect = (item) => {
+        const key = item ? item.key : this.indexMenuData.key;
         this.setState({
-            title: this.getTitle(item.key)
+            title: this.getTitle(key)
         });
     };
 
@@ -95,14 +131,13 @@ class Hera extends Component {
                             <Breadcrumb>
                                 <Breadcrumb.Item>应用列表</Breadcrumb.Item>
                                 <Breadcrumb.Item>
-                                    { this.state.title || this.onMenuSelect()}
+                                    { this.state.title || this.indexMenuData.title}
                                 </Breadcrumb.Item>
                             </Breadcrumb>
                         </div>
                         <div className="ant-layout-container">
                             <div className="ant-layout-content">
-                                <Route path="/user" component={User}/>
-                                <Route path="/meta" component={MetaList}/>
+                                <Route path="/:comp" component={this.getComp}/>
                             </div>
                         </div>
                         <div className="ant-layout-footer">

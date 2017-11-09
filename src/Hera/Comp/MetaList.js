@@ -35,9 +35,9 @@ class MetaList extends Component {
         const metaAttrList = [
             {type: 'date', desc: '日期'},
             { type: 'time', desc: '时间'},
-            { type: 'number', desc: '数字'},
+            { type: 'num', desc: '数字'},
             { type: 'str', desc: '字符串'},
-            { type: 'e-mail', desc: '邮箱'},
+            { type: 'mail', desc: '邮箱'},
             { type: 'refer', desc: '参照'},];
 
         const isEditable = this.state.isEditable;

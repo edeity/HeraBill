@@ -48,9 +48,9 @@ class Body extends Component {
         self.rowSelection = rowSelection;
     }
 
-    onFieldChange = (index, key) => {
+    onFieldChange = (index) => {
         let self = this;
-        return (value) => {
+        return (key, value) => {
             self.props.onBodyFieldChanged(index, key, value)
         };
     };
@@ -62,7 +62,7 @@ class Body extends Component {
                       editable={this.props.editable}
                       isSimMode={true}
                       value={this.props.data[index][key]}
-                      onChange={this.onFieldChange(index, key)}
+                      onChange={this.onFieldChange(index)}
         />);
     }
 

@@ -14,35 +14,34 @@ const FormItem = Form.Item;
  * 用于渲染一个字段的组件
  */
 class Meta extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
 
+    onChange = (value) => {
+        this.props.onChange(this.props.field, value);
+    };
     
     getTypeRender = () => {
         const type = this.props.meta.type;
         const disabled = !this.props.editable;
         const value = this.props.value;
-        const onChange = this.props.onChange;
 
         switch (type) {
             // case 'refer': return ();
             // case 'phone': return ();
             case 'date': return (
-               <DatePickerDecorator value={ value } onChange={ onChange } disabled={disabled}/>
+               <DatePickerDecorator value={ value } onChange={ this.onChange } disabled={disabled}/>
             );
             case 'time': return (
-               <TimePickerDecorator onChange={ onChange } disabled={disabled}/>
+               <TimePickerDecorator onChange={ this.onChange } disabled={disabled}/>
             );
             case 'num': return (
-                <InputNumber defaultValue={ value } onChange={ onChange } disabled={disabled}/>
+                <InputNumber defaultValue={ value } onChange={ this.onChange } disabled={disabled}/>
             );
             case 'mail': return (
-                <InputEmailDecorator value={ value } onChnge={ onChange } disabled={disabled}/>
+                <InputEmailDecorator value={ value } onChange={ this.onChange } disabled={disabled}/>
             );
             case 'str': // 默认渲染即str
             default: return ((
-                <InputStrDecorator value={ value } onChange={ onChange } disabled={disabled}/>
+                <InputStrDecorator value={ value } onChange={ this.onChange } disabled={disabled}/>
                 )
             );
         }

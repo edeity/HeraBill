@@ -12,15 +12,32 @@ import React, {Component} from 'react';
 class Refer extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            value: this.props.value
+        }
     }
 
-   
+    emitEmpty = () => {
+        this.refInput.focus();
+        this.setState({ value: '' });
+    };
+
+    onValueChange = (e) => {
+        this.setState({ value: e.target.value }, ()=> {
+            this.props.onChange && this.props.onChange(this.state.value);
+        });
+    };
 
     render() {
+        const { value } = this.state;
+        const suffix = (value && !this.props.disabled)  ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
         return (
-            <div>
-                
-            </div>
+            <Input className="meta-str"
+                   value={value}
+                   suffix={suffix}
+                   ref={node => this.refInput = node}
+                   onChange={this.onValueChange}
+                   disabled={this.props.disabled}/>
         )
     }
 }
