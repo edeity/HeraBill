@@ -39,7 +39,12 @@ class Bill extends Component {
             key: 'hera-bill-operation',
             fixed: 'right',
             width: 100,
-            render: (text, record, index) => <a onClick={() => BTN_ACTION.head.edit(index)}>修改</a>
+            render: (text, record, index) => {
+                return <div className="row-btn">
+                    <a onClick={() => BTN_ACTION.details(index)}>浏览</a>
+                    <span> | </span>
+                    <a onClick={() => BTN_ACTION.head.edit(index)}>修改</a>
+                </div>}
         });
         this.columns = columns;
 
@@ -68,6 +73,7 @@ class Bill extends Component {
 
         // 数据动作
         const DATA_ACTION = {
+            // 列表态 -> 编辑态
             view2Edit: () => {
                 self.setState({
                     editData: $.extend(true, {}, self.state.cardData),
@@ -172,15 +178,7 @@ class Bill extends Component {
                     VIEW_ACTION.canEditable(true);
                 },
                 edit: (index) => {
-                    let selectedData = [];
-                    let editData = this.state.allData[index];
-                    selectedData.push(editData);
-                    this.setState({
-                        selectedData: selectedData,
-                        cardData: editData,
-                        // cardBodyData: self.cardBodyData,
-                        // editBodyData: self.cardBodyData
-                    }, BTN_ACTION.modify);
+                    BTN_ACTION.details(index, BTN_ACTION.modify);
                 },
                 delete: ()=> {
                     let deletedData = this.state.selectedData;
@@ -274,15 +272,26 @@ class Bill extends Component {
             },
             // 修改
             modify: () => {
-                let cardData = this.state.cardData;
-                if (cardData && cardData[PK]) {
-                    VIEW_ACTION.toCard();
-                    VIEW_ACTION.canEditable(true);
-                    DATA_ACTION.view2Edit();
-                } else {
-                    message.warning('操作错误: 请选择至少一条数据');
-                }
+                VIEW_ACTION.canEditable(true);
             },
+            details: (index, callback) => {
+                let selectedData = [];
+                let editData = this.state.allData[index];
+                selectedData.push(editData);
+                this.setState({
+                    selectedData: selectedData,
+                    cardData: editData,
+                }, () => {
+                    let cardData = this.state.cardData;
+                    if (cardData && cardData[PK]) {
+                        VIEW_ACTION.toCard();
+                        DATA_ACTION.view2Edit();
+                        $.isFunction(callback) && callback()
+                    } else {
+                        message.warning('操作错误: 请选择至少一条数据');
+                    }
+                });
+            }
         };
         self.BTN_ACTION = BTN_ACTION;
     }

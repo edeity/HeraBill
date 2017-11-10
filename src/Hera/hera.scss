@@ -1,3 +1,10 @@
+.ant-layout-aside-collapse {
+  .ant-layout-sider {
+    height: 100vh;
+    position: fixed;
+  }
+}
+
 .anticon-close-circle {
   cursor: pointer;
   color: #ccc;
@@ -25,4 +32,22 @@
   color: #eee;
   font-size: 20px;
   text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  .title-anchor {
+    font-size: 15px;
+    display: none;
+    color: #c9c9c9;
+  }
+  &:hover .title-anchor {
+    display: inline-block;
+    color: #0b97c4 !important;
+  }
+}
+
+div.markdown-body {
+  code.lang-javascript {
+    font-size: 13px;
+  }
 }

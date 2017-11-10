@@ -1,3 +1,7 @@
+.ant-layout-aside-collapse .ant-layout-sider {
+  height: 100vh;
+  position: fixed; }
+
 .anticon-close-circle {
   cursor: pointer;
   color: #ccc;
@@ -20,3 +24,15 @@
   color: #eee;
   font-size: 20px;
   text-align: center; }
+
+h1 .title-anchor, h2 .title-anchor, h3 .title-anchor, h4 .title-anchor, h5 .title-anchor, h6 .title-anchor {
+  font-size: 15px;
+  display: none;
+  color: #c9c9c9; }
+
+h1:hover .title-anchor, h2:hover .title-anchor, h3:hover .title-anchor, h4:hover .title-anchor, h5:hover .title-anchor, h6:hover .title-anchor {
+  display: inline-block;
+  color: #0b97c4 !important; }
+
+div.markdown-body code.lang-javascript {
+  font-size: 13px; }
