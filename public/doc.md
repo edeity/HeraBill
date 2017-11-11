@@ -1,8 +1,6 @@
-# 单据组件
-
 通过描述字段快速生成通用高级单据的React组件，也可认为是快速生成通用单据的一种解决方案
 
-### 基本用法
+## 基本用法
 
 ```javascript
 import Bill from 'HeraBill';
@@ -19,12 +17,12 @@ class XXX extends Component {
     
     render() {
         <Bill 
-			tableId='test'
-			headMeta={this.headMeta}
-			bodyMeta={this.bodyMeta}
-			onQuery={this.onQuery}
-        	onDelete={this.onDelete}
-        	onSave={this.onSave}
+            tableId='test'
+            headMeta={this.headMeta}
+            bodyMeta={this.bodyMeta}
+            onQuery={this.onQuery}
+            onDelete={this.onDelete}
+            onSave={this.onSave}
 		/>
     }
 }
@@ -60,8 +58,8 @@ Meta是用来描述一个字段的详细信息
 
 | 基本字段     | 说明    | 字段类型    | 默认值  |
 | -------- | ----- | ------- | ---- |
-| type     | 基本类型  | String  | null |
-| desc     | 显示名称  | String  | null |
+| type     | 基本类型  | String  | str  |
+| desc     | 显示名称  | String  | ''   |
 | editable | 是否可编辑 | Boolean | true |
 
 #### 预置种类（type）
@@ -93,7 +91,6 @@ Meta是用来描述一个字段的详细信息
 |          | matchFun        | 离开焦点或保存时执行校验 | Function(fieldValue) | null  |
 |          | matchTips       | 不匹配的提示       | string               | null  |
 |          | isMatchWhenBlur | 是否离开焦点后立即校验  | boolean              | false |
-| refer    |                 | 详细秒速：__参照__  |                      |       |
 
 
 

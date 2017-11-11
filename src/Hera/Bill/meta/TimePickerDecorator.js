@@ -40,6 +40,7 @@ class TimePickerDecorator extends Component {
     render() {
         return (
             <TimePicker
+                className={this.props.className}
                 value = {this.state.value}
                 open={this.state.open}
                 onOpenChange={this.handleOpenChange}

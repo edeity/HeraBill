@@ -4,39 +4,40 @@ import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import './layout.css'
 import './hera.css'
 
-import Home from './Comp/Home';
+import Doc from './Comp/Doc';
 import User from './Comp/User';
 import MetaList from './Comp/MetaList';
+import NotFound from './Exception/NotFound';
 
 class Hera extends Component {
     constructor() {
         super();
 
         const menuData = [{
-            key: 'home',
-            url: '/home',
+            key: 'doc',
+            url: '/doc',
             iconType: 'home',
-            comp: <Home/>,
-            title: '首页'
+            comp: <Doc/>,
+            title: '文档'
         },{
             key: 'user',
             url: '/user',
             iconType: 'user',
+            comp: <User/>,
             title: '个人信息'
         }, {
             key: 'meta',
             url: '/meta',
             iconType: 'book',
+            comp: <MetaList/>,
             title: 'meta类型'
         }];
-
-        this.indexMenuData = menuData[0];
 
         this.menuData = menuData;
 
         this.state = {
             collapse: true, // 是否收缩
-            title: this.indexMenuData.title,
+            title: '',
         };
     }
 
@@ -46,51 +47,47 @@ class Hera extends Component {
         })
     };
 
-    getIndex = () => {
-        return this.indexMenuData.comp;
-    };
-
+    // 获取当前页面渲染的路由组件
     getComp = (routeObj) => {
         let comp = routeObj.match.params.comp;
-        switch(comp) {
-            case 'user': return <User/>;
-            case 'meta': return <MetaList/>;
-            case 'home': return <Home/>;
-            default: return <Home/>;
-        }
+        let rendererComp = null;
+        this.menuData.some((eachMenuData) => {
+            if(eachMenuData.key === comp) {
+                rendererComp = eachMenuData.comp
+                return true;
+            }
+            return false;
+        });
+        return rendererComp || <NotFound/>
     };
 
     getMenuData = (key) => {
         let currentMenuData = null;
-        if(key === '') {
-            return this.indexMenuData;
-        } else {
-            this.menuData.some(function (eachMenuData) {
-                if(eachMenuData.key === key) {
-                    currentMenuData = eachMenuData;
-                    return true;
-                }
-                return false;
-            });
-            return currentMenuData;
-        }
+        this.menuData.some(function (eachMenuData) {
+            if(eachMenuData.key === key) {
+                currentMenuData = eachMenuData;
+                return true;
+            }
+            return false;
+        });
+        return currentMenuData;
     };
 
     getCurrentMenuSelectedKeys = () => {
         let currKey = document.location.pathname.split('/')[1];
         let currentMenuData = this.getMenuData(currKey);
-        return currentMenuData ? [currentMenuData.key] : [this.indexMenuData.key];
+        return currentMenuData ? [currentMenuData.key] : ['404'];
     };
 
     getTitle = (key) => {
         let currentKey = this.getCurrentMenuSelectedKeys()[0];
         let currentMenuData = this.getMenuData(currentKey);
-        return currentMenuData ? currentMenuData.title : this.indexMenuData.title;
+        return currentMenuData ? currentMenuData.title : '404';
     };
 
 
     onMenuSelect = (item) => {
-        const key = item ? item.key : this.indexMenuData.key;
+        const key = item.key;
         this.setState({
             title: this.getTitle(key)
         });
@@ -130,9 +127,7 @@ class Hera extends Component {
                         <div className="ant-layout-header">
                             <Breadcrumb>
                                 <Breadcrumb.Item>应用列表</Breadcrumb.Item>
-                                <Breadcrumb.Item>
-                                    { this.state.title || this.indexMenuData.title}
-                                </Breadcrumb.Item>
+                                <Breadcrumb.Item> { this.state.title }</Breadcrumb.Item>
                             </Breadcrumb>
                         </div>
                         <div className="ant-layout-container">

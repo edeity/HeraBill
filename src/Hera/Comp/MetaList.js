@@ -6,6 +6,7 @@
 import React, {Component} from 'react';
 import Meta from '../Bill/Meta';
 import {Row, Col, Button} from 'antd';
+import dm from '../Tools/DefaultMeta';
 
 // 实例:用户单据
 class MetaList extends Component {
@@ -32,13 +33,15 @@ class MetaList extends Component {
         /**
          * 枚举支持的类型
          */
-        const metaAttrList = [
-            {type: 'date', desc: '日期'},
-            { type: 'time', desc: '时间'},
-            { type: 'num', desc: '数字'},
-            { type: 'str', desc: '字符串'},
-            { type: 'mail', desc: '邮箱'},
-            { type: 'refer', desc: '参照'},];
+        const metaAttrList = dm.createMeta({
+            data: {type: 'date', desc: '日期'},
+            time: { type: 'time', desc: '时间'},
+            num: { type: 'num', desc: '数字'},
+            str: { type: 'str', desc: '字符串'},
+            mail: { type: 'mail', desc: '邮箱'},
+            refer: { type: 'refer', desc: '参照'}
+        });
+        const keys = Object.keys(metaAttrList);
 
         const isEditable = this.state.isEditable;
         return (
@@ -59,7 +62,8 @@ class MetaList extends Component {
                 <Row>
                     <Col span={24}>
                         {
-                            metaAttrList.map((metaAttr)=> {
+                            keys.map((key)=> {
+                                let metaAttr = metaAttrList[key];
                                 return <Meta key={metaAttr.type} type={metaAttr.type} meta={metaAttr} editable={isEditable}/>
                             })
                         }

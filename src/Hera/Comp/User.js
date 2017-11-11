@@ -22,6 +22,7 @@ class User extends Component {
                 editable: true,
                 validate: {
                     matchReg: '',
+                    matchFun: '',
                     matchTips: '',
                     minLen: 10,
                     maxLen: 20,
@@ -30,7 +31,7 @@ class User extends Component {
             },
             phone: {type: 'str', desc: '联系电话'},
             age: {type: 'num', desc: '年龄'},
-            mail: {type: 'mail', desc: '邮箱地址'}
+            mail: {type: 'mail', desc: '邮箱地址'},
         };
         // 表体描述
         this.bodyMeta = {

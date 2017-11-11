@@ -37,6 +37,7 @@ class InputEmailDecorator extends Component {
     render() {
         return (
             <Select
+                className={this.props.className}
                 mode="combobox"
                 style={{ width: 200 }}
                 onChange={this.handleChange}

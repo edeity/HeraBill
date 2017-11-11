@@ -36,3 +36,15 @@ h1:hover .title-anchor, h2:hover .title-anchor, h3:hover .title-anchor, h4:hover
 
 div.markdown-body code.lang-javascript {
   font-size: 13px; }
+
+.home-anchor {
+  position: fixed;
+  top: 0;
+  right: 0; }
+
+.not-found {
+  font-size: 20vw;
+  text-align: center; }
+
+.hera-bill .is-not-validate input {
+  border: 1px solid red; }

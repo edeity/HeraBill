@@ -20,7 +20,9 @@ class InputStr extends Component {
 
     emitEmpty = () => {
         this.refInput.focus();
-        this.setState({ value: '' });
+        this.setState({ value: '' }, () => {
+            this.props.onChange && this.props.onChange(this.state.value);
+        });
     };
 
     onValueChange = (e) => {
@@ -33,7 +35,8 @@ class InputStr extends Component {
         const { value } = this.state;
         const suffix = (value && !this.props.disabled)  ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
         return (
-            <Input className="meta-str"
+            <Input
+                className={"meta-str " + this.props.className}
                 value={value}
                 suffix={suffix}
                 ref={node => this.refInput = node}

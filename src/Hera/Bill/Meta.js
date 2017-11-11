@@ -22,26 +22,47 @@ class Meta extends Component {
     getTypeRender = () => {
         const type = this.props.meta.type;
         const disabled = !this.props.editable;
-        const value = this.props.value;
+        let data = this.props.data; // 值和其他的属性
+        const value = data ? data.value : '';
+        const className = (data  && !data.__isValidate)? 'is-not-validate' :  '';
 
         switch (type) {
             // case 'refer': return ();
             // case 'phone': return ();
             case 'date': return (
-               <DatePickerDecorator value={ value } onChange={ this.onChange } disabled={disabled}/>
+               <DatePickerDecorator
+                   className={ className }
+                   value={ value }
+                   onChange={ this.onChange }
+                   disabled={disabled}/>
             );
             case 'time': return (
-               <TimePickerDecorator onChange={ this.onChange } disabled={disabled}/>
+               <TimePickerDecorator
+                   className={ className }
+                   onChange={ this.onChange }
+                   disabled={disabled}/>
             );
             case 'num': return (
-                <InputNumber defaultValue={ value } onChange={ this.onChange } disabled={disabled}/>
+                <InputNumber
+                    className={ className }
+                    defaultValue={ value }
+                    onChange={ this.onChange }
+                    disabled={disabled}/>
             );
             case 'mail': return (
-                <InputEmailDecorator value={ value } onChange={ this.onChange } disabled={disabled}/>
+                <InputEmailDecorator
+                    className={ className }
+                    value={ value }
+                    onChange={ this.onChange }
+                    disabled={disabled}/>
             );
             case 'str': // 默认渲染即str
             default: return ((
-                <InputStrDecorator value={ value } onChange={ this.onChange } disabled={disabled}/>
+                <InputStrDecorator
+                    className={ className }
+                    value={ value }
+                    onChange={ this.onChange }
+                    disabled={disabled}/>
                 )
             );
         }

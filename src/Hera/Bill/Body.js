@@ -8,6 +8,7 @@ import {Button, Tooltip} from 'antd';
 import {Row} from 'antd';
 import {Table} from 'antd';
 import Meta from './Meta';
+import dv from '../Tools/DefaultValue';
 
 /**
  * 单据表体
@@ -56,12 +57,13 @@ class Body extends Component {
     };
 
     renderColumns = (meta, index, key) => {
+        let data = this.props.data[index][key];
         return (<Meta key={key}
                       field={key}
                       meta={meta}
                       editable={this.props.editable}
                       isSimMode={true}
-                      value={this.props.data[index][key]}
+                      data={data}
                       onChange={this.onFieldChange(index)}
         />);
     }
@@ -75,7 +77,7 @@ class Body extends Component {
                             <Table
                                 rowSelection={this.rowSelection}
                                 columns={this.editColumns}
-                                dataSource={this.props.data || []}
+                                dataSource={dv.reductionArray(this.props.data)}
                                 bordered
                                 title={() => {
                                 return <Row type="flex" justify="end">
@@ -93,7 +95,7 @@ class Body extends Component {
                             :
                             <Table
                                 columns={this.cardColumns}
-                                dataSource={this.props.data || []}
+                                dataSource={dv.reductionArray(this.props.data)}
                                 bordered/>
                     }
                 </Row>

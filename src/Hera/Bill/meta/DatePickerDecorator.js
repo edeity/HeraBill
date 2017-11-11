@@ -19,11 +19,17 @@ class Refer extends Component {
     };
 
 
+    onChange = (moment) => {
+        this.props.onChange(moment.format('YYYY-MM-DD'));
+    };
+
     render() {
         return (
-            <DatePicker defaultValue={moment(this.props.value || this.getCurrentDateStr(), 'YYYY-MM-DD')} 
-                        onChange={this.props.onChange}
-                        disabled={this.props.disabled}/>
+            <DatePicker 
+                className={ this.props.className }
+                defaultValue={this.props.value ? moment(this.props.value) : null}
+                onChange={this.onChange}
+                disabled={this.props.disabled}/>
         )
     }
 }
