@@ -11,7 +11,7 @@ yarn start
 
 ## 文档
 
-[DOC](https://github.com/edeity/HeraBill/tree/master/public/home.md)
+[DOC](https://github.com/edeity/HeraBill/tree/master/public/doc.md)
 
 
 

@@ -6,6 +6,7 @@ import './hera.css'
 
 import Doc from './Comp/Doc';
 import User from './Comp/User';
+import Post from './Comp/Post';
 import MetaList from './Comp/MetaList';
 import NotFound from './Exception/NotFound';
 
@@ -26,6 +27,12 @@ class Hera extends Component {
             comp: <User/>,
             title: '个人信息'
         }, {
+            key: 'post',
+            url: '/post',
+            iconType: 'contacts',
+            comp: <Post/>,
+            title: '职位'
+        },{
             key: 'meta',
             url: '/meta',
             iconType: 'book',

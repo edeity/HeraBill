@@ -1,6 +1,7 @@
 /**
- * Created by edeity on 11/10/2017.
+ * Created by edeity on 13/11/2017.
  */
+
 
 import React, {Component} from 'react';
 
@@ -9,47 +10,22 @@ import Consistence from '../Tools/Consistence';
 
 const PK = 'pk';
 // 实例:用户单据
-class User extends Component {
+class Post extends Component {
     constructor() {
         super();
         // 单据标志
-        this.tableId = "user";
+        this.tableId = "post";
         // 基本描述
         this.headMeta = {
-            name: {
-                type: 'str',
-                desc: '姓名',
-                editable: true,
-                validate: {
-                    matchReg: '',
-                    matchFun: '',
-                    matchTips: '',
-                    minLen: 10,
-                    maxLen: 20,
-                    required: true,
-                },
-            },
-            phone: {type: 'str', desc: '联系电话'},
-            age: {type: 'num', desc: '年龄'},
-            mail: {type: 'mail', desc: '邮箱地址'},
-        };
-        // 表体描述
-        this.bodyMeta = {
-            post: {type: 'refer', desc: '职位', refer: {
-                tableId: 'post',
-                field: 'pk',
-                renderField: 'name'
-            }},
-            date: {type: 'date', desc: '担任时间'},
-            point: {type: 'num', desc: '分数'}
+            name: { type: 'str', desc: '职位名称'},
         };
     };
 
     onQuery = (queryCondition, callback) => {
         Consistence.query(this.tableId)
             .then((res) => {
-            callback(res);
-        });
+                callback(res);
+            });
     };
 
     onSave = (data, callback) => {
@@ -62,7 +38,7 @@ class User extends Component {
     onDelete = (data, callback) => {
         var delPks = [];
         data.forEach((eachRow) => {
-           delPks.push(eachRow[PK]);
+            delPks.push(eachRow[PK]);
         });
         Consistence.onDelete(this.tableId, delPks).then((res) => {
             callback(res);
@@ -82,4 +58,4 @@ class User extends Component {
     }
 }
 
-export default User;
+export default Post;

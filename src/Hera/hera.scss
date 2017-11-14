@@ -65,7 +65,13 @@ div.markdown-body {
 
 .hera-bill {
   .is-not-validate {
-    input {
+    .ant-input {
+      border: 1px solid red;
+    }
+    .ant-select-selection {
+      border: 1px solid red;
+    }
+    &.ant-input-number {
       border: 1px solid red;
     }
   }

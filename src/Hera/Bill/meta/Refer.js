@@ -4,6 +4,9 @@
 
 
 import React, {Component} from 'react';
+import {Select} from 'antd';
+import Consistence from '../../Tools/Consistence';
+const Option = Select.Option;
 
 
 /**
@@ -12,32 +15,69 @@ import React, {Component} from 'react';
 class Refer extends Component {
     constructor(props) {
         super(props);
+        this.referConfig = this.props.meta.refer;
         this.state = {
-            value: this.props.value
-        }
+            selector: [],
+            value: this.props.value,
+        };
+        this.loadData();
     }
 
-    emitEmpty = () => {
-        this.refInput.focus();
-        this.setState({ value: '' });
+    loadData = (callback) => {
+        let rc = this.referConfig;
+        if (!rc) {
+            console.error('meta: 参照必须设置refer');
+        } else if (!rc.tableId) {
+            console.error('meta: 参照必须设置tableId');
+        } else if (!rc.field) {
+            console.error('meta: 参照必须设置field');
+        } else if (!rc.renderField) {
+            console.error('meta: 参照必须设置renderField');
+        } else {
+            Consistence.query(rc.tableId)
+                .then((res) => {
+                    if (res.success) {
+                        this.setState({
+                            selector: res.data
+                        })
+                    }
+                });
+        }
     };
 
-    onValueChange = (e) => {
-        this.setState({ value: e.target.value }, ()=> {
-            this.props.onChange && this.props.onChange(this.state.value);
-        });
+    handleSelect = (selectedData) => {
+        var realValue = selectedData["key"];
+        this.setState({
+            value: realValue,
+        }, () => {
+            this.props.onChange && this.props.onChange(realValue);
+        })
+    };
+
+    filter = (input, option) => {
+        return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
     };
 
     render() {
-        const { value } = this.state;
-        const suffix = (value && !this.props.disabled)  ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
+        let self = this;
         return (
-            <Input className="meta-str"
-                   value={value}
-                   suffix={suffix}
-                   ref={node => this.refInput = node}
-                   onChange={this.onValueChange}
-                   disabled={this.props.disabled}/>
+            <Select labelInValue
+                    showSearch
+                    className={this.props.className}
+                    style={{width: 120}}
+                    onSelect={self.handleSelect}
+                    value={{ key: this.state.value }}
+                    disabled={self.props.disabled}
+                    filterOption={self.filter}
+            >
+                {
+                    this.state.selector.map((eachOption) => {
+                        return <Option
+                            key={eachOption[self.referConfig.field]}>
+                            {eachOption[self.referConfig.renderField]}</Option>
+                    })
+                }
+            </Select>
         )
     }
 }

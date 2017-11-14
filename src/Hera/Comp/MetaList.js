@@ -29,6 +29,10 @@ class MetaList extends Component {
         })
     };
 
+    onChange = (key, value) => {
+        console.log('变更字段: ' + key + ', 值: ' + value);
+    };
+
     render() {
         /**
          * 枚举支持的类型
@@ -39,7 +43,11 @@ class MetaList extends Component {
             num: { type: 'num', desc: '数字'},
             str: { type: 'str', desc: '字符串'},
             mail: { type: 'mail', desc: '邮箱'},
-            refer: { type: 'refer', desc: '参照'}
+            refer: { type: 'refer', desc: '参照', refer: {
+                tableId: 'user',
+                field: 'pk',
+                renderField: 'name'
+            }}
         });
         const keys = Object.keys(metaAttrList);
 
@@ -64,7 +72,14 @@ class MetaList extends Component {
                         {
                             keys.map((key)=> {
                                 let metaAttr = metaAttrList[key];
-                                return <Meta key={metaAttr.type} type={metaAttr.type} meta={metaAttr} editable={isEditable}/>
+                                return <Meta
+                                    key={metaAttr.type}
+                                    type={metaAttr.type}
+                                    field={ key }
+                                    meta={metaAttr}
+                                    editable={isEditable}
+                                    onChange={this.onChange}
+                                />
                             })
                         }
                     </Col>

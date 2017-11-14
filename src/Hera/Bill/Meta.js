@@ -7,6 +7,7 @@ import InputStrDecorator from './meta/InputStrDecorator';
 import TimePickerDecorator from './meta/TimePickerDecorator';
 import InputEmailDecorator from './meta/InputEmailDecorator';
 import DatePickerDecorator from './meta/DatePickerDecorator';
+import Refer from './meta/Refer';
 
 const FormItem = Form.Item;
 
@@ -20,7 +21,8 @@ class Meta extends Component {
     };
     
     getTypeRender = () => {
-        const type = this.props.meta.type;
+        const meta = this.props.meta;
+        const type = meta.type;
         const disabled = !this.props.editable;
         let data = this.props.data; // 值和其他的属性
         const value = data ? data.value : '';
@@ -54,6 +56,14 @@ class Meta extends Component {
                     className={ className }
                     value={ value }
                     onChange={ this.onChange }
+                    disabled={disabled}/>
+            );
+            case'refer': return (
+                <Refer
+                    className={className}
+                    value={ value }
+                    onChange={ this.onChange }
+                    meta={ meta }
                     disabled={disabled}/>
             );
             case 'str': // 默认渲染即str

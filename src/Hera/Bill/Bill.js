@@ -26,8 +26,15 @@ class Bill extends Component {
         super(props);
 
         // 构建表头列
-        this.headMeta = dm.createMeta(this.props.headMeta);
-        this.bodyMeta = dm.createMeta(this.props.bodyMeta);
+        if(!this.props.headMeta) {
+            console.error('Bill 错误: headMeta属性为必需项');
+        } else {
+            this.headMeta = dm.createMeta(this.props.headMeta);
+        }
+
+        if(this.props.bodyMeta) {
+            this.bodyMeta = dm.createMeta(this.props.bodyMeta);
+        }
 
         this.columns = this.getHeadColumns(this.headMeta);
 
@@ -350,6 +357,7 @@ class Bill extends Component {
         let isValidate = true;
         headKey.forEach((eachKey) => {
             if(!this.validate(headMeta[eachKey], headData[eachKey])) {
+                realHeadData[eachKey] = realHeadData[eachKey] || dv.createSingleValue();
                 realHeadData[eachKey].__isValidate = false;
                 isValidate = false;
             }
@@ -362,24 +370,32 @@ class Bill extends Component {
         return isValidate;
     };
     validateBody = (bodyData) => {
-        let bodyMeta = this.bodyMeta;
-        let realBodyData = this.state.editBodyData;
-        let bodyKey = Object.keys(bodyMeta);
-        let isValidate = true;
-        bodyKey.forEach((eachKey) => {
-            bodyData.forEach((eachBodyData, index) => {
-                if(!this.validate(bodyMeta[eachKey], eachBodyData[eachKey])) {
-                    realBodyData[index][eachKey].__isValidate = false;
-                    isValidate = false;
-                }
-            })
-        });
-        if(!isValidate) {
-            this.setState({
-                editBodyData: realBodyData
+        if(this.bodyMeta) {
+            let bodyMeta = this.bodyMeta;
+            let realBodyData = this.state.editBodyData;
+            let bodyKey = Object.keys(bodyMeta);
+            let isValidate = true;
+            bodyKey.forEach((eachKey) => {
+                bodyData.forEach((eachBodyData, index) => {
+                    if(!this.validate(bodyMeta[eachKey], eachBodyData[eachKey])) {
+                        if(!realBodyData[index][eachKey]) {
+                            realBodyData[index][eachKey] = dv.createSingleValue();
+                        }
+                        realBodyData[index][eachKey].__isValidate = false;
+                        isValidate = false;
+                    }
+                })
             });
+            if(!isValidate) {
+                this.setState({
+                    editBodyData: realBodyData
+                });
+            }
+            return isValidate;
+        } else {
+            return true; // 不需要校验表体
         }
-        return isValidate;
+
     };
 
     componentDidMount = () => {

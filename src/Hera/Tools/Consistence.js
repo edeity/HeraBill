@@ -30,6 +30,7 @@ class Consistence {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 db.getItem(tableId).then((table) => {
+                    table = table ? table : {};
                     let resData = [];
                     const key = Object.keys(table);
                     if(billVo) {
@@ -73,6 +74,7 @@ class Consistence {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                     db.getItem(tableId).then((table) => {
+                        table = table ? table : {};
                         table[billPK] = billVo;
                         db.setItem(tableId, table).then(() => {
                             return db.getItem(tableId);
@@ -86,7 +88,7 @@ class Consistence {
             });
         } else {
             // 新增
-            billPK = Math.random();
+            billPK = '' + Math.random();
             billVo[PK] = billPK;
             return Consistence.onSave(tableId, billVo)
         }

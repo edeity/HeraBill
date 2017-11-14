@@ -31,6 +31,7 @@ class Body extends Component {
             cardColumns.push({
                 title: tempField.desc,
                 dataIndex: key,
+                render: (text, record, index) => this.renderColumns(meta[key], index, key)
             })
             editColumns.push({
                 title: tempField.desc,
