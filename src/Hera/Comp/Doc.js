@@ -55,7 +55,7 @@ class Doc extends Component {
         });
 
 
-        fetch(window.location.origin + '/doc.md')
+        fetch('https://raw.githubusercontent.com/edeity/HeraBill/master/public/doc.md')
             .then(response => response.text())
             .then(txt => {
                 this.setState({

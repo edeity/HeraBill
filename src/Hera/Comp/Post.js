@@ -22,7 +22,7 @@ class Post extends Component {
     };
 
     onQuery = (queryCondition, callback) => {
-        Consistence.query(this.tableId)
+        Consistence.query(this.tableId, queryCondition)
             .then((res) => {
                 callback(res);
             });

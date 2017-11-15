@@ -26,7 +26,7 @@ class Meta extends Component {
         const disabled = !this.props.editable;
         let data = this.props.data; // 值和其他的属性
         const value = data ? data.value : '';
-        const className = (data  && !data.__isValidate)? 'is-not-validate' :  '';
+        const className = (data  && data.__isValidate === false)? 'is-not-validate' :  '';
 
         switch (type) {
             // case 'refer': return ();

@@ -40,6 +40,7 @@ class Consistence {
                             var isMatch = filterKey.every((eachFilterKey)=> {
                                 let matchKey = billVo[eachFilterKey];
                                 if (matchKey === null
+                                    || matchKey === ''
                                     || matchKey === undefined
                                     || matchKey === tempRowData[eachFilterKey]) {
                                     return true;

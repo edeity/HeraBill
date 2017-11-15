@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Menu, Breadcrumb, Icon} from 'antd';
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
+import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import './layout.css'
 import './hera.css'
 
@@ -10,6 +10,7 @@ import Post from './Comp/Post';
 import MetaList from './Comp/MetaList';
 import NotFound from './Exception/NotFound';
 
+const preMount = '/HeraBill';
 class Hera extends Component {
     constructor() {
         super();
@@ -44,7 +45,7 @@ class Hera extends Component {
 
         this.state = {
             collapse: true, // 是否收缩
-            title: '',
+            title: this.getTitle(this.getCurrentMenuSelectedKeys()[0]),
         };
     }
 
@@ -80,21 +81,27 @@ class Hera extends Component {
         return currentMenuData;
     };
 
+    // 返回当前被激活的页签
     getCurrentMenuSelectedKeys = () => {
-        let currKey = document.location.pathname.split('/')[1];
+        let urlArray = document.location.pathname.split('/');
+        let currKey = urlArray[urlArray.length - 1];
         let currentMenuData = this.getMenuData(currKey);
         return currentMenuData ? [currentMenuData.key] : ['404'];
     };
 
+    // 通过当前激活的页签获取名称
     getTitle = (key) => {
         let currentKey = this.getCurrentMenuSelectedKeys()[0];
         let currentMenuData = this.getMenuData(currentKey);
         return currentMenuData ? currentMenuData.title : '404';
     };
 
-
+    // 通过选择页签更改名称
     onMenuSelect = (item) => {
         const key = item.key;
+        this.changeTitle(key);
+    };
+    changeTitle = (key) => {
         this.setState({
             title: this.getTitle(key)
         });
@@ -115,7 +122,7 @@ class Hera extends Component {
                                 this.menuData.map((eachMenuData) => {
                                     return (
                                         <Menu.Item key={eachMenuData.key}>
-                                            <Link to={eachMenuData.url}>
+                                            <Link to={preMount + eachMenuData.url}>
                                                 <Icon type={eachMenuData.iconType}/>
                                                 <span className="nav-text">{eachMenuData.title}</span>
                                             </Link>
@@ -139,7 +146,11 @@ class Hera extends Component {
                         </div>
                         <div className="ant-layout-container">
                             <div className="ant-layout-content">
-                                <Route path="/:comp" component={this.getComp}/>
+                                <Route>
+                                    <Switch>
+                                        <Route path={preMount + "/:comp"} component={this.getComp}/>
+                                    </Switch>
+                                </Route>
                             </div>
                         </div>
                         <div className="ant-layout-footer">

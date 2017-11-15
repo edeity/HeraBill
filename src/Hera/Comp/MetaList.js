@@ -68,21 +68,19 @@ class MetaList extends Component {
                     }
                 </Row>
                 <Row>
-                    <Col span={24}>
-                        {
-                            keys.map((key)=> {
-                                let metaAttr = metaAttrList[key];
-                                return <Meta
-                                    key={metaAttr.type}
-                                    type={metaAttr.type}
-                                    field={ key }
-                                    meta={metaAttr}
-                                    editable={isEditable}
-                                    onChange={this.onChange}
-                                />
-                            })
-                        }
-                    </Col>
+                    {
+                        keys.map((key)=> {
+                            let metaAttr = metaAttrList[key];
+                            return <Meta
+                                key={metaAttr.type}
+                                type={metaAttr.type}
+                                field={ key }
+                                meta={metaAttr}
+                                editable={isEditable}
+                                onChange={this.onChange}
+                            />
+                        })
+                    }
                 </Row>
             </div>
         )
