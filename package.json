@@ -28,6 +28,7 @@
     "mongoose": "^4.12.3",
     "mongoskin": "^2.1.0",
     "nedb": "^1.8.0",
+    "prop-types": "^15.6.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router": "^4.2.0",

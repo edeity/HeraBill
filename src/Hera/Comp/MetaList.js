@@ -5,7 +5,7 @@
 
 import React, {Component} from 'react';
 import Meta from '../Bill/Meta';
-import {Row, Col, Button} from 'antd';
+import {Row, Button} from 'antd';
 import dm from '../Tools/DefaultMeta';
 
 // 实例:用户单据

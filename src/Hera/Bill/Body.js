@@ -53,7 +53,7 @@ class Body extends Component {
     onFieldChange = (index) => {
         let self = this;
         return (key, value) => {
-            self.props.onBodyFieldChanged(index, key, value)
+            self.props.onBodyFieldChanged(key, value, index)
         };
     };
 

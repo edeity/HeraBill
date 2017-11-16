@@ -3,6 +3,7 @@
  */
 
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {Button, message} from 'antd';
 import {Row} from 'antd';
 import {Table} from 'antd';
@@ -18,6 +19,8 @@ const PK = 'pk';
 const BODY_DATA = "bodyData";
 let nKey = [];
 nKey.push(BODY_DATA);
+
+
 
 /**
  * 单据表头
@@ -62,6 +65,38 @@ class Bill extends Component {
 
         let self = this;
 
+        // 暴露给外界的接口
+        let HeadTable = {
+            __changedData: {},
+            __emptyData: function () {
+                HeadTable.__changedData = {};
+            },
+            __getChangedData: function () {
+                return HeadTable.__changedData;
+            },
+            setValue: function(key, value) {
+                HeadTable.__changedData[key] = value;
+            },
+            getValue: function(key) {
+                return dv.reduction(self.state.editData[key]);
+            },
+        };
+        let BodyTable = {
+            __changedData: {},
+            __emptyData: function() {
+                BodyTable.__changedData = {};
+            },
+            __getChangedData: function () {
+                return BodyTable.__changedData;
+            },
+            setValue: function(key, value, index) {
+                BodyTable.__changedData[index][key] = value;
+            },
+            getValue: function(key, index) {
+                return dv.reduction(self.editBodyData[index][key]);
+            },
+        };
+        
         // 以下对应的具体操作需要好好分类
         // 数据动作
         const DATA_ACTION = {
@@ -83,7 +118,7 @@ class Bill extends Component {
             onQueryHeadFieldChanged: (key, value) => {
                 let queryData = this.state.queryData;
                 let keyData = queryData[key];
-                queryData[key] = keyData || dv.createSingleValue;
+                queryData[key] = keyData || dv.createSingleValue();
                 queryData[key].value = value;
                 self.setState({
                     queryData: queryData
@@ -94,17 +129,28 @@ class Bill extends Component {
                 let keyData = editData[key];
                 editData[key] = keyData || dv.createSingleValue();
                 editData[key].value = value;
+                // 假如用户监听了字段变更事件
+                if(this.props.onHeadFieldChanged) {
+                    this.props.onHeadFieldChanged(key, value, HeadTable);
+                    let changedData = HeadTable.__getChangedData();
+                    let keys = Object.keys(changedData);
+                    keys.forEach(function (eachKey) {
+                        editData[eachKey] = dv.createSingleValue(changedData[eachKey]);
+                    })
+                }
+
                 self.setState({
                     editData: editData
                 });
             },
-            onBodyFieldChanged: (index, key, value) => {
+            onBodyFieldChanged: (key, value, index) => {
                 let editBodyData = self.state.editBodyData;
                 let keyData = editBodyData[index][key];
                 if (typeof keyData === 'undefined') {
                     editBodyData[index][key] = dv.createSingleValue();
                 }
                 editBodyData[index][key].value = value;
+                this.props.onBodyFieldChanged && this.props.onBodyFieldChanged(key, value, index, BodyTable);
                 self.setState({
                     editBodyData: editBodyData
                 })
@@ -315,6 +361,12 @@ class Bill extends Component {
         self.BTN_ACTION = BTN_ACTION;
     }
 
+    componentDidMount = () => {
+        if (this.props.isQuery) {
+            this.BTN_ACTION.query();
+        }
+    };
+
     getHeadColumns = () => {
         const keys = Object.keys(this.headMeta);
         let columns = []; // 列表态的表头
@@ -409,11 +461,6 @@ class Bill extends Component {
 
     };
 
-    componentDidMount = () => {
-        if (this.props.isQuery) {
-            this.BTN_ACTION.query();
-        }
-    };
 
 
     // 渲染视图
@@ -525,5 +572,26 @@ class Bill extends Component {
         )
     }
 }
+
+Bill.propTypes = {
+    // 表名
+    tableId: PropTypes.string.isRequired,
+    // 表头字段描述
+    headMeta: PropTypes.object.isRequired,
+    // 表体字段描述
+    bodyMeta: PropTypes.object,
+    // 首次加载是查询
+    isQuery: PropTypes.bool,
+    // 查询按钮触发事件
+    onQuery: PropTypes.func.isRequired,
+    // 删除按钮触发事件
+    onDelete: PropTypes.func.isRequired,
+    // 保存按钮触发事件
+    onSave: PropTypes.func.isRequired,
+    // 当表头字段改变触发事件
+    onHeadFieldChanged: PropTypes.func,
+    // 当表体字段改变触发事件
+    onBodyFieldChanged: PropTypes.func
+};
 
 export default Bill;

@@ -3,7 +3,7 @@
  */
 
 
-import React, {Component} from 'react';
+import React, { PureComponent } from 'react';
 import { TimePicker, Button } from 'antd';
 import moment from 'moment';
 
@@ -11,7 +11,7 @@ import moment from 'moment';
 /**
  * 基本字符串
  */
-class TimePickerDecorator extends Component {
+class TimePickerDecorator extends PureComponent {
     constructor(props) {
         super(props);
         this.format = 'HH:mm:ss';

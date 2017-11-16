@@ -3,14 +3,14 @@
  */
 
 
-import React, {Component} from 'react';
+import React, { PureComponent} from 'react';
 import { Input, Icon } from 'antd';
 
 
 /**
  * 基本字符串
  */
-class InputStr extends Component {
+class InputStr extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {

@@ -3,35 +3,28 @@
  */
 
 
-import React, {Component} from 'react';
+import React from 'react';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 
 
 /**
- * 参照
+ * 日期
  */
-class Refer extends Component {
-    
-    getCurrentDateStr =() =>{
-        let date = new Date();
-        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+const DatePickerDecorator =(props) => {
+
+    // 日期变更事件
+    function onChange (moment) {
+        props.onChange(moment.format('YYYY-MM-DD'));
     };
 
-
-    onChange = (moment) => {
-        this.props.onChange(moment.format('YYYY-MM-DD'));
-    };
-
-    render() {
-        return (
-            <DatePicker 
-                className={ this.props.className }
-                defaultValue={this.props.value ? moment(this.props.value) : null}
-                onChange={this.onChange}
-                disabled={this.props.disabled}/>
-        )
-    }
+    return (
+        <DatePicker
+            className={ props.className }
+            defaultValue={ props.value && moment(props.value) }
+            onChange={ onChange }
+            disabled={ props.disabled }/>
+    )
 }
 
-export default Refer;
+export default DatePickerDecorator;

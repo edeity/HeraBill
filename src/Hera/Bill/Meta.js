@@ -1,7 +1,9 @@
 /**
  * Created by edeity on 12/10/2017.
  */
-import React, {Component} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+
 import {Col, Form, InputNumber} from 'antd';
 import InputStrDecorator from './meta/InputStrDecorator';
 import TimePickerDecorator from './meta/TimePickerDecorator';
@@ -14,55 +16,55 @@ const FormItem = Form.Item;
 /**
  * 用于渲染一个字段的组件
  */
-class Meta extends Component {
+const Meta = (props) => {
 
-    onChange = (value) => {
-        this.props.onChange(this.props.field, value);
+    function onChange(value) {
+        props.onChange(props.field, value);
     };
     
-    getTypeRender = () => {
-        const meta = this.props.meta;
-        const type = meta.type;
-        const disabled = !this.props.editable;
-        let data = this.props.data; // 值和其他的属性
+    function getTypeRender (){
+        const meta = props.meta;
+        const type = meta.type || 'str';
+        const disabled = !props.editable;
+        let data = props.data; // 值和其他的属性
         const value = data ? data.value : '';
         const className = (data  && data.__isValidate === false)? 'is-not-validate' :  '';
 
         switch (type) {
-            // case 'refer': return ();
             // case 'phone': return ();
             case 'date': return (
                <DatePickerDecorator
                    className={ className }
                    value={ value }
-                   onChange={ this.onChange }
+                   onChange={ onChange }
                    disabled={disabled}/>
             );
             case 'time': return (
                <TimePickerDecorator
                    className={ className }
-                   onChange={ this.onChange }
+                   onChange={ onChange }
                    disabled={disabled}/>
             );
             case 'num': return (
                 <InputNumber
                     className={ className }
                     defaultValue={ value }
-                    onChange={ this.onChange }
+                    value={ value }
+                    onChange={ onChange }
                     disabled={disabled}/>
             );
             case 'mail': return (
                 <InputEmailDecorator
                     className={ className }
                     value={ value }
-                    onChange={ this.onChange }
+                    onChange={ onChange }
                     disabled={disabled}/>
             );
             case'refer': return (
                 <Refer
                     className={className}
                     value={ value }
-                    onChange={ this.onChange }
+                    onChange={ onChange }
                     meta={ meta }
                     disabled={disabled}/>
             );
@@ -71,40 +73,55 @@ class Meta extends Component {
                 <InputStrDecorator
                     className={ className }
                     value={ value }
-                    onChange={ this.onChange }
+                    onChange={ onChange }
                     disabled={disabled}/>
                 )
             );
         }
     };
 
-    render() {
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 23 },
-                sm: { span: 6 },
-            },
-            wrapperCol: {
-                xs: { span: 22, offset: 1 },
-                sm: { span: 14 },
-            },
-        };
 
-        const isSimMode = this.props.isSimMode;
-        return (
-            <Col className="gutter-row" xs={12} sm={8} md={6}>
-                {
-                    isSimMode ? this.getTypeRender()
-                    :
-                        (<div className="gutter-box">
-                            <FormItem {...formItemLayout} label={this.props.meta.desc} hasFeedback>
-                                {this.getTypeRender()}
-                            </FormItem>
-                        </div>)
-                }
-            </Col>
-        )
-    }
-}
+    const formItemLayout = {
+        labelCol: {
+            xs: { span: 23 },
+            sm: { span: 6 },
+        },
+        wrapperCol: {
+            xs: { span: 22, offset: 1 },
+            sm: { span: 14 },
+        },
+    };
+
+    const isSimMode = props.isSimMode;
+    return (
+        <Col className="gutter-row" xs={12} sm={8} md={6}>
+            {
+                isSimMode ? getTypeRender()
+                :
+                    (<div className="gutter-box">
+                        <FormItem {...formItemLayout} label={props.meta.desc} hasFeedback>
+                            { getTypeRender() }
+                        </FormItem>
+                    </div>)
+            }
+        </Col>
+    )
+};
+
+Meta.PropTypes = {
+    // 字段类型
+    type: PropTypes.string,
+    // 字段
+    field: PropTypes.string.isRequired,
+    // 字段描述
+    meta: PropTypes.object.isRequired,
+    // 字段数据
+    data: PropTypes.object,
+    // 是否可编辑
+    editable: PropTypes.bool,
+    // 字段值变更后的触发事件
+    onChange: PropTypes.func.isRequired
+};
+
 
 export default Meta;

@@ -13,8 +13,8 @@ const {Link} = Anchor;
 
 // 实例:用户单据
 class Doc extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
 
         let toc = [];
 

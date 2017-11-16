@@ -11,8 +11,9 @@ let defaultValue = {
 
 // 实例:用户单据
 class DefaultValue {
-    static createSingleValue = () => {
+    static createSingleValue = (value) => {
         let copyData = $.extend(true, {}, defaultValue);
+        copyData.value = value;
         return copyData  
     };
     static createValue = (data, nKey) => {
