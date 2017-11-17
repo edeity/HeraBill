@@ -67,7 +67,7 @@ class MetaList extends Component {
                             </Button.Group>
                     }
                 </Row>
-                <Row>
+                <Row gutter={16}>
                     {
                         keys.map((key)=> {
                             let metaAttr = metaAttrList[key];

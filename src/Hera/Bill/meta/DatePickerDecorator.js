@@ -21,7 +21,7 @@ const DatePickerDecorator =(props) => {
     return (
         <DatePicker
             className={ props.className }
-            defaultValue={ props.value && moment(props.value) }
+            defaultValue={ props.value ? moment(props.value) : moment()}
             onChange={ onChange }
             disabled={ props.disabled }/>
     )

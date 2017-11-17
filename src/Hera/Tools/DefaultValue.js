@@ -5,12 +5,20 @@ import $ from 'jquery';
 
 // 默认的meta
 let defaultValue = {
-    value: null,
+    value: '',
     __isValidate: true
 };
 
 // 实例:用户单据
 class DefaultValue {
+    static createValueByMeta = (meta) => {
+        let keys = Object.keys(meta);
+        let data = {};
+        keys.forEach((eachKey) => {
+            data[eachKey] = $.extend(true, {}, defaultValue);
+        })
+        return data;
+    }
     static createSingleValue = (value) => {
         let copyData = $.extend(true, {}, defaultValue);
         copyData.value = value;

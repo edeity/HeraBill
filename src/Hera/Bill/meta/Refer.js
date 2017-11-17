@@ -63,8 +63,8 @@ class Refer extends Component {
         return (
             <Select labelInValue
                     showSearch
+                    style={{ minWidth: 100 }}
                     className={this.props.className}
-                    style={{width: 120}}
                     onSelect={self.handleSelect}
                     value={{ key: this.state.value }}
                     disabled={self.props.disabled}

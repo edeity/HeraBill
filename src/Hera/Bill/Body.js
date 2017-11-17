@@ -59,13 +59,14 @@ class Body extends Component {
 
     renderColumns = (meta, index, key) => {
         let data = this.props.data[index][key];
-        return (<Meta key={key}
-                      field={key}
-                      meta={meta}
-                      editable={this.props.editable}
-                      isSimMode={true}
-                      data={data}
-                      onChange={this.onFieldChange(index)}
+        return (<Meta
+                    key={key}
+                    field={key}
+                    meta={meta}
+                    editable={this.props.editable}
+                    isSimMode={true}
+                    data={data}
+                    onChange={this.onFieldChange(index)}
         />);
     }
 

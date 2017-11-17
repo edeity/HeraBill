@@ -25,7 +25,7 @@ const Meta = (props) => {
     function getTypeRender (){
         const meta = props.meta;
         const type = meta.type || 'str';
-        const disabled = !props.editable;
+        const disabled = meta.editable === false ? true : !props.editable;
         let data = props.data; // 值和其他的属性
         const value = data ? data.value : '';
         const className = (data  && data.__isValidate === false)? 'is-not-validate' :  '';
@@ -94,17 +94,21 @@ const Meta = (props) => {
 
     const isSimMode = props.isSimMode;
     return (
-        <Col className="gutter-row" xs={12} sm={8} md={6}>
-            {
-                isSimMode ? getTypeRender()
-                :
+        isSimMode
+            ?
+            <Col xs={20} sm={20} md={20}>
+                {getTypeRender()}
+            </Col>
+            :
+            <Col className="gutter-row" xs={12} sm={8} md={6}>
+                {
                     (<div className="gutter-box">
                         <FormItem {...formItemLayout} label={props.meta.desc} hasFeedback>
                             { getTypeRender() }
                         </FormItem>
                     </div>)
-            }
-        </Col>
+                }
+            </Col>
     )
 };
 

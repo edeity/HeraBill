@@ -15,7 +15,6 @@ class InputEmailDecorator extends Component {
         super(props);
         this.state = {
             options: [],
-            value: this.props.value
         }
     }
 
@@ -29,21 +28,22 @@ class InputEmailDecorator extends Component {
                 return <Option key={email}>{email}</Option>;
             });
         }
-        this.setState({ options, value: value }, () => {
-            this.props.onChange(this.state.value);
+        this.setState({ options }, () => {
+            this.props.onChange(value);
         });
     }
 
     render() {
         return (
             <Select
+                style={{ minWidth: 100 }}
                 className={this.props.className}
                 mode="combobox"
-                style={{ width: 200 }}
                 onChange={this.handleChange}
                 filterOption={false}
                 placeholder="请输入邮箱地址"
-                defaultValue={this.state.value}
+                defaultValue={this.props.defaultValue}
+                value={this.props.value}
                 disabled={this.props.disabled}
             >
                 {this.state.options}

@@ -2,30 +2,44 @@
 
 ## 基本用法
 
-```javascript
-import Bill from 'HeraBill';
+参见`Post.js`，该代码实现了一个字段的增删改查
 
-class XXX extends Component {
-	constructor(props) {
-		this.headMeta = { name: {type: 'str', desc: '姓名'}}
-		this.bodyMeta = { post: {type: 'str', desc: '职位'}}
+```javascript
+const PK = 'pk';
+// 实例:用户单据
+const Post = () => {
+
+    // 单据标志
+    const tableId = "post";
+    // 基本描述
+    const headMeta = {
+        name: { type: 'str', desc: '职位名称'}
+    };
+
+    function onQuery(queryCondition, callback) {
+        Consistence.query(tableId, queryCondition).then((res) => { callback(res);});
+    };
+
+    function onSave(data, callback) {
+        Consistence.onSave(tableId, data).then((res) => { callback(res);});
     }
-  
-	onQuery = (data, callback) => {...}
-	onSave = (data, callback) => {...}
-	onDelete = (data, callback) => {...}
-    
-    render() {
-        <Bill 
-            tableId='test'
-            headMeta={this.headMeta}
-            bodyMeta={this.bodyMeta}
-            onQuery={this.onQuery}
-            onDelete={this.onDelete}
-            onSave={this.onSave}
-		/>
+
+    function onDelete(data, callback) {
+        var delPks = [];
+        data.forEach((eachRow) => {  delPks.push(eachRow[PK]);});
+        Consistence.onDelete(tableId, delPks).then((res) => { callback(res);});
     }
-}
+
+    return (
+        <Bill tableId={tableId}
+              headMeta={headMeta}
+              onQuery={onQuery}
+              onDelete={onDelete}
+              onSave={onSave}/>
+    )
+};
+
+export default Post;
 ```
 
 核心概念是：
@@ -138,6 +152,8 @@ import React from 'react';
 import Bill from '../Bill/Bill';
 
 import Consistence from '../Tools/Consistence';
+import CommonRegex from '../Tools/CommonRegex';
+import CommonFun from '../Tools/CommonFun';
 
 const PK = 'pk';
 // 实例:用户单据
@@ -150,7 +166,6 @@ const User = () => {
         name: {
             type: 'str',
             desc: '姓名',
-            editable: true,
             validate: {
                 matchReg: '',
                 matchFun: '',
@@ -160,9 +175,25 @@ const User = () => {
                 required: true,
             },
         },
-        phone: {type: 'str', desc: '联系电话'},
-        age: {type: 'num', desc: '年龄'},
-        mail: {type: 'mail', desc: '邮箱地址'},
+        phone: {
+            type: 'str',
+            desc: '联系电话',
+            validate: {
+                matchReg: CommonRegex.phone,
+                required: true
+            }
+        },
+        mail: {type: 'mail', desc: '邮箱地址',
+            validate: {
+                matchReg: CommonRegex.mail,
+                required: true
+        }},
+        age: {type: 'num', desc: '年龄',
+            validate: {
+                matchFun: CommonFun.isPositive,
+                matchTips: '年龄必须大于0'
+            } },
+        syncAge: { type: 'num', desc: '年龄 - 6', editable: false, validate: {required: false}}
     };
     // 表体描述
     const bodyMeta = {
@@ -172,7 +203,8 @@ const User = () => {
             renderField: 'name'
         }},
         date: {type: 'date', desc: '担任时间'},
-        point: {type: 'num', desc: '分数'}
+        point: {type: 'num', desc: '分数'},
+        syncPoint: {type: 'num', desc: '同步分数', editable: false, validate: {required: false}}
     };
 
 
@@ -200,15 +232,30 @@ const User = () => {
         });
     }
 
+    function onHeadFieldChanged(key, val, table) {
+        if(key === 'age') {
+            table.setHeadValue('syncAge', val - 6);
+        }
+    }
+
+    function onBodyFieldChanged(key, val, index, table) {
+        if(key === 'point') {
+            table.setBodyValue('syncPoint', val, index);
+        }
+    }
+
     return (
         <Bill
-              tableId={tableId}
-              headMeta={headMeta}
-              bodyMeta={bodyMeta}
-              isQuery={true}
-              onQuery={onQuery}
-              onDelete={onDelete}
-              onSave={onSave}/>
+            tableId={tableId}
+            headMeta={headMeta}
+            bodyMeta={bodyMeta}
+            isQuery={true}
+            onQuery={onQuery}
+            onDelete={onDelete}
+            onSave={onSave}
+            onHeadFieldChanged={onHeadFieldChanged}
+            onBodyFieldChanged={onBodyFieldChanged}
+        />
     )
 };
 

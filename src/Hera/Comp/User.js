@@ -6,6 +6,8 @@ import React from 'react';
 import Bill from '../Bill/Bill';
 
 import Consistence from '../Tools/Consistence';
+import CommonRegex from '../Tools/CommonRegex';
+import CommonFun from '../Tools/CommonFun';
 
 const PK = 'pk';
 // 实例:用户单据
@@ -18,7 +20,6 @@ const User = () => {
         name: {
             type: 'str',
             desc: '姓名',
-            editable: true,
             validate: {
                 matchReg: '',
                 matchFun: '',
@@ -28,10 +29,25 @@ const User = () => {
                 required: true,
             },
         },
-        phone: {type: 'str', desc: '联系电话'},
-        age: {type: 'num', desc: '年龄'},
-        mail: {type: 'mail', desc: '邮箱地址'},
-        syncAge: {type: 'num', desc: '同步年龄'}
+        phone: {
+            type: 'str',
+            desc: '联系电话',
+            validate: {
+                matchReg: CommonRegex.phone,
+                required: true
+            }
+        },
+        mail: {type: 'mail', desc: '邮箱地址',
+            validate: {
+                matchReg: CommonRegex.mail,
+                required: true
+        }},
+        age: {type: 'num', desc: '年龄',
+            validate: {
+                matchFun: CommonFun.isPositive,
+                matchTips: '年龄必须大于0'
+            } },
+        syncAge: { type: 'num', desc: '年龄 - 6', editable: false, validate: {required: false}}
     };
     // 表体描述
     const bodyMeta = {
@@ -41,7 +57,8 @@ const User = () => {
             renderField: 'name'
         }},
         date: {type: 'date', desc: '担任时间'},
-        point: {type: 'num', desc: '分数'}
+        point: {type: 'num', desc: '分数'},
+        syncPoint: {type: 'num', desc: '同步分数', editable: false, validate: {required: false}}
     };
     
 
@@ -71,12 +88,14 @@ const User = () => {
 
     function onHeadFieldChanged(key, val, table) {
         if(key === 'age') {
-            table.setValue('syncAge', val);
+            table.setHeadValue('syncAge', val - 6);
         }
     }
 
     function onBodyFieldChanged(key, val, index, table) {
-        console.log(key, val, index, table);
+        if(key === 'point') {
+            table.setBodyValue('syncPoint', val, index);
+        }
     }
 
     return (

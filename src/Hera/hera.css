@@ -54,3 +54,6 @@ div.markdown-body code.lang-javascript {
 
 .hera-bill .is-not-validate.ant-input-number {
   border: 1px solid red; }
+
+.hera-bill .ant-select, .hera-bill .ant-input-number {
+  width: 100%; }
