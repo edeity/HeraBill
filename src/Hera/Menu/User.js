@@ -18,8 +18,7 @@ const User = () => {
     // 基本描述
     const headMeta = {
         name: {
-            type: 'str',
-            desc: '姓名',
+            type: 'str', desc: '姓名',
             validate: {
                 matchReg: '',
                 matchFun: '',
@@ -30,35 +29,61 @@ const User = () => {
             },
         },
         phone: {
-            type: 'str',
-            desc: '联系电话',
+            type: 'str', desc: '联系电话',
             validate: {
                 matchReg: CommonRegex.phone,
                 required: true
             }
         },
-        mail: {type: 'mail', desc: '邮箱地址',
+        mail: {
+            type: 'mail', desc: '邮箱地址',
             validate: {
                 matchReg: CommonRegex.mail,
                 required: true
-        }},
-        age: {type: 'num', desc: '年龄',
+            },
+        },
+        age: {
+            type: 'num', desc: '年龄',
             validate: {
                 matchFun: CommonFun.isPositive,
                 matchTips: '年龄必须大于0'
-            } },
-        syncAge: { type: 'num', desc: '年龄 - 6', editable: false, validate: {required: false}}
+            }
+        },
+        ageEditable: {
+            type: 'checkbox', desc: '可编辑性',
+            query: {
+                isShow: false
+            }
+        },
+        syncAge: {
+            type: 'num', desc: 'sync年龄',
+            editable: false,
+            editableRely: 'ageEditable', // 依赖字段
+            validate: {
+                required: false
+            },
+        },
     };
     // 表体描述
     const bodyMeta = {
-        post: {type: 'refer', desc: '职位', refer: {
-            tableId: 'post',
-            field: 'pk',
-            renderField: 'name'
-        }},
-        date: {type: 'date', desc: '担任时间'},
-        point: {type: 'num', desc: '分数'},
-        syncPoint: {type: 'num', desc: '同步分数', editable: false, validate: {required: false}}
+        post: {
+            type: 'refer',
+            desc: '职位',
+            refer: {
+                tableId: 'post',
+                field: 'pk',
+                renderField: 'name'}
+        },
+        date: { type: 'date', desc: '担任时间'},
+        point: { type: 'num', desc: '分数'},
+        syncPoint: {
+            type: 'num',
+            desc: '同步分数',
+            editable: false,
+            validate: {
+                required: false
+            }
+        }
     };
     
 
@@ -89,6 +114,8 @@ const User = () => {
     function onHeadFieldChanged(key, val, table) {
         if(key === 'age') {
             table.setHeadValue('syncAge', val - 6);
+        } else if(key === 'ageEditable') {
+            table.setHeadAttr('syncAge', { editable: val })
         }
     }
 
@@ -103,10 +130,14 @@ const User = () => {
             tableId={tableId}
             headMeta={headMeta}
             bodyMeta={bodyMeta}
+
             isQuery={true}
+            isCheckWhenInput={true}
+
             onQuery={onQuery}
             onDelete={onDelete}
             onSave={onSave}
+
             onHeadFieldChanged={onHeadFieldChanged}
             onBodyFieldChanged={onBodyFieldChanged}
         />

@@ -10,13 +10,13 @@ import Consistence from '../Tools/Consistence';
 
 const PK = 'pk';
 // 实例:用户单据
-const Post = () => {
+const POST = () => {
     
     // 单据标志
     const tableId = "post";
     // 基本描述
     const headMeta = {
-        name: { type: 'str', desc: '职位名称'}
+        name: { type: 'str', desc: '职位'}
     };
     
 
@@ -55,4 +55,4 @@ const Post = () => {
     )
 };
 
-export default Post;
+export default POST;

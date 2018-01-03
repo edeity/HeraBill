@@ -3,7 +3,9 @@
  */
 import $ from 'jquery';
 
-// 默认的meta
+/**
+ * 默认的meta
+ * */
 let defaultMeta = {
     type: 'str',
     desc: '',
@@ -21,7 +23,7 @@ let defaultMeta = {
 
 // 实例:用户单据
 class DefaultMeta  {
-    static createMeta = (metas, settingObj) => {
+    static fillDefaultMeta = (metas, settingObj) => {
         let meta = {};
         let keys = Object.keys(metas);
         let isSetting = !!settingObj;

@@ -11,6 +11,7 @@ import Meta from './Meta';
 import $ from 'jquery';
 import dm from '../Tools/DefaultMeta';
 import dv from '../Tools/DefaultValue';
+import DataTable from  '../Tools/DataTable';
 
 const Panel = Collapse.Panel;
 
@@ -20,6 +21,7 @@ const BODY_DATA = "bodyData";
 let nKey = [];
 nKey.push(BODY_DATA);
 
+const DV_CONSTANT = dv.CONSTANT;
 
 /**
  * 单据表头
@@ -30,13 +32,13 @@ class Bill extends Component {
 
         let self = this;
 
-        // 构建表头列
+        // 自动填充默认值
+        this.queryMeta = dm.fillDefaultMeta(this.props.headMeta, {editable: true}); // 查询区域
+        this.headMeta = dm.fillDefaultMeta(this.props.headMeta); // 表头区域
+        this.props.bodyMeta && ( this.bodyMeta = dm.fillDefaultMeta(this.props.bodyMeta)); // 表体区域
+        this.columns = this.getHeadColumns(this.headMeta); // 构造表体列
 
-        this.headMeta = dm.createMeta(this.props.headMeta);
-        this.queryMeta = dm.createMeta(this.props.headMeta, {editable: true});
-        this.props.bodyMeta && ( this.bodyMeta = dm.createMeta(this.props.bodyMeta));
-
-        this.columns = this.getHeadColumns(this.headMeta);
+        // 相关校验信息
         this.validateHeadTips = [];
         this.validateBodyTips = [];
 
@@ -61,37 +63,20 @@ class Bill extends Component {
         };
 
         // 暴露给外界的接口
-        let TABLE = {
-            __headData: {},
-            __bodyData: [],
-            __emptyData: function () {
-                TABLE.__headData = {};
-                TABLE.__bodyData = {};
-            },
-            __getChangedHeadData: function () {
-                return TABLE.__headData;
-            },
-            __getChangedBodyData: function () {
-                return TABLE.__bodyData;
-            },
-            setHeadValue: function (key, value) {
-                TABLE.__headData[key] = value;
-            },
-            setBodyValue: function (key, value, index) {
-                TABLE.__bodyData[index] = TABLE.__bodyData[index] || {};
-                TABLE.__bodyData[index][key] = value;
-            },
-            getHeadValue: function (key) {
-                return dv.reduction(self.state.editData[key]);
-            },
-            getBodyValue: function (key, index) {
-                return dv.reduction(self.editBodyData[index][key]);
-            }
-        };
+        self.dataTable = new DataTable();
+        self.DATA_ACTION = this.initDataAction(); // 数据
+        self.VIEW_ACTION = this.initViewAction(); // 视图
+        self.BTN_ACTION = this.initCommonBtbAction(); // 按钮动作
+    }
 
+    componentDidMount = () => {
+        if (this.props.isQuery) {
+            this.BTN_ACTION.query();
+        }
+    };
 
-        // 以下对应的具体操作需要好好分类
-        // 数据动作
+    initDataAction = () => {
+        let self = this;
         const DATA_ACTION = {
             // 卡牌态 : 浏览态 -> 编辑态
             view2Edit: () => {
@@ -127,12 +112,22 @@ class Bill extends Component {
                 editData[key].value = value;
                 // 假如用户监听了字段变更事件
                 if (this.props.onHeadFieldChanged) {
-                    this.props.onHeadFieldChanged(key, value, TABLE);
-                    let changedData = TABLE.__getChangedHeadData();
+                    this.props.onHeadFieldChanged(key, value, self.dataTable);
+                    let changedData = self.dataTable.__getChangedHeadData();
+                    let changedAttr = self.dataTable.__getChangedHeadAttr();
                     let keys = Object.keys(changedData);
                     keys.forEach(function (eachKey) {
                         editData[eachKey] = dv.createSingleValue(changedData[eachKey]);
-                    })
+                    });
+                    // 设置其他属性
+                    let dataKeys = Object.keys(changedAttr);
+                    dataKeys.forEach(function (eachDataKey) {
+                        let realData = editData[eachDataKey] || dv.createSingleValue();
+                        let attrKeys = Object.keys(changedAttr[eachDataKey]);
+                        attrKeys.forEach(function (eachAttrKey) {
+                            realData[eachAttrKey] = changedAttr[eachDataKey][eachAttrKey];
+                        })
+                    });
                 }
 
                 self.setState({
@@ -148,8 +143,8 @@ class Bill extends Component {
                 }
                 editBodyData[index][key].value = value;
                 if (this.props.onBodyFieldChanged) {
-                    this.props.onBodyFieldChanged(key, value, index, TABLE);
-                    let changedData = TABLE.__getChangedBodyData();
+                    this.props.onBodyFieldChanged(key, value, index, self.dataTable);
+                    let changedData = self.dataTable.__getChangedBodyData();
                     changedData.forEach(function (eachBodyData, index) {
                         let keys = Object.keys(eachBodyData);
                         keys.forEach(function (eachKey) {
@@ -162,20 +157,11 @@ class Bill extends Component {
                 })
             }
         };
-        self.DATA_ACTION = DATA_ACTION;
+        return DATA_ACTION;
+    };
 
-        // 基本视图动作
-        // 多选状态
-        const rowSelection = {
-            onChange: (selectedRowKeys, selectedRows) => {
-                this.setState({
-                    selectedData: selectedRows,
-                    cardData: dv.createValue(selectedRows[0], nKey),
-                    cardBodyData: dv.createArrayValue(selectedRows[0][BODY_DATA])
-                });
-            },
-        };
-        this.rowSelection = rowSelection;
+    initViewAction = () => {
+        let self = this;
         const VIEW_ACTION = {
             // 设置是否可编辑
             canEditable: (editable) => {
@@ -203,8 +189,11 @@ class Bill extends Component {
                 })
             }
         };
-        self.VIEW_ACTION = VIEW_ACTION;
+        return VIEW_ACTION;
+    };
 
+    initCommonBtbAction = ()=> {
+        let self = this;
         // 基本按钮操作
         const BTN_ACTION = {
             reset: () => {
@@ -215,7 +204,7 @@ class Bill extends Component {
             },
             query: () => {
                 const hide = message.loading('查询中', 0);
-                this.props.onQuery(dv.reduction(this.state.queryData), (res) => {
+                self.props.onQuery(dv.reduction(self.state.queryData), (res) => {
                     if (res.success) {
                         hide();
                         if (res.data) {
@@ -238,15 +227,15 @@ class Bill extends Component {
             head: {
                 // 添加
                 add: () => {
-                    DATA_ACTION.emptyData();
-                    VIEW_ACTION.toCard();
-                    VIEW_ACTION.canEditable(true);
+                    self.DATA_ACTION.emptyData();
+                    self.VIEW_ACTION.toCard();
+                    self.VIEW_ACTION.canEditable(true);
                 },
                 edit: (index) => {
                     BTN_ACTION.details(index, BTN_ACTION.modify);
                 },
                 delete: ()=> {
-                    let deletedData = this.state.selectedData;
+                    let deletedData = self.state.selectedData;
                     if (deletedData.length > 0) {
                         const hide = message.loading('删除中', 0);
 
@@ -282,7 +271,7 @@ class Bill extends Component {
                                 if (res.success) {
                                     hide();
                                     message.success('保存成功');
-                                    VIEW_ACTION.canEditable(false);
+                                    self.VIEW_ACTION.canEditable(false);
                                     self.setState({
                                         cardData: dv.createValue(res.data),
                                         cardBodyData: dv.createArrayValue(res.data[BODY_DATA])
@@ -290,7 +279,7 @@ class Bill extends Component {
                                 } else {
                                     hide();
                                     message.error(res.error);
-                                    VIEW_ACTION.canEditable(false);
+                                    self.VIEW_ACTION.canEditable(false);
                                 }
                                 self.setState({
                                     errorMsg: ''
@@ -351,35 +340,35 @@ class Bill extends Component {
             },
             // 取消
             cancel: () => {
-                VIEW_ACTION.canEditable(false);
-                DATA_ACTION.view2Edit();
+                self.VIEW_ACTION.canEditable(false);
+                self.DATA_ACTION.view2Edit();
                 self.emptyValidateTips();
             },
             // 返回
             back: () => {
-                VIEW_ACTION.toTemplate();
+                self.VIEW_ACTION.toTemplate();
                 self.BTN_ACTION.query();
                 self.emptyValidateTips();
             },
             // 修改
             modify: () => {
-                DATA_ACTION.view2Edit();
-                VIEW_ACTION.canEditable(true);
+                self.DATA_ACTION.view2Edit();
+                self.VIEW_ACTION.canEditable(true);
             },
             // 进入详情页
             details: (index, callback) => {
-                let selectedData = [];
-                let cardData = dv.createValue(this.state.allData[index], nKey);
-                let cardBodyData = dv.createArrayValue(this.state.allData[index][BODY_DATA]);
+                // let selectedData = [];
+                let cardData = dv.createValue(self.state.allData[index], self.headMeta, nKey);
+                let cardBodyData = dv.createArrayValue(self.state.allData[index][BODY_DATA]);
                 // selectedData.push(cardData);
-                this.setState({
+                self.setState({
                     // selectedData: selectedData,
                     cardData: cardData,
                     cardBodyData: cardBodyData
                 }, () => {
-                    let cardData = this.state.cardData;
+                    let cardData = self.state.cardData;
                     if (cardData && cardData[PK] && cardData[PK].value) {
-                        VIEW_ACTION.toCard();
+                        self.VIEW_ACTION.toCard();
                         $.isFunction(callback) && callback()
                     } else {
                         message.warning('操作错误: 请选择至少一条数据');
@@ -387,13 +376,7 @@ class Bill extends Component {
                 });
             }
         };
-        self.BTN_ACTION = BTN_ACTION;
-    }
-
-    componentDidMount = () => {
-        if (this.props.isQuery) {
-            this.BTN_ACTION.query();
-        }
+        return BTN_ACTION;
     };
 
     getHeadColumns = () => {
@@ -465,11 +448,11 @@ class Bill extends Component {
         headKey.forEach((eachKey) => {
             realHeadData[eachKey] = realHeadData[eachKey] || dv.createSingleValue();
             if (!this.validate(headMeta[eachKey], headData[eachKey])) {
-                realHeadData[eachKey].__isValidate = false;
+                realHeadData[eachKey][DV_CONSTANT.VALID] = false;
                 this.addValidateHeadTips(headMeta[eachKey]);
                 isValidate = false;
             } else {
-                realHeadData[eachKey].__isValidate = true;
+                realHeadData[eachKey][DV_CONSTANT.VALID] = true;
             }
         });
         if (!isValidate) {
@@ -489,11 +472,11 @@ class Bill extends Component {
                 bodyData.forEach((eachBodyData, index) => {
                     realBodyData[index][eachKey] = realBodyData[index][eachKey] || dv.createSingleValue();
                     if (!this.validate(bodyMeta[eachKey], eachBodyData[eachKey])) {
-                        this.addValidateBodyTips(bodyMeta[eachKey])
-                        realBodyData[index][eachKey].__isValidate = false;
+                        this.addValidateBodyTips(bodyMeta[eachKey]);
+                        realBodyData[index][eachKey][DV_CONSTANT.VALID] = false;
                         isValidate = false;
                     } else {
-                        realBodyData[index][eachKey].__isValidate = true;
+                        realBodyData[index][eachKey][DV_CONSTANT.VALID] = true;
                     }
                 })
             });
@@ -511,6 +494,16 @@ class Bill extends Component {
 
     // 渲染视图
     render() {
+        const rowSelection = {
+            onChange: (selectedRowKeys, selectedRows) => {
+                this.setState({
+                    selectedData: selectedRows,
+                    cardData: dv.createValue(selectedRows[0],self.headMeta, nKey),
+                    cardBodyData: dv.createArrayValue(selectedRows[0][BODY_DATA], self.bodyMeta)
+                });
+            },
+        };
+
         let self = this;
         let isEditable = this.state.editable;
         let bodyData = isEditable ? this.state.editBodyData : this.state.cardBodyData;
@@ -540,12 +533,16 @@ class Bill extends Component {
                                     <Row gutter={16}>
                                         {
                                             Object.keys(self.queryMeta).map((key) => {
-                                                return <Meta key={'query-' + key}
-                                                             field={key}
-                                                             meta={ self.queryMeta[key] }
-                                                             data={ self.state.queryData[key] }
-                                                             editable={true}
-                                                             onChange={this.DATA_ACTION.onQueryHeadFieldChanged}/>
+                                                if(!(self.queryMeta[key].query
+                                                    && self.queryMeta[key].query.isShow === false)) {
+                                                    return <Meta key={'query-' + key}
+                                                                 field={key}
+                                                                 meta={ self.queryMeta[key] }
+                                                                 data={ self.state.queryData[key] }
+                                                                 editable={true}
+                                                                 onChange={this.DATA_ACTION.onQueryHeadFieldChanged}/>
+                                                };
+                                                return null;
                                             })
                                         }
                                         <Button.Group style={{ float: 'right' }}>
@@ -557,7 +554,7 @@ class Bill extends Component {
                                 <Panel header="列表" key="list">
                                     <Table
                                         /*scroll={{ x: 1000, y: 500 }}*/
-                                        rowSelection={this.rowSelection}
+                                        rowSelection={rowSelection}
                                         columns={this.columns}
                                         dataSource={this.state.allData}
                                         onRowClick={this.VIEW_ACTION.onRowClick}
@@ -609,7 +606,9 @@ class Bill extends Component {
                                     <Row gutter={16}>
                                         {
                                             Object.keys(self.headMeta).map((key) => {
-                                                let fieldData = self.state.editable ? self.state.editData[key] : self.state.cardData[key];
+                                                let fieldData = self.state.editable
+                                                    ? self.state.editData[key]
+                                                    : self.state.cardData[key];
                                                 return <Meta key={'card-' + key}
                                                              field={key}
                                                              meta={self.headMeta[key]}
@@ -652,6 +651,8 @@ Bill.propTypes = {
     bodyMeta: PropTypes.object,
     // 首次加载是查询
     isQuery: PropTypes.bool,
+    // 是否在输入时检测
+    isCheckWhenInput: PropTypes.bool,
     // 查询按钮触发事件
     onQuery: PropTypes.func.isRequired,
     // 删除按钮触发事件

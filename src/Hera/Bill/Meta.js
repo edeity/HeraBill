@@ -9,6 +9,7 @@ import InputStrDecorator from './meta/InputStrDecorator';
 import TimePickerDecorator from './meta/TimePickerDecorator';
 import InputEmailDecorator from './meta/InputEmailDecorator';
 import DatePickerDecorator from './meta/DatePickerDecorator';
+import CheckBoxDecorator from './meta/CheckboxDecorator';
 import Refer from './meta/Refer';
 
 const FormItem = Form.Item;
@@ -24,10 +25,14 @@ const Meta = (props) => {
     
     function getTypeRender (){
         const meta = props.meta;
-        const type = meta.type || 'str';
-        const disabled = meta.editable === false ? true : !props.editable;
         let data = props.data; // 值和其他的属性
+        // 类型
+        const type = meta.type || 'str';
+        // 值
         const value = data ? data.value : '';
+        // 可编辑性
+        const disabled = ((data && data.editable === false) && meta.editable === false) ? true : !props.editable;
+        // 合法性
         const className = (data  && data.__isValidate === false)? 'is-not-validate' :  '';
 
         switch (type) {
@@ -50,6 +55,7 @@ const Meta = (props) => {
                     className={ className }
                     defaultValue={ value }
                     value={ value }
+                    size="default"
                     onChange={ onChange }
                     disabled={disabled}/>
             );
@@ -67,6 +73,14 @@ const Meta = (props) => {
                     onChange={ onChange }
                     meta={ meta }
                     disabled={disabled}/>
+            );
+            case 'checkbox': return (
+                <CheckBoxDecorator
+                    value={ value }
+                    onChange={ onChange }
+                    meta={ meta }
+                    disabled={disabled}
+                />
             );
             case 'str': // 默认渲染即str
             default: return ((

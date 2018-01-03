@@ -11,10 +11,6 @@ import { Input, Icon } from 'antd';
  * 基本字符串
  */
 class InputStr extends PureComponent {
-    constructor(props) {
-        super(props);
-    }
-
     emitEmpty = () => {
         this.refInput.focus();
         this.props.onChange && this.props.onChange('');

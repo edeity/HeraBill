@@ -3,14 +3,22 @@
  */
 import $ from 'jquery';
 
-// 默认的meta
+/**
+ * 数据流动所需要的状态值,
+ * 一般与显示属性有关
+ * */
 let defaultValue = {
     value: '',
-    __isValidate: true
+    // 其他属性
+    editable: true,
+    __isValidate: true,
 };
 
 // 实例:用户单据
 class DefaultValue {
+    static CONSTANT = {
+        VALID: '__isValidate', // 
+    };
     static createValueByMeta = (meta) => {
         let keys = Object.keys(meta);
         let data = {};
@@ -21,10 +29,12 @@ class DefaultValue {
     }
     static createSingleValue = (value) => {
         let copyData = $.extend(true, {}, defaultValue);
-        copyData.value = value;
+        if(typeof value !== 'undefined') {
+            copyData.value = value;   
+        }
         return copyData  
     };
-    static createValue = (data, nKey) => {
+    static createValue = (data, meta, nKey) => {
         let keys = Object.keys(data);
         let copyData = $.extend(true, {}, data);
         keys.forEach((eachKey) => {
@@ -33,9 +43,18 @@ class DefaultValue {
             } else {
                 let initData = $.extend(true, {}, defaultValue);
                 initData.value = copyData[eachKey];
+                // 额外的属性在初始化时需要从meta中获取
+                if(meta && meta[eachKey]) {
+                    if(meta[eachKey].editable === false) {
+                        initData.editable = false;
+                    }
+                    let relyKey = meta[eachKey].editableRely;
+                    if(relyKey!== undefined) {
+                        initData.editable = !!data[relyKey];
+                    }
+                }
                 copyData[eachKey] = initData;
             }
-            
         });
 
         return copyData;

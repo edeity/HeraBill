@@ -6,6 +6,11 @@ import * as db from 'localforage';
 
 const PK = 'pk';
 const AJAX_TIME = '200';
+
+/**
+ * 用来模拟单据操作请求的类
+ * 对应的对持久化操作的层
+ */
 class Consistence {
     /**
      *

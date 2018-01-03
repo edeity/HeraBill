@@ -37,7 +37,7 @@ class MetaList extends Component {
         /**
          * 枚举支持的类型
          */
-        const metaAttrList = dm.createMeta({
+        const metaAttrList = dm.fillDefaultMeta({
             data: {type: 'date', desc: '日期'},
             time: { type: 'time', desc: '时间'},
             num: { type: 'num', desc: '数字'},

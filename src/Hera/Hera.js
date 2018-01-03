@@ -4,10 +4,7 @@ import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import './layout.css'
 import './hera.css'
 
-import Doc from './Comp/Doc';
-import User from './Comp/User';
-import Post from './Comp/Post';
-import MetaList from './Comp/MetaList';
+import menuConfig from './Config/MenuConfig';
 import NotFound from './Exception/NotFound';
 
 const preMount = '/HeraBill';
@@ -15,33 +12,7 @@ class Hera extends Component {
     constructor() {
         super();
 
-        const menuData = [{
-            key: 'doc',
-            url: '/doc',
-            iconType: 'home',
-            comp: <Doc/>,
-            title: '文档'
-        },{
-            key: 'user',
-            url: '/user',
-            iconType: 'user',
-            comp: <User/>,
-            title: '个人信息'
-        }, {
-            key: 'post',
-            url: '/post',
-            iconType: 'contacts',
-            comp: <Post/>,
-            title: '职位'
-        },{
-            key: 'meta',
-            url: '/meta',
-            iconType: 'book',
-            comp: <MetaList/>,
-            title: 'meta类型'
-        }];
-
-        this.menuData = menuData;
+        this.menuData = menuConfig;
 
         this.state = {
             collapse: true, // 是否收缩

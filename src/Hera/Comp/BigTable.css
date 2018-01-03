@@ -1,0 +1,39 @@
+@charset "UTF-8";
+.table-wrapper {
+  position: relative;
+  overflow: auto;
+  border: 1px solid #ddd; }
+  .table-wrapper.head-wrapper {
+    overflow: hidden;
+    border-top: none;
+    border-bottom: none; }
+    .table-wrapper.head-wrapper.top-fixed {
+      box-shadow: 1px 1px 10px #ddd; }
+
+.table-inner {
+  position: relative; }
+
+.hs-table {
+  position: absolute;
+  border-collapse: collapse;
+  overflow: scroll;
+  table-layout: fixed;
+  /*宽度由col决定的关键*/ }
+  .hs-table .hs-head .hs-head-row {
+    overflow: auto; }
+    .hs-table .hs-head .hs-head-row .hs-th {
+      height: 25px;
+      padding: 1px 5px;
+      border-top: 1px solid #ddd;
+      border-left: 1px solid #ddd; }
+    .hs-table .hs-head .hs-head-row .hs-th:first-child {
+      border-left: none; }
+  .hs-table .hs-body .hs-tr .hs-td {
+    box-sizing: border-box;
+    height: 25px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 1px 5px;
+    overflow: hidden;
+    outline-width: 0;
+    white-space: pre-line; }

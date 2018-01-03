@@ -6,7 +6,8 @@
 .ant-layout-main {
   min-height: 100vh; }
   .ant-layout-main .ant-layout-header {
-    height: 64px; }
+    height: 64px;
+    padding: 0 20px; }
   .ant-layout-main .ant-layout-container {
     min-height: calc(100vh - 106px);
     margin: 0; }

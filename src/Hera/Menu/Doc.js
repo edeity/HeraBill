@@ -3,7 +3,7 @@
  */
 
 import React, {Component} from 'react';
-import {Anchor} from 'antd';
+import {Anchor, Spin} from 'antd';
 import marked from 'marked';
 import 'github-markdown-css/github-markdown.css';
 import hljs from 'highlight.js';
@@ -54,11 +54,11 @@ class Doc extends Component {
             tables: true,
         });
 
-
         fetch('https://raw.githubusercontent.com/edeity/HeraBill/master/public/doc.md')
             .then(response => response.text())
             .then(txt => {
                 this.setState({
+                    loading: false,
                     markStr: marked(txt)
                 }, () => {
 
@@ -94,6 +94,7 @@ class Doc extends Component {
             });
 
         this.state = {
+            loading: true,
             markStr: '',
             toc: []
         }
@@ -123,9 +124,12 @@ class Doc extends Component {
     render() {
         return (
             <div>
-                <div className="markdown-body" dangerouslySetInnerHTML={ this.createMarkup() }/>
-                <Anchor className="home-anchor"> { this.createTocByData(this.state.toc) }
-                </Anchor>
+                <Spin spinning={this.state.loading}
+                      delay={500}
+                      style={{position: 'fixed', top: '20vh'}}>
+                    <div className="markdown-body" dangerouslySetInnerHTML={ this.createMarkup() }/>
+                    <Anchor className="home-anchor"> { this.createTocByData(this.state.toc) }</Anchor>
+                </Spin>
             </div>
         )
     }

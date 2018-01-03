@@ -4,7 +4,9 @@
 
 import React, {Component} from 'react';
 
-// 实例:用户单据
+/**
+ * 404
+ */
 class NotFound extends Component {
     render() {
        return <div className="not-found">

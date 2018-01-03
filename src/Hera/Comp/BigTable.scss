@@ -1,0 +1,55 @@
+.table-wrapper {
+  position: relative;
+  overflow: auto;
+  border: 1px solid #ddd;
+  &.head-wrapper {
+    overflow: hidden;
+    border-top: none;
+    border-bottom: none;
+    &.top-fixed {
+      box-shadow: 1px 1px 10px #ddd;
+    }
+  }
+}
+.table-inner {
+  // 该高度应该由显示区域决定
+  //width: 500px;
+  //height: 250px;
+  position: relative;
+}
+.hs-table {
+  position: absolute;
+  border-collapse: collapse;
+  overflow: scroll;
+  table-layout: fixed; /*宽度由col决定的关键*/
+  .hs-head {
+    .hs-head-row {
+      overflow: auto;
+      .hs-th {
+        height: 25px;
+        padding: 1px 5px;
+        border-top: 1px solid #ddd;
+        border-left: 1px solid #ddd;
+      }
+      .hs-th:first-child {
+        border-left: none;
+      }
+    }
+    //width: 100%;
+    //table-layout: fixed;
+  }
+  .hs-body {
+    .hs-tr {
+      .hs-td {
+        box-sizing: border-box;
+        height: 25px;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 1px 5px;
+        overflow: hidden;
+        outline-width: 0;
+        white-space: pre-line;
+      }
+    }
+  }
+}

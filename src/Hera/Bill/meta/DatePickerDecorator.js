@@ -15,7 +15,9 @@ const DatePickerDecorator =(props) => {
 
     // 日期变更事件
     function onChange (moment) {
-        props.onChange(moment.format('YYYY-MM-DD'));
+        if(moment) {
+            props.onChange(moment.format('YYYY-MM-DD'));
+        }
     };
 
     return (
