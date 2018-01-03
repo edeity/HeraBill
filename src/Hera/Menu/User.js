@@ -39,6 +39,7 @@ const User = () => {
             type: 'mail', desc: '邮箱地址',
             validate: {
                 matchReg: CommonRegex.mail,
+                matchTips: '不是一个合法的邮箱地址',
                 required: true
             },
         },

@@ -124,9 +124,13 @@ class Doc extends Component {
     render() {
         return (
             <div>
-                <Spin spinning={this.state.loading}
-                      delay={500}
-                      style={{position: 'fixed', top: '20vh'}}>
+                <Spin
+                    tip="Loading..."
+                    size="large"
+                    spinning={this.state.loading}
+                    delay={500}
+                    style={{ 'marginTop': 100}}
+                >
                     <div className="markdown-body" dangerouslySetInnerHTML={ this.createMarkup() }/>
                     <Anchor className="home-anchor"> { this.createTocByData(this.state.toc) }</Anchor>
                 </Spin>

@@ -4,7 +4,7 @@
 
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Row, Col, Button, message, Collapse, Table, Alert} from 'antd';
+import {Row, Col, Button, message, Collapse, Table, Alert, Checkbox} from 'antd';
 import Body from './Body';
 import Meta from './Meta';
 
@@ -359,7 +359,7 @@ class Bill extends Component {
             details: (index, callback) => {
                 // let selectedData = [];
                 let cardData = dv.createValue(self.state.allData[index], self.headMeta, nKey);
-                let cardBodyData = dv.createArrayValue(self.state.allData[index][BODY_DATA]);
+                let cardBodyData = dv.createArrayValue(self.state.allData[index][BODY_DATA], self.bodyMeta);
                 // selectedData.push(cardData);
                 self.setState({
                     // selectedData: selectedData,
@@ -384,11 +384,26 @@ class Bill extends Component {
         let columns = []; // 列表态的表头
         keys.forEach((key) => {
             var tempField = this.headMeta[key];
-            columns.push({
-                key: key,
-                title: tempField.desc,
-                dataIndex: key,
-            })
+            switch(tempField.type) {
+                case 'checkbox': {
+                    columns.push({
+                        title: tempField.desc,
+                        render: (text, record, index) => {
+                            return <Checkbox
+                                key={'list-' + key + index}
+                                defaultChecked={record[key]}
+                                disabled/>
+                        }
+                    });
+                    break;
+                }
+                default:
+                    columns.push({
+                        key: key,
+                        title: tempField.desc,
+                        dataIndex: key,
+                    })
+            }
         });
 
         // 最后一列为动作列
@@ -496,11 +511,19 @@ class Bill extends Component {
     render() {
         const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
-                this.setState({
-                    selectedData: selectedRows,
-                    cardData: dv.createValue(selectedRows[0],self.headMeta, nKey),
-                    cardBodyData: dv.createArrayValue(selectedRows[0][BODY_DATA], self.bodyMeta)
-                });
+                if(selectedRows.length > 0) {
+                    this.setState({
+                        selectedData: selectedRows,
+                        cardData: dv.createValue(selectedRows[0],self.headMeta, nKey),
+                        cardBodyData: dv.createArrayValue(selectedRows[0][BODY_DATA], self.bodyMeta)
+                    });
+                } else {
+                    this.setState({
+                        selectedData: null,
+                        cardData: null,
+                        cardBodyData: null
+                    })
+                }
             },
         };
 

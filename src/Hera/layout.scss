@@ -5,7 +5,6 @@
 .ant-layout-main {
   min-height: 100vh;
   .ant-layout-header {
-    height: 64px;
     padding: 0 20px;
   }
   .ant-layout-container {
@@ -29,7 +28,6 @@
 .ant-layout-aside .ant-layout-logo {
   width: 150px;
   height: 32px;
-  background: #333;
   border-radius: 6px;
   margin: 16px 24px 16px 28px;
   transition: all 0.3s ease;
@@ -43,7 +41,6 @@
 
 .ant-layout-aside .ant-layout-sider {
   width: 224px;
-  background: #404040;
   position: absolute;
   overflow: visible;
   padding-bottom: 24px;
@@ -57,7 +54,8 @@
 }
 
 .ant-layout-aside .ant-layout-sider > .ant-menu {
-  margin-bottom: 20px;
+  height: calc(100vh - 104px);
+  overflow: auto;
 }
 
 .ant-layout-aside .ant-layout-sider > .ant-menu > .ant-menu-item {
@@ -98,7 +96,6 @@
   width: 224px;
   position: absolute;
   bottom: 0;
-  background: #656565;
   color: #fff;
   text-align: center;
   line-height: 42px;
@@ -114,6 +111,10 @@
 .ant-layout-aside .ant-layout-header {
   background: #fff;
   border-bottom: 1px solid #e9e9e9;
+  .ant-breadcrumb {
+    height: 64px;
+    line-height: 64px;
+  }
 }
 
 .ant-layout-aside .ant-layout-main {
@@ -128,7 +129,6 @@
 }
 
 .ant-layout-aside .ant-layout-content {
-  background: #fff;
   padding: 10px 20px;
 }
 

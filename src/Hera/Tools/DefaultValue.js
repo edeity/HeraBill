@@ -59,10 +59,10 @@ class DefaultValue {
 
         return copyData;
     };
-    static createArrayValue = (data) => {
+    static createArrayValue = (data, meta) => {
         let copyData = $.extend(true, [], data);
         copyData.forEach((eachData, index)=>{
-            copyData[index] = DefaultValue.createValue(eachData)
+            copyData[index] = DefaultValue.createValue(eachData, meta)
         });
         return copyData;
     }

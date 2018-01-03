@@ -8,6 +8,7 @@ import User from '../Menu/User';
 import Post from '../Menu/Post';
 import MetaList from '../Menu/MetaList';
 import Comp from '../Menu/Comp';
+import Plan from '../Menu/Plan';
 
 const menuConifg = [{
     key: 'doc',
@@ -39,6 +40,12 @@ const menuConifg = [{
     iconType: 'windows-o',
     comp: <Comp/>,
     title: '组件一览'
+}, {
+    key: 'plan',
+    url: '/plan',
+    iconType: 'paper-clip',
+    comp: <Plan/>,
+    title: '开发计划'
 }];
 
 export default menuConifg;

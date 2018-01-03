@@ -125,7 +125,7 @@ class Hera extends Component {
                             </div>
                         </div>
                         <div className="ant-layout-footer">
-                            版权所有 © 2017 Edeity
+                            版权所有 © 2017~2018 Edeity
                         </div>
                     </div>
                     {/* 主题内容 E */}
