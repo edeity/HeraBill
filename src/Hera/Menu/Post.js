@@ -5,8 +5,8 @@
 
 import React from 'react';
 
-import Bill from '../Bill/Bill';
-import Consistence from '../Tools/Consistence';
+import Bill from '../bill/Bill';
+import Consistence from '../tools/Consistence';
 
 const PK = 'pk';
 // 实例:用户单据

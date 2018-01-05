@@ -3,12 +3,13 @@
  */
 
 import React from 'react';
-import Doc from '../Menu/Doc';
-import User from '../Menu/User';
-import Post from '../Menu/Post';
-import MetaList from '../Menu/MetaList';
-import Comp from '../Menu/Comp';
-import Plan from '../Menu/Plan';
+import Doc from '../menu/Doc';
+import User from '../menu/User';
+import NewUser from '../menu/NewUser';
+import Post from '../menu/Post';
+import MetaList from '../menu/MetaList';
+import Comp from '../menu/Comp';
+import Plan from '../menu/Plan';
 
 const menuConifg = [{
     key: 'doc',
@@ -28,6 +29,12 @@ const menuConifg = [{
     iconType: 'user',
     comp: <User/>,
     title: '个人信息'
+}, {
+    key: 'new_user',
+    url: '/new_user',
+    iconType: 'user',
+    comp: <NewUser/>,
+    title: '新个人信息'
 },{
     key: 'meta',
     url: '/meta',

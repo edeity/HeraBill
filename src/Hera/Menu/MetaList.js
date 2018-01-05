@@ -4,9 +4,9 @@
 
 
 import React, {Component} from 'react';
-import Meta from '../Bill/Meta';
+import Meta from '../bill/Meta';
 import {Row, Button} from 'antd';
-import dm from '../Tools/DefaultMeta';
+import dm from '../tools/DefaultMeta';
 
 // 实例:用户单据
 class MetaList extends Component {

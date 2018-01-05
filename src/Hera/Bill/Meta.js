@@ -126,7 +126,7 @@ const Meta = (props) => {
     )
 };
 
-Meta.PropTypes = {
+Meta.propTypes = {
     // 字段类型
     type: PropTypes.string,
     // 字段

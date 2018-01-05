@@ -1,7 +1,7 @@
 /**
  * Created by edeity on 11/11/2017.
  */
-import $ from 'jquery';
+import Type from './Type';
 
 /**
  * 数据流动所需要的状态值,
@@ -23,12 +23,12 @@ class DefaultValue {
         let keys = Object.keys(meta);
         let data = {};
         keys.forEach((eachKey) => {
-            data[eachKey] = $.extend(true, {}, defaultValue);
+            data[eachKey] = Type.extend(true, {}, defaultValue);
         })
         return data;
     }
     static createSingleValue = (value) => {
-        let copyData = $.extend(true, {}, defaultValue);
+        let copyData = Type.extend(true, {}, defaultValue);
         if(typeof value !== 'undefined') {
             copyData.value = value;   
         }
@@ -36,12 +36,12 @@ class DefaultValue {
     };
     static createValue = (data, meta, nKey) => {
         let keys = Object.keys(data);
-        let copyData = $.extend(true, {}, data);
+        let copyData = Type.extend(true, {}, data);
         keys.forEach((eachKey) => {
             if(nKey && nKey.includes(eachKey)) {
                delete copyData[eachKey];
             } else {
-                let initData = $.extend(true, {}, defaultValue);
+                let initData = Type.extend(true, {}, defaultValue);
                 initData.value = copyData[eachKey];
                 // 额外的属性在初始化时需要从meta中获取
                 if(meta && meta[eachKey]) {
@@ -60,7 +60,7 @@ class DefaultValue {
         return copyData;
     };
     static createArrayValue = (data, meta) => {
-        let copyData = $.extend(true, [], data);
+        let copyData = Type.extend(true, [], data);
         copyData.forEach((eachData, index)=>{
             copyData[index] = DefaultValue.createValue(eachData, meta)
         });
@@ -75,7 +75,7 @@ class DefaultValue {
         return returnData;
     };
     static reductionArray = (data) => {
-        let copyData = $.extend(true, [], data);
+        let copyData = Type.extend(true, [], data);
         copyData.forEach((eachData, index)=> {
             copyData[index] = DefaultValue.reduction(eachData);
         })

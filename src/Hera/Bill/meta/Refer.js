@@ -5,7 +5,7 @@
 
 import React, {Component} from 'react';
 import {Select} from 'antd';
-import Consistence from '../../Tools/Consistence';
+import Consistence from '../../tools/Consistence';
 const Option = Select.Option;
 
 

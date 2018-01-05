@@ -8,7 +8,7 @@ import {Button, Tooltip} from 'antd';
 import {Row} from 'antd';
 import {Table} from 'antd';
 import Meta from './Meta';
-import dv from '../Tools/DefaultValue';
+import dv from '../tools/DefaultValue';
 
 /**
  * 单据表体

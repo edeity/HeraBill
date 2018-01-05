@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import Bill from '../bill/Bill';
+import Bill from '../bill/NewBill';
 
 import Consistence from '../tools/Consistence';
 import CommonRegex from '../tools/CommonRegex';
@@ -14,7 +14,7 @@ const PK = 'pk';
 const User = () => {
     
     // 单据标志
-    const tableId = "user";
+    const tableId = "new_user";
     // 基本描述
     const headMeta = {
         name: {

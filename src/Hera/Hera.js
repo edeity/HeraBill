@@ -4,10 +4,11 @@ import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import './layout.css'
 import './hera.css'
 
-import menuConfig from './Config/MenuConfig';
-import NotFound from './Exception/NotFound';
+import menuConfig from './config/MenuConfig';
+import NotFound from './exception/NotFound';
 
 const preMount = '/HeraBill';
+
 class Hera extends Component {
     constructor() {
         super();
@@ -134,5 +135,4 @@ class Hera extends Component {
         );
     }
 }
-
 export default Hera;

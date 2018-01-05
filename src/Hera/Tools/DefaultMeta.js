@@ -1,7 +1,7 @@
 /**
  * Created by edeity on 11/11/2017.
  */
-import $ from 'jquery';
+import Type from './Type';
 
 /**
  * 默认的meta
@@ -31,8 +31,8 @@ class DefaultMeta  {
             console.error('单据meta信息设置错误,请确认');
         } else {
             keys.forEach((eachKey) => {
-                let initData = $.extend(true, {}, defaultMeta);
-                meta[eachKey] = $.extend(true, initData, metas[eachKey]);
+                let initData = Type.extend(true, {}, defaultMeta);
+                meta[eachKey] = Type.extend(true, initData, metas[eachKey]);
                 if(isSetting) {
                     let settingKeys = Object.keys(settingObj);
                     settingKeys.forEach((eachSettingKey) => {

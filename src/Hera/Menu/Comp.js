@@ -3,7 +3,7 @@
  */
 
 import React, {Component} from 'react';
-import BigTable from '../Comp/BigTable';
+import BigTable from '../comp/BigTable';
 
 // 实例:用户单据
 class Comp extends Component {
