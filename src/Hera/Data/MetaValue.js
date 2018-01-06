@@ -1,22 +1,22 @@
-/**
- * Created by edeity on 11/11/2017.
- */
 import Type from '../tools/Type';
+import Log from '../tools/Log';
 
-// 实例:用户单据
+/**
+ * 用来描述一个字段的值
+ */
 class MetaValue  {
-    static VALUE_KEY = '__value';
+    static VALUE_KEY = 'value';
     /**
      * 每次获得一个新的默认数据
      **/
     static getDefaultMetaValue = function () {
         return {
-            __value: '',
+            value: null,
             type: 'str',
-            desc: '',
+            desc: null,
             editable: true,
-            validate: {
-                __isValidate: true,
+            isValid: true,
+            __validConfig: {
                 matchReg: null,
                 matchFun: null,
                 matchTips: null,
@@ -24,23 +24,31 @@ class MetaValue  {
                 maxLen: 50,
                 required: true,
                 isMatchWhenBlur: false
+            },
+            __renderConfig: {
+                isQuery: true,
+                isList: true,
+                isCard: true,
+            },
+            __relyConfig: {
+                
             }
         }
-    }
+    };
     /**
      * 创建metaValue
      * @param metas 类DefaultMetaValue的数据结构
      * @param coverMeta 类DefaultMetaValue的数据结构
      * @returns {{}}
      */
-    static createMetaValue = function(metas){
+    static create = function(metas){
         if(!metas) {
-            console.error('请传入meta信息');
+            Log.error('请传入meta信息');
         }
         let meta = null;
         let keys = Object.keys(metas);
         if(keys.length === 0) {
-            console.error('单据meta信息设置错误,请确认');
+            Log.error('单据meta信息设置错误,请确认');
         } else {
             meta = Type.extend(true, {}, metas); // 不影响metas
             keys.forEach((eachKey) => {
@@ -53,14 +61,6 @@ class MetaValue  {
                     // 假若传入的参数是一个对象
                     meta[eachKey] = Type.extend(true, MetaValue.getDefaultMetaValue(), meta[eachKey]);
                 }
-
-                // let isSetting = !!settingObj;
-                // if(isSetting) {
-                //     let settingKeys = Object.keys(settingObj);
-                //     settingKeys.forEach((eachSettingKey) => {
-                //         meta[eachKey][eachSettingKey] = settingObj[settingKeys];
-                //     })
-                // }
             })
         }
         return meta;
@@ -70,7 +70,7 @@ class MetaValue  {
      * @param metaData 类DefaultMetaValue的数据结构
      * @returns {{}}
      */
-    static reduceMetaValue = function(metaData){
+    static reduce = function(metaData){
         let reduceData = {};
         let metaKeys = Object.keys(metaData);
         metaKeys.forEach(function (eachMetaKey) {

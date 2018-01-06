@@ -3,40 +3,64 @@
  */
 
 import MetaValue from './MetaValue';
+import Type from '../tools/Type';
 
 const VALUE_KEY = MetaValue.VALUE_KEY;
 
 class DataRow {
-    __id = null;
+    id = null;
     __rowMeta = null;
-    __rowMetaData = null;
+    __rowMetaValue = null;
+    
+    static ROW_KEY = '__rowKey';
 
     constructor(meta) {
-        this.__id = Symbol();
+        this.id = Symbol();
         this.__rowMeta = meta;
-        this.__rowMetaData = MetaValue.createMetaValue(meta);
+        this.__rowMetaValue = MetaValue.create(meta);
     }
     setValue(field, value){
-        let preMetaValue = this.__rowMetaData[field];
+        let preMetaValue = this.__rowMetaValue[field];
         preMetaValue[VALUE_KEY] = value;
     }
     getValue(field){
-        return this.__rowMetaData[field][VALUE_KEY];
+        let value = this.__rowMetaValue[field][VALUE_KEY];
+        if(Type.isObject(value)) {
+            return Type.extend(true, {}, value);
+        } else if(Type.isArray(value)){
+            return Type.extend(true, [], value);
+        } else {
+            return  value;
+        }
+    }
+    getMetaValue(field) {
+        if(field) {
+            let value = this.__rowMetaValue[field];
+            if(Type.isObject(value)) {
+                return Type.extend(true, {}, value);
+            } else if(Type.isArray(value)) {
+                return Type.extend(true, [], value);
+            } else {
+                return value;
+            }
+        } else {
+            return Type.extend(true, {}, this.__rowMetaValue);
+        }
     }
     setSimpleData(data) {
         let dataKeys = Object.keys(data);
-        dataKeys.forEach((eachDataKey) => {
-            this.__rowMetaData[eachDataKey][VALUE_KEY] = data[eachDataKey];
+        dataKeys.forEach((eachField) => {
+            this.__rowMetaValue[eachField][VALUE_KEY] = data[eachField];
         })
     }
     getSimpleData() {
-        return MetaValue.reduceMetaValue(this.__rowMetaData);
+        let simpleData = MetaValue.reduce(this.__rowMetaValue);
+        return Type.extend(true, {}, simpleData);
     }
-    __setData(metaData) {
-        this.__rowMetaData = MetaValue.createMetaValue(this.__rowMeta);
-    }
-    __getData() {
-        return this.__rowMetaData;
+    __getSimpleDataWithRowKey() {
+        let data = this.getSimpleData();
+        data[DataRow.ROW_KEY] = Math.random();
+        return data;
     }
 }
 

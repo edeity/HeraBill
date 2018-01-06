@@ -10,3 +10,5 @@ render((
 ), document.getElementById('root'));
 
 registerServiceWorker();
+
+// --inspect-brk 

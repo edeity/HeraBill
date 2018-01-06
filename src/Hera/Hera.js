@@ -7,6 +7,9 @@ import './hera.css'
 import menuConfig from './config/MenuConfig';
 import NotFound from './exception/NotFound';
 
+import Log from './tools/Log';
+Log.isDebugger = true;
+
 const preMount = '/HeraBill';
 
 class Hera extends Component {

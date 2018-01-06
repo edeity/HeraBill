@@ -46,5 +46,13 @@ describe('DataRow', function () {
         testRow.setSimpleData(changeValue);
         changeValue.test = 'newChange';
         expect(testRow.getSimpleData()).to.not.contains(changeValue);
+    });
+
+    it('当value为复杂对象时, getValue得到的应是复杂对象的副本', function () {
+        let testRow = new DataRow({test: {}});
+        testRow.setSimpleData({test: {test: '123'}});
+        let data = testRow.getSimpleData();
+        data.test.test = '345';
+        expect(testRow.getSimpleData().test.test).to.equal('123');
     })
 });

@@ -1,12 +1,11 @@
 /**
  * Created by edeity on 2018/1/4.
  */
-    
-import MetaValue from './MetaValue';   
+
 import DataRow from './DataRow';
+import MetaValue from './MetaValue';
 import Type from '../tools/Type';
-    
-const VALUE_KEY = MetaValue.VALUE_KEY;
+import Log from '../tools/Log';
 
 class DataTable {
     
@@ -16,10 +15,11 @@ class DataTable {
     
     constructor(meta) {
         if(Type.isObject(meta)) {
-            this.__meta = meta;
+            this.__meta = MetaValue.create(meta);
         } else {
-            console.error('meta should be object, not ' + typeof meta)
+            Log.error('meta should be object, not ' + typeof meta)
         }
+        // this.createEmptyRow();
     }
     setValue(field, value){
         let currRow = this.getCurrentRow();
@@ -27,19 +27,23 @@ class DataTable {
             currRow = this.createEmptyRow();
         }
         currRow.setValue(field, value);
+        return this;
     }
     getValue(field){
         return this.getCurrentRow().getValue(field);
     }
     setSimpleData(data) {
-        if(!Type.isArray(data)) {
-            console.error('data error: setSimpleData(params) params must be array')
-        }
         this.removeAllRows();
-        data.forEach((eachData) => {
+        if(!Type.isArray(data)) {
             let tempRow = this.createEmptyRow();
-            tempRow.setSimpleData(eachData);
-        })
+            tempRow.setSimpleData(data);
+        } else {
+            data.forEach((eachData) => {
+                let tempRow = this.createEmptyRow();
+                tempRow.setSimpleData(eachData);
+            });
+        }
+        return this;
     }
     getSimpleData() {
         let reduceData = [];
@@ -49,20 +53,16 @@ class DataTable {
         }
         return reduceData;
     }
-    __setData(metaData) {
-
-    }
-    __getData() {
-
+    __getSimpleDataWithRowKey() {
+        let reduceData = [];
+        let tempAllRows = this.getAllRows();
+        for(let eachRow of tempAllRows) {
+            reduceData.push(eachRow.__getSimpleDataWithRowKey());
+        }
+        return reduceData;
     }
     getAllRows() {
         return this.__dataRows;
-    }
-    __setCurrentRow(row) {
-        if(!(row instanceof DataRow)) {
-            console.error('__setCurrentRow(params): params must be DataRow')
-        }
-        this.__currRow = row;
     }
     getCurrentRow() {
         return this.__currRow;
@@ -75,6 +75,7 @@ class DataTable {
     }
     removeAllRows() {
         this.__dataRows = new Set();
+        return this;
     }
     removeRow(row) {
         let tempAllRow = this.getAllRows();
@@ -84,6 +85,50 @@ class DataTable {
                 break;
             }
         }
+        return this;
+    }
+    getRowByIndex(index) {
+        if(Type.isNumber(index)) {
+            let row = null;
+            let i = 0;
+            for(let eachRow of this.__dataRows) {
+                if(i === index) {
+                    row = eachRow;
+                    break;
+                } else {
+                    i ++;
+                }
+            }
+           return row;
+        } else {
+            Log.error('getRowByIndex(index): index seems not a number');
+        }
+    }
+    getMeta() {
+        return Type.extend(true, {}, this.__meta);
+    }
+    getMetaValue() {
+        let tableMetaValue = [];
+        for(let eachRow of this.__dataRows) {
+            tableMetaValue.push(eachRow.getMetaValue())
+        }
+        return tableMetaValue;
+    }
+    __getMetaValueWithRowKey() {
+        let tableMetaValue = [];
+        for(let eachRow of this.__dataRows) {
+            let eachRowMetaValue = eachRow.getMetaValue();
+            eachRowMetaValue[DataRow.ROW_KEY] = Math.random();
+            tableMetaValue.push(eachRowMetaValue);
+        }
+        return tableMetaValue;
+    }
+    __setCurrentRow(row) {
+        if(!(row instanceof DataRow)) {
+            Log.error('__setCurrentRow(params): params must be DataRow')
+        }
+        this.__currRow = row;
+        return this;
     }
 }
 

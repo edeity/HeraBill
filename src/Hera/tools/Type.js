@@ -14,7 +14,11 @@ class Type {
     }
 
     static isObject(obj) {
-        return typeof obj === 'object'
+        return typeof obj === 'object';
+    }
+
+    static isNumber(obj) {
+        return typeof obj === 'number';
     }
 
     static isFunction(obj) {
@@ -81,8 +85,8 @@ class Type {
         for (; i < length; i++) {
 
             // Only deal with non-null/undefined values
-            if (( options = arguments[i] ) != null) {
-
+            if ( arguments[i] != null) {
+                options = arguments[i]
                 // Extend the base object
                 for (name in options) {
                     src = target[name];
@@ -93,9 +97,9 @@ class Type {
                         continue;
                     }
 
+                    copyIsArray = Array.isArray(copy)
                     // Recurse if we're merging plain objects or arrays
-                    if (deep && copy && ( Type.isPlainObject(copy) ||
-                        ( copyIsArray = Array.isArray(copy) ) )) {
+                    if (deep && copy && ( Type.isPlainObject(copy) || copyIsArray )) {
 
                         if (copyIsArray) {
                             copyIsArray = false;
