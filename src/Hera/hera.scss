@@ -65,6 +65,14 @@ div.markdown-body {
 }
 
 .hera-bill {
+  .inline-btn {
+    border-right: 2px solid #ccc;
+    padding: 0 5px;
+    &.inline-btn:last-child {
+      border-right: none;
+      margin-right: 0;
+    }
+  }
   .is-not-validate {
     .ant-input {
       border: 1px solid red;

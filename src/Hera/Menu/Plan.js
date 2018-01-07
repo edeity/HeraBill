@@ -3,39 +3,41 @@
  */
 
 import React, {Component} from 'react';
-import { List } from 'antd';
+import { Timeline } from 'antd';
 
 // 开发计划
 class Plan extends Component {
     render() {
         const doneData= [
-            '单表头表体CRDU',
-            '简单参照',
-            '校验接口',
-            '字段变更'
+            '单表头表体',
+            '多表体',
+            'Kero接口'
         ];
         const toDoData = [
-            '多表体',
+            '简单参照',
+            '校验接口',
+            '字段变更',
             '显示公式',
-            '代码持续重构'
         ];
+        function getDoneTimeLine() {
+            let doneTimeLine = [];
+            doneData.forEach(function (eachData) {
+                doneTimeLine.push(<Timeline.Item color="green">{eachData}</Timeline.Item>)
+            });
+            return doneTimeLine;
+        }
+        function getToDoTimeLine() {
+            let doneTimeLine = [];
+            toDoData.forEach(function (eachData) {
+                doneTimeLine.push(<Timeline.Item color="blue">{eachData}</Timeline.Item>)
+            });
+            return doneTimeLine;
+        }
         return (
-            <div>
-                <List
-                    style={{ marginBottom: 16 }}
-                    header={<h2>已完成</h2>}
-                    bordered
-                    dataSource={doneData}
-                    renderItem={item => (<List.Item>{item}</List.Item>)}
-                />
-                <List
-                    style={{ marginBottom: 16 }}
-                    header={<h2>未完成</h2>}
-                    bordered
-                    dataSource={toDoData}
-                    renderItem={item => (<List.Item>{item}</List.Item>)}
-                />
-            </div>
+            <Timeline>
+                {getDoneTimeLine()}
+                {getToDoTimeLine()}
+            </Timeline>
         )
     }
 }

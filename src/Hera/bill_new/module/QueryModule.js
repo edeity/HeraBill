@@ -39,7 +39,7 @@ class QueryModule extends Component {
     };
     render() {
         let currRow = this.state.dataTable.getCurrentRow();
-        return <Row gutter={16}>
+        return <Row gutter={16} style={{marginBottom: 20}}>
                 {
                     Object.keys(this.meta).map((key) => {
                         let metaValue = currRow.getMetaValue(key);

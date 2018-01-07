@@ -46,6 +46,14 @@ div.markdown-body code.lang-javascript {
   font-size: 20vw;
   text-align: center; }
 
+.hera-bill .inline-btn {
+  border-right: 2px solid #ccc;
+  padding: 0 5px; }
+
+.hera-bill .inline-btn.inline-btn:last-child {
+  border-right: none;
+  margin-right: 0; }
+
 .hera-bill .is-not-validate .ant-input {
   border: 1px solid red; }
 
