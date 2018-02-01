@@ -12,7 +12,7 @@ describe('MetaValue', function () {
     let pureValue = MetaValue.reduce(metaValue);
     it('create 应包含额外的属性', function () {
         expect(metaValue.test).to.have.all
-            .keys('value', 'type', 'desc', 'editable', 'isValid', '__validConfig', '__renderConfig', '__relyConfig');
+            .keys('__value', 'type', 'desc', 'editable', 'isValid', '__validConfig', '__renderConfig', '__relyConfig');
     });
     it('reduce 应只包含自身属性', function () {
         expect(pureValue).to.have.all.keys('test');

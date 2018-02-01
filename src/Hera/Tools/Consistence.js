@@ -5,6 +5,7 @@
 import * as db from 'localforage';
 import VO from '../tools/VO';
 
+const HEAD_PK = 'headPk';
 const PK = 'pk';
 const AJAX_TIME = '200';
 
@@ -123,27 +124,59 @@ class Consistence {
         });
     };
 
+    /**
+     * 保存一个完整的单据
+     * @param postData
+     * @returns {Promise}
+     */
     static onBillSave = (postData) => {
         return new Promise((resolve, reject) => {
             let headData = postData.headData;
             let bodyData = postData.bodyData;
             let headTableId = Object.keys(headData)[0];
-            let headPk = VO.saveVO(headTableId, headData[headTableId])
+
+            VO.saveVO(headTableId, headData[headTableId])
                 .then((headPk) => {
-                    bodyData.forEach(function (eachBodyData) {
-                        let bodyTableIds = Object.keys(eachBodyData);
-                        bodyTableIds.forEach(function (eachTableId) {
-                            let eachBodyDataArray = eachBodyData[eachTableId];
-                            eachBodyDataArray.forEach(function (eachRowBodyData) {
-                                eachRowBodyData['headPk'] = headPk;
+                    let bodyTrans = [];
+
+                    // 遍历每个表体
+                    bodyData.forEach((eachBodyData) => {
+                        let bodyTableId = Object.keys(eachBodyData)[0];
+
+                        bodyTrans.push(new Promise((resolve, reject) => {
+                            Consistence.query(bodyTableId, {headPk: headPk}).then((res) => {
+                                let bodyData = res.data;
+                                if(bodyData.length !== 0) {
+                                    let tempBodyPks = [];
+                                    bodyData.forEach((eachBodyData)=> {
+                                        tempBodyPks.push(eachBodyData[PK]);
+                                    });
+                                    // 删除旧的
+                                    VO.deleteVOByPks(bodyTableId, tempBodyPks).then(()=> {
+                                        // 保存新的
+                                        let bodyDataArray = eachBodyData[bodyTableId];
+                                        bodyDataArray.forEach(function (eachRowData) {
+                                            eachRowData[HEAD_PK] = headPk;
+                                        });
+                                        VO.saveVOArray(bodyTableId, bodyDataArray).then(()=> {
+                                            resolve();
+                                        }).catch(err => reject(err))
+                                    })
+                                } else {
+                                    resolve();
+                                }
                             });
-                            VO.saveVOArray(eachTableId, eachBodyDataArray);
-                        });
-                        resolve(Consistence.resSuccess(headPk));
-                    })
+                        }));
+                    });
+
+                    // 更新新的
+                    Promise.all(bodyTrans)
+                        .then(() => resolve(Consistence.resSuccess(headPk)))
+                        .catch(err => reject(Consistence.resFail(err)));
+
                 }).catch((err) => {
-                    reject(Consistence.resFail(err));
-                });
+                reject(Consistence.resFail(err));
+            });
         })
     };
 

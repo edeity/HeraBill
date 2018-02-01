@@ -8,25 +8,38 @@ import Type from '../tools/Type';
 import Log from '../tools/Log';
 
 class DataTable {
-    
+
+    // 数据集
     __meta = null;
     __currRow = null;
     __dataRows = new Set();
+
+    // 更新代理
+    __getRefreshHandle = null;
+    __refreshKey = Math.random();
     
-    constructor(meta) {
+    constructor(meta, getRefreshHandle) {
         if(Type.isObject(meta)) {
             this.__meta = MetaValue.create(meta);
         } else {
             Log.error('meta should be object, not ' + typeof meta)
         }
-        // this.createEmptyRow();
+        if(Type.isFunction(getRefreshHandle)) {
+            this.__getRefreshHandle = getRefreshHandle();
+        } else {
+            Log.error('react dateTable should have refreshCallback')
+        }
     }
     setValue(field, value){
         let currRow = this.getCurrentRow();
         if(!(currRow instanceof DataRow)) {
             currRow = this.createEmptyRow();
         }
-        currRow.setValue(field, value);
+        let preValue = currRow.getValue(field);
+        if(preValue !== value) {
+            currRow.setValue(field, value);
+            // this.__refresh();
+        }
         return this;
     }
     getValue(field){
@@ -43,6 +56,7 @@ class DataTable {
                 tempRow.setSimpleData(eachData);
             });
         }
+        this.__refresh();
         return this;
     }
     getSimpleData() {
@@ -71,10 +85,12 @@ class DataTable {
         let tempRow = new DataRow(this.__meta);
         this.getAllRows().add(tempRow);
         this.__setCurrentRow(tempRow);
+        this.__refresh();
         return tempRow;
     }
     removeAllRows() {
         this.__dataRows = new Set();
+        this.__refresh();
         return this;
     }
     removeRow(row) {
@@ -85,6 +101,7 @@ class DataTable {
                 break;
             }
         }
+        this.__refresh();
         return this;
     }
     getRowByIndex(index) {
@@ -109,7 +126,7 @@ class DataTable {
     }
     getMetaValue() {
         let tableMetaValue = [];
-        for(let eachRow of this.__dataRows) {
+        for(let eachRow of this.getAllRows()) {
             tableMetaValue.push(eachRow.getMetaValue())
         }
         return tableMetaValue;
@@ -127,8 +144,26 @@ class DataTable {
         if(!(row instanceof DataRow)) {
             Log.error('__setCurrentRow(params): params must be DataRow')
         }
-        this.__currRow = row;
-        return this;
+        if(this.__currRow && row.id === this.__currRow.id) {
+            return this;
+        } else {
+            this.__currRow = row;
+            this.__refresh();
+            return this;   
+        }
+    }
+
+    __getRefreshKey() {
+        let b = this.__refreshKey;
+        return b;
+    }
+    
+    __refresh() {
+        if(this.__getRefreshHandle) {
+            let refreshHandle = this.__getRefreshHandle();
+            Type.isFunction(refreshHandle) && refreshHandle();
+            this.__refreshKey = Math.random();
+        }
     }
 }
 

@@ -6,6 +6,7 @@
 import React, { PureComponent } from 'react';
 import { TimePicker, Button } from 'antd';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 
 /**
@@ -50,5 +51,13 @@ class TimePickerDecorator extends PureComponent {
         )
     }
 }
+
+TimePickerDecorator.propTypes = {
+    className: PropTypes.string, // 名称-一般由状态觉定
+    defaultValue: PropTypes.string, // 默认显示的值
+    value: PropTypes.string, // 实际的值
+    disabled: PropTypes.bool, // 是否可编辑
+    onChange: PropTypes.func.isRequired, // 字段变更的回调
+};
 
 export default TimePickerDecorator;

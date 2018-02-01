@@ -9,9 +9,9 @@ import Body from './Body';
 import Meta from './Meta';
 
 import $ from 'jquery';
-import dm from '../tools/DefaultMeta';
-import dv from '../tools/DefaultValue';
-import DataTable from  '../tools/DataTable';
+import dm from './tools/DefaultMeta';
+import dv from './tools/DefaultValue';
+import DataTable from  './tools/DataTable';
 
 const Panel = Collapse.Panel;
 

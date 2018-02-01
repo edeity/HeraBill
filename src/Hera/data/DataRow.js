@@ -4,6 +4,7 @@
 
 import MetaValue from './MetaValue';
 import Type from '../tools/Type';
+// import Log from '../tools/Log';
 
 const VALUE_KEY = MetaValue.VALUE_KEY;
 
@@ -50,7 +51,12 @@ class DataRow {
     setSimpleData(data) {
         let dataKeys = Object.keys(data);
         dataKeys.forEach((eachField) => {
-            this.__rowMetaValue[eachField][VALUE_KEY] = data[eachField];
+            let currMetaValue = this.__rowMetaValue[eachField];
+            if(currMetaValue) {
+                currMetaValue[VALUE_KEY] = data[eachField];
+            } else {
+                // Log.warn(`useless field: ${eachField}, this could show only in debug mode`)
+            }
         })
     }
     getSimpleData() {

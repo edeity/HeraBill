@@ -5,11 +5,11 @@ import Log from '../tools/Log';
  * 用来描述一个字段的值
  */
 class MetaValue  {
-    static VALUE_KEY = 'value';
+    static VALUE_KEY = '__value';
     /**
      * 每次获得一个新的默认数据
      **/
-    static getDefaultMetaValue = function () {
+    static getMetaValue = function () {
         return {
             value: null,
             type: 'str',
@@ -56,10 +56,10 @@ class MetaValue  {
                     // 假若传入的参数不是一个对象,则默认将该值赋值给value
                     let newObject = {};
                     newObject[MetaValue.VALUE_KEY] = meta[eachKey];
-                    meta[eachKey] = Type.extend(true, MetaValue.getDefaultMetaValue(), newObject);
+                    meta[eachKey] = Type.extend(true, MetaValue.getMetaValue(), newObject);
                 } else {
                     // 假若传入的参数是一个对象
-                    meta[eachKey] = Type.extend(true, MetaValue.getDefaultMetaValue(), meta[eachKey]);
+                    meta[eachKey] = Type.extend(true, MetaValue.getMetaValue(), meta[eachKey]);
                 }
             })
         }

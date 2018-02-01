@@ -3,9 +3,16 @@
  */
 import * as db from 'localforage';
 
+// const HEAD_PK = 'headPk';
 const PK = 'pk';
 
 class VO {
+    /**
+     * 保存单个VO
+     * @param tableId
+     * @param billVo
+     * @returns {Promise}
+     */
     static saveVO(tableId, billVo) {
         return new Promise((resolve, reject) => {
             db.getItem(tableId)
@@ -27,7 +34,7 @@ class VO {
         });
     }
     /**
-     * 保存多个Vo
+     * 保存多个VO
      * @param tableId
      * @param billVo
      */
@@ -59,7 +66,7 @@ class VO {
     }
 
     /**
-     * 删除多个Vo
+     * 删除多个VO
      * @param tableId
      * @param pks
      */

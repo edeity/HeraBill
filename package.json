@@ -52,7 +52,7 @@
     "build": "npm run build-css && react-scripts build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "test": "NODE_ENV=development mocha --require babel-core/register ./src/Hera/test/*.test.js",
+    "test": "NODE_ENV=development mocha --inspect-brk --require babel-core/register ./src/Hera/test/*.test.js",
     "eject": "react-scripts eject"
   },
   "babel": {

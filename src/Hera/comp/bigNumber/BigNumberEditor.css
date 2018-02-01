@@ -1,0 +1,16 @@
+.editor .input-block {
+  width: 100px;
+  display: inline-block;
+  outline: none;
+  min-width: 20px;
+  padding: 10px 0;
+  margin: 10px;
+  font-size: 15px;
+  text-align: center; }
+  .editor .input-block:first-child {
+    margin-left: 0; }
+
+.editor .result {
+  font-size: 20px; }
+  .editor .result .desc {
+    font-size: 15px; }

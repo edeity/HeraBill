@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import Bill from '../bill/Bill';
+import Bill from '../bill/OldBill';
 
 import Consistence from '../tools/Consistence';
 import CommonRegex from '../tools/CommonRegex';

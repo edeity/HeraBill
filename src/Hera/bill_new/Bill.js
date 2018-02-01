@@ -9,7 +9,8 @@ import Type from '../tools/Type';
 
 import Log from '../tools/Log';
 
-import {message} from 'antd';
+import {message, Tabs} from 'antd';
+const TabPane = Tabs.TabPane;
 
 const PK = 'pk';
 
@@ -18,10 +19,11 @@ class Bill extends Component {
         super(props);
 
         // 构造 查询, 列表, 卡片三种状态的DataTable
-        this.queryTable = new DataTable(props.headMeta);
-        this.listTable = new DataTable(props.headMeta);
-        this.cardTable = new DataTable(props.headMeta);
-        this.__cacheCardTabel = null; // 用来暂存取消时的副本
+        this.queryTable = new DataTable(props.headMeta, this.__getRefreshHandle);
+        this.listTable = new DataTable(props.headMeta, this.__getRefreshHandle);
+        this.cardTable = new DataTable(props.headMeta, this.__getRefreshHandle);
+        this.__cacheCardTabelData = null; // 用来暂存取消时的副本
+        this.__cacheCardBodyTabelData = new Map(); // 用来暂存取消的表体副本
         this.queryTable.createEmptyRow(); // 默认查询区域有空行
 
         // 构造表体状态的DataTable
@@ -33,14 +35,15 @@ class Bill extends Component {
                     Log.error('bodyMeta error, key should be unique, that is more than one : ' + eachBodyKey);
                 } else {
                     let eachBodyMeta = props.bodyMeta[eachBodyKey];
-                    this.cardBodyTableMap.set(eachBodyKey, new DataTable(eachBodyMeta));
+                    this.cardBodyTableMap.set(eachBodyKey, new DataTable(eachBodyMeta, this.__getRefreshHandle));
                 }
             })
         }
 
+        this.isMount = false;
         // state状态
         this.state = {
-            isNewMode: false, // 是否是新增态
+            isNew: false, // 是否是新增态
             isList: true, // 是否为列表态
             editable: false, // 是否可编辑,一般仅针对Card形态,
             refresh: Symbol(),
@@ -48,11 +51,27 @@ class Bill extends Component {
     }
 
     componentWillMount = () => {
+        this.isMount = true;
         this.props.onInit(this.queryTable, this.listTable, this.cardTable, this.cardBodyTableMap);
         if (this.props.isQuery) {
             this.onQuery();
         }
     };
+
+    componentWillUnMount = () => {
+        this.isMount = false;
+    }
+
+    __getRefreshHandle = () => {
+        return () => {
+            if(this.isMount) {
+                this.setState({
+                    refresh: Symbol()
+                });
+            }
+        }
+    };
+
 
     /**
      * 新增
@@ -64,12 +83,42 @@ class Bill extends Component {
     };
 
     /**
+     * 浏览
+     */
+    onReview = (reviewMsg) => {
+        let modifyData;
+        if(Type.isNumber(reviewMsg)) {
+            // 通过列表点击的预览
+            let reviewRow = this.listTable.getRowByIndex(reviewMsg);
+            modifyData = reviewRow.getSimpleData();
+        } else if(Type.isObject(reviewMsg)) {
+            // 通过跳转或后天刷新的预览
+            modifyData = reviewMsg;
+        }
+        this.cardTable.setSimpleData(modifyData);
+        this.__toEditMode();
+        this.__cannotEditable();
+        this.onBodyQuery();
+    };
+
+    /**
      * 卡牌态的修改
      */
     onCardModify = () => {
-        this.__cacheCardTabel = this.cardTable.getSimpleData();
+        this.__cacheCardTabelData = this.cardTable.getSimpleData();
         this.__canEditable();
     };
+
+    onBodyQuery = () => {
+        let queryCondition = {};
+        queryCondition["headPk"] = this.cardTable.getCurrentRow().getSimpleData()[PK];
+        for(let eachKey of this.cardBodyTableMap.keys()) {
+            this.props.onBodyQuery(eachKey, queryCondition, this.cardBodyTableMap.get(eachKey), (data)=> {
+                this.__cacheCardBodyTabelData.set(eachKey, data); // 缓存表体
+            })
+        }
+    };
+
 
     /**
      * 删除
@@ -93,63 +142,42 @@ class Bill extends Component {
     onQuery = () => {
         let queryCondition = this.queryTable.getCurrentRow().getSimpleData();
         this.props.onQuery(queryCondition, this.listTable, (res)=> {
-            this.__refresh();
         })
-    };
-    
-    onBodyQuery = () => {
-        let queryCondition = {};
-        queryCondition["headPk"] = this.cardTable.getCurrentRow().getSimpleData()[PK];
-        for(let eachKey of this.cardBodyTableMap.keys()) {
-            this.props.onBodyQuery(eachKey, queryCondition, this.cardBodyTableMap.get(eachKey), (res)=> {
-                this.__refresh();
-            })
-        }
     };
 
     /**
      * 列表态的修改
      */
     onListModify = (index) => {
-        let currRow = this.listTable.getRowByIndex(index);
-        let modifyData = currRow.getSimpleData();
-        this.__cacheCardTabel = modifyData;
-        this.cardTable.setSimpleData(modifyData);
-        this.onBodyQuery();
-        this.__toEditMode();
-        this.__canEditable();
+        this.onReview(index);
+        this.onCardModify();
     };
-    
+
     /**
      * 保存
      */
     onSave = () => {
-        this.props.onSave(this.cardTable, this.cardBodyTableMap, this.__refresh);
+        this.props.onSave(this.cardTable, this.cardBodyTableMap, (data) => {
+            this.onReview(data);
+        });
     };
 
     /**
      * 重置
      */
-    onReset() {
+    onReset = () => {
         this.queryTable.removeAllRows();
-    }
-
-    /**
-     * 浏览
-     */
-    onReview = (index) => {
-        let reviewRow = this.listTable.getRowByIndex(index);
-        let modifyData = reviewRow.getSimpleData();
-        this.cardTable.setSimpleData(modifyData);
-        this.__toEditMode();
-        this.__cannotEditable();
     };
 
     /**
      * 取消
      */
     onCancel = () => {
-        this.cardTable.setSimpleData(this.__cacheCardTabel);
+        this.cardTable.setSimpleData(this.__cacheCardTabelData);
+        for(let key of this.__cacheCardBodyTabelData.keys()) {
+            let tempBodyTable = this.cardBodyTableMap.get(key);
+            tempBodyTable.setSimpleData(this.__cacheCardBodyTabelData.get(key));
+        }
         this.__cannotEditable();
     };
 
@@ -161,24 +189,31 @@ class Bill extends Component {
         for (let eachBodyTable of this.cardBodyTableMap.values()) {
             eachBodyTable.removeAllRows();
         }
+        this.__cannotEditable();
         this.__toList();
         this.onQuery();
     };
 
-    onCardBodyDelete(tableId) {
-
-    }
+    onCardBodyDelete = (index, tableId) => {
+        let currTable = this.cardBodyTableMap.get(tableId);
+        let currRow = currTable.getRowByIndex(index);
+        currTable.removeRow(currRow);
+    };
 
     onCardBodyChange = (tableId, field, value) => {
         let changeTable = this.cardBodyTableMap.get(tableId);
         changeTable.setValue(field, value);
-        this.__refresh();
+    };
+
+    onCardBodyCell = (tableId, index) => {
+        let changeTable = this.cardBodyTableMap.get(tableId);
+        let currRow = changeTable.getRowByIndex(index);
+        changeTable.__setCurrentRow(currRow);
     };
 
     onCardBodyNew = (tableId) => {
         let changeTable = this.cardBodyTableMap.get(tableId);
         changeTable.createEmptyRow();
-        this.__refresh();
     };
 
     static handleRes = (res, successMsg, callback) => {
@@ -189,13 +224,6 @@ class Bill extends Component {
             Log.error(res.error);
             message.error(res.error);
         }
-    };
-    
-    
-    __refresh = () => {
-        this.setState({
-            refresh: Symbol()
-        })
     };
 
     __toList = () => {
@@ -235,15 +263,21 @@ class Bill extends Component {
         let child = [];
         for (let key of this.cardBodyTableMap.keys()) {
             let eachCardBodyTable = this.cardBodyTableMap.get(key);
-            child.push(<ListModule
-                key={key}
-                tableId={key}
-                dataTable={eachCardBodyTable}
-                btnInPanel
-                editable={self.state.editable}
-                onDelete={self.onCardBodyDelete}
-                onChange={self.onCardBodyChange}
-                onNew={self.onCardBodyNew}/>)
+            child.push(
+                <TabPane tab={this.props.bodyTableAttr[key].title} key={key}>
+                    <ListModule
+                    key={key}
+                    tableId={key}
+                    dataTable={eachCardBodyTable}
+                    uniqKey={eachCardBodyTable.__getRefreshKey()}
+                    btnInPanel
+                    editable={self.state.editable}
+                    onDelete={self.onCardBodyDelete}
+                    onChange={self.onCardBodyChange}
+                    onCell={self.onCardBodyCell}
+                    onNew={self.onCardBodyNew}/>
+                </TabPane>
+            )
         }
         return child;
     };
@@ -254,12 +288,14 @@ class Bill extends Component {
                 <div id="list-panle">
                     <QueryModule
                         dataTable={this.queryTable}
+                        uniqKey={this.cardTable.__getRefreshKey()}
                         onQuery={this.onQuery}
                         onReset={this.onReset}
                         onNew={this.onNew}/>
                     <ListModule
                         tableId="list"
                         dataTable={this.listTable}
+                        uniqKey={this.listTable.__getRefreshKey()}
                         btnInLine
                         onReview={this.onReview}
                         onDelete={this.onDelete}
@@ -269,14 +305,16 @@ class Bill extends Component {
                 <CardModule
                     dataTable={this.cardTable}
                     editable={this.state.editable}
-                    isNewMode={this.state.isNewMode}
+                    isNewMode={this.state.isNew}
                     onSave={this.onSave}
                     onModify={this.onCardModify}
                     onCancel={this.onCancel}
                     onReturn={this.onReturn}>
-                    {
-                        this.__getCardBody()
-                    }
+                        <Tabs defaultActiveKey={this.cardBodyTableMap.keys().next().value} >
+                        {
+                            this.__getCardBody()
+                        }
+                        </Tabs>
                 </CardModule>
             </div>
             }
@@ -288,6 +326,7 @@ Bill.propTypes = {
     tableId: PropTypes.string.isRequired,
     headMeta: PropTypes.object.isRequired,
     bodyMeta: PropTypes.object,
+    bodyTableAttr: PropTypes.object,
     isQuery: PropTypes.bool,
     onQuery: PropTypes.func.isRequired,
     onBodyQuery: PropTypes.func.isRequired,

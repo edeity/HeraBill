@@ -54,13 +54,13 @@ const User = () => {
                 isQuery: false
             }
         },
-        syncAge: {
-            type: 'num', desc: 'sync年龄',
-            editable: false,
-            __renderConfig: {
-                isQuery: false
-            }
-        },
+        // syncAge: {
+        //     type: 'num', desc: 'sync年龄',
+        //     editable: false,
+        //     __renderConfig: {
+        //         isQuery: false
+        //     }
+        // },
     };
     
     // 表体描述
@@ -78,13 +78,18 @@ const User = () => {
             __renderConfig: {
                 isQuery: false,
                 isList: false,
-                isCard: false
+                isCard: false,
+                tableDesc: '职位'
             }
         },
         post: {
             type: 'str',
             desc: '职位',
         },
+        level: {
+            type: 'str',
+            desc: '等级',
+        }
     };
     
     const pointMeta = {
@@ -101,7 +106,8 @@ const User = () => {
             __renderConfig: {
                 isQuery: false,
                 isList: false,
-                isCard: false
+                isCard: false,
+                tableDesc: '分数'
             }
         },
         point: {
@@ -109,10 +115,19 @@ const User = () => {
             desc: '分数'
         },
     };
+
     
     const bodyMeta = {
-        post: postMeta,
-        point: pointMeta
+        newPost: postMeta,
+        newPoint: pointMeta,
+    };
+    const bodyTableAttr = {
+        newPost: {
+            title: '职位'
+        },
+        newPoint: {
+            title: '分数'
+        },
     };
     
     function onInit(queryTable, listTable, cardTable, cardBodyTableMap) {
@@ -130,12 +145,12 @@ const User = () => {
     function onBodyQuery(tableId, queryCondition, suchTable, refresh) {
         Consistence.query(tableId, queryCondition).then((res) => {
             suchTable.setSimpleData(res.data);
-            refresh();
+            refresh(res.data);
         })
     }
 
     /**
-     * 获取表体的信息, 应注意两点:
+     * 获取表体message, 应注意两点:
      *
      * 1. 表体应标注表头的pk(一般在后台进行)
      * 2. 表头表体的数据应一次性提交(一般对应DB的事物)
@@ -171,7 +186,7 @@ const User = () => {
      * success: 是否成功,
      * error: 错误堆栈信息这三种基本格式
      **/
-    function onSave(cardTable, cardBodyTableMap, refreshCallback) {
+    function onSave(cardTable, cardBodyTableMap, refresh) {
         // 获取表头的信息
         let headData = cardTable.getCurrentRow().getSimpleData();
 
@@ -193,11 +208,11 @@ const User = () => {
 
         Consistence.onBillSave(postData)
             .then((res) => {
-                if(res.success) {
-                    refreshCallback(res);
-                } else {
-                    console.log(res.error);
-                }
+                Bill.handleRes(res, '保存成功', function (headPk) {
+                    let currRowData = cardTable.getCurrentRow().getSimpleData();
+                    currRowData['pk'] = headPk;
+                    refresh(currRowData);
+                });
             });
     }
 
@@ -216,9 +231,8 @@ const User = () => {
             tableId={tableId}
             headMeta={headMeta}
             bodyMeta={bodyMeta}
-
+            bodyTableAttr={bodyTableAttr}
             isQuery
-            
             onQuery={onQuery}
             onBodyQuery={onBodyQuery}
             onDelete={onDelete}

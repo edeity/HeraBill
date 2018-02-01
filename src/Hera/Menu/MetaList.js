@@ -6,7 +6,7 @@
 import React, {Component} from 'react';
 import Meta from '../bill/Meta';
 import {Row, Button} from 'antd';
-import dm from '../tools/DefaultMeta';
+import dm from '../bill/tools/DefaultMeta';
 
 // 实例:用户单据
 class MetaList extends Component {

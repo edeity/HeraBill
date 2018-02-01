@@ -17,6 +17,9 @@ class QueryModule extends Component {
             dataTable: dataTable
         }
     }
+    shouldComponentUpdate = (nextProps, nextState) => {
+        return this.props.uniqKey !== nextProps.uniqKey;
+    };
     onNew = () => {
         this.props.onNew();
     };

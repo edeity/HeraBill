@@ -21,15 +21,15 @@ class Plan extends Component {
         ];
         function getDoneTimeLine() {
             let doneTimeLine = [];
-            doneData.forEach(function (eachData) {
-                doneTimeLine.push(<Timeline.Item color="green">{eachData}</Timeline.Item>)
+            doneData.forEach(function (eachData, i) {
+                doneTimeLine.push(<Timeline.Item color="green" key={`done-${i}`}>{eachData}</Timeline.Item>)
             });
             return doneTimeLine;
         }
         function getToDoTimeLine() {
             let doneTimeLine = [];
-            toDoData.forEach(function (eachData) {
-                doneTimeLine.push(<Timeline.Item color="blue">{eachData}</Timeline.Item>)
+            toDoData.forEach(function (eachData, i) {
+                doneTimeLine.push(<Timeline.Item color="blue" key={`todo-${i}`}>{eachData}</Timeline.Item>)
             });
             return doneTimeLine;
         }

@@ -15,6 +15,11 @@ class ListModule extends Component {
         this.columns = this.getHeadColumns();
     }
 
+    shouldComponentUpdate = (nextProps, nextState) => {
+        return this.props.uniqKey !== nextProps.uniqKey
+            || this.props.editable !== nextProps.editable;
+    };
+
     /**
      * 获得通用的显示行
      * @returns {Array}
@@ -38,6 +43,7 @@ class ListModule extends Component {
                             field={key}
                             metaValue={eachCellMetaValue}
                             onChange={ (field, value) => this.props.onChange(this.props.tableId, field, value) }
+                            onCell={ () => this.props.onCell(this.props.tableId, index)}
                             isStrMode={!this.props.editable}
                             isSimMode
                             disabled/>
@@ -46,7 +52,7 @@ class ListModule extends Component {
             }
         });
 
-        if(this.props.btnInLine) {
+        if(this.props.onReview || this.props.onModify || this.props.onDelete) {
             // 最后一列为动作列
             columns.push({
                 title: '操作',
@@ -61,37 +67,39 @@ class ListModule extends Component {
                     </div>
                 }
             });
+
         }
 
         return columns;
     };
     
     onDelete = (index) => {
-        this.props.onDelete(index);
+        this.props.onDelete(index, this.props.tableId);
     };
 
     onReview =(index) => {
-        this.props.onReview(index);
+        this.props.onReview(index, this.props.tableId);
     };
 
     onModify =(index) => {
-        this.props.onModify(index);
+        this.props.onModify(index, this.props.tableId);
     };
 
-    __getTitleBtn = () => {
+    onNew = () => {
+        this.props.onNew(this.props.tableId)
+    };
 
-        return  this.props.btnInPanel && <Row type="flex" justify="end">
+    onRow = (record, index) => {
+        ;
+    }
+
+    __getTitleBtn = () => {
+        return  <Row type="flex" justify="end">
             <Button.Group style={{ float: 'right' }}>
                 {
                     this.props.onNew &&
-                    <Tooltip placement="top" title="新增" onClick={() => this.props.onNew(this.props.tableId)}>
+                    <Tooltip placement="top" title="新增" onClick={this.onNew}>
                         <Button icon="plus"/>
-                    </Tooltip>
-                }
-                {
-                    this.props.onDelete &&
-                    <Tooltip placement="top" title="删除" onClick={this.props.onDelete}>
-                        <Button icon="delete"/>
                     </Tooltip>
                 }
             </Button.Group>
@@ -113,11 +121,11 @@ ListModule.propTypes = {
     tableId: PropTypes.string.isRequired,
     dataTable: PropTypes.instanceOf(DataTable),
     editable: PropTypes.bool,
-    btnInLine: PropTypes.bool, // 按钮是否在行上
-    btnInPanel: PropTypes.bool, // 按钮是否在顶部上
     onNew: PropTypes.func,
     onModify: PropTypes.func,
+    onReview: PropTypes.func,
     onDelete: PropTypes.func,
+    onRow: PropTypes.func
 };
 
 export default ListModule;

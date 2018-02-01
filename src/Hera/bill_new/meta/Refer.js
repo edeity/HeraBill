@@ -6,6 +6,8 @@
 import React, {Component} from 'react';
 import {Select} from 'antd';
 import Consistence from '../../tools/Consistence';
+import PropTypes from 'prop-types';
+
 const Option = Select.Option;
 
 
@@ -81,5 +83,13 @@ class Refer extends Component {
         )
     }
 }
+
+Refer.propTypes = {
+    className: PropTypes.string, // 名称-一般由状态觉定
+    defaultValue: PropTypes.string, // 默认显示的值
+    value: PropTypes.object, // 实际的值
+    disabled: PropTypes.bool, // 是否可编辑
+    onChange: PropTypes.func.isRequired, // 字段变更的回调
+};
 
 export default Refer;

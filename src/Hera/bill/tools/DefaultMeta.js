@@ -1,7 +1,7 @@
 /**
  * Created by edeity on 11/11/2017.
  */
-import Type from './Type';
+import Type from './../../tools/Type';
 
 /**
  * 默认的meta

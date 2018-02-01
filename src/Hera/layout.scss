@@ -8,7 +8,8 @@
     padding: 0 20px;
   }
   .ant-layout-container {
-    min-height: calc(100vh - 106px);
+    height: calc(100vh - 106px);
+    overflow: auto;
     margin: 0;
   }
   .ant-layout-footer {

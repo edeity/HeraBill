@@ -16,7 +16,6 @@ class CardModule extends Component {
             dataTable: dataTable
         }
     }
-
     onFieldChanged = (field, value) => {
         let dataTable = this.state.dataTable;
         dataTable.setValue(field, value);
