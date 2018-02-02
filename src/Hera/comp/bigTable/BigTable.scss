@@ -1,54 +1,100 @@
-.table-wrapper {
+.big-table {
   position: relative;
   overflow: auto;
-  border: 1px solid #ddd;
-  &.head-wrapper {
-    overflow: hidden;
-    border-top: none;
-    border-bottom: none;
-    &.top-fixed {
+  zoom: 1;
+  font-size: 0;
+  .fir-col {
+    display: inline-block;
+    background: #f1f1f1;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    &.fixed {
+      z-index: 3;
       box-shadow: 1px 1px 10px #ddd;
     }
   }
-}
-.table-inner {
-  // 该高度应该由显示区域决定
-  //width: 500px;
-  //height: 250px;
-  position: relative;
-}
-.hs-table {
-  position: absolute;
-  border-collapse: collapse;
-  overflow: scroll;
-  table-layout: fixed; /*宽度由col决定的关键*/
-  .hs-head {
-    .hs-head-row {
-      overflow: auto;
-      .hs-th {
-        height: 25px;
-        padding: 1px 5px;
-        border-top: 1px solid #ddd;
-        border-left: 1px solid #ddd;
-      }
-      .hs-th:first-child {
-        border-left: none;
+  .table-wrapper {
+    position: relative;
+    overflow: auto;
+    border: 1px solid #ddd;
+    display: inline-block;
+    font-size: 14px;
+    &.head-wrapper {
+      overflow: hidden;
+      border-top: none;
+      border-bottom: none;
+      background: #f1f1f1;
+      z-index: 2;
+    }
+    &.row-wrapper {
+      &.top-fixed {
+        box-shadow: 1px 1px 10px #ddd;
       }
     }
-    //width: 100%;
-    //table-layout: fixed;
-  }
-  .hs-body {
-    .hs-tr {
-      .hs-td {
+    &.col-wrapper {
+      border: none;
+      border-top: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      &.left-fixed {
+        box-shadow: 1px 1px 10px #ddd;
+      }
+      .hs-th {
         box-sizing: border-box;
         height: 25px;
-        border-right: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
         padding: 1px 5px;
         overflow: hidden;
         outline-width: 0;
         white-space: pre-line;
+      }
+    }
+    &.body-wrapper {
+      background: #fff;
+    }
+  }
+  .table-inner {
+    position: relative;
+  }
+  .hs-table {
+    position: absolute;
+    border-collapse: collapse;
+    overflow: scroll;
+    table-layout: fixed; /*宽度由col决定的关键*/
+    .hs-row-head {
+      .hs-row {
+        overflow: auto;
+        .hs-th {
+          height: 25px;
+          padding: 1px 5px;
+          border-top: 1px solid #ddd;
+          border-left: 1px solid #ddd;
+        }
+        .hs-th:first-child {
+          border-left: none;
+        }
+      }
+      //width: 100%;
+      //table-layout: fixed;
+    }
+    .hs-col-head {
+      .hs-th {
+        width: 100px;
+        padding: 1px 5px;
+      }
+    }
+    .hs-body {
+      .hs-tr {
+        .hs-td {
+          box-sizing: border-box;
+          height: 25px;
+          border-right: 1px solid #ddd;
+          border-bottom: 1px solid #ddd;
+          padding: 1px 5px;
+          overflow: hidden;
+          outline-width: 0;
+          white-space: pre-line;
+        }
       }
     }
   }

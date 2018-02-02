@@ -31,14 +31,13 @@ const defaultConfig = {
 };
 
 const wordNum = 26;
+const colLeft = 50;
 
 class BigTable extends Component {
 
     constructor(props) {
-        super();
-
-        this.data = this.getTestData(1000, 1000); // 100W单元格测试
-
+        super(props);
+        this.data = this.props.data;
         // 处理用户参数和默认配置
         this.width = props.width || defaultConfig.width;
         this.height = props.height || defaultConfig.height;
@@ -70,35 +69,20 @@ class BigTable extends Component {
         };
     }
 
-    getTestData(row, col) {
-        let data = [];
-        let dataRow= 1000; //
-        let dataCol= 1000; // 列
-        for(var i=0; i<dataRow; i++) {
-            let tempArray = [];
-            data.push(tempArray);
-            for(var j=0; j<dataCol; j++) {
-                let tempData = { data: i + ',' + j};
-                tempArray.push(tempData);
-            }
-        }
-        return data;
-    }
-
     getColGroup = (eCol) => {
         let colGroup = [];
-        for(let i=0; i<eCol; i++) {
-            let id=`col_${i}`;
+        for (let i = 0; i < eCol; i++) {
+            let id = `col_${i}`;
             colGroup.push(<col key={id} id={id} className="hs-col" width={this.cellWidth}></col>);
         }
         return colGroup;
     };
 
-    getHead = () => {
+    getRowHead = () => {
         let sCol = this.state.startCol;
         let eCol = this.state.endCol;
         let ths = [];
-        for(let i=sCol; i<eCol; i++) {
+        for (let i = sCol; i < eCol; i++) {
             let id = `th_${i}`;
             ths.push(<th className="hs-th" key={id} id={id} style={{ width: this.cellWidth }}>
                 <div><span>{this.getHeadText(i)}</span></div>
@@ -107,9 +91,25 @@ class BigTable extends Component {
         return ths;
     };
 
-    // 递归获取显示的名称
+    // 获取列名称
+    getColHead = () => {
+        let sRow = 0;
+        let eRow = this.allRow;
+        let ths = [];
+        for (let i = sRow; i < eRow; i++) {
+            let id = `tr_${i}`;
+            ths.push(<tr key={id} id={id}>
+                <th className="hs-th">
+                    <div><span>{i}</span></div>
+                </th>
+            </tr>)
+        }
+        return ths;
+    }
+
+    // 递归获取显示的名称, 如 A1, A2
     getHeadText = (index) => {
-        if(index >= wordNum) {
+        if (index >= wordNum) {
             return this.getHeadText(parseInt(index / wordNum, 10) - 1) + this.getHeadText(parseInt(index % wordNum, 10));
         } else {
             return String.fromCharCode(65 + index);
@@ -118,7 +118,7 @@ class BigTable extends Component {
 
     getBody = (sRow, sCol, eRow, eCol) => {
         let trs = [];
-        for(let i=sRow; i<eRow; i++) {
+        for (let i = sRow; i < eRow; i++) {
             let id = `row_${i}`;
             trs.push(<tr className="hs-tr" key={id} id={id}>
                 {this.getCell(i, sCol, eCol)}
@@ -129,7 +129,7 @@ class BigTable extends Component {
 
     getCell = (currRow, sCol, eCol) => {
         var tds = [];
-        for(let j=sCol; j<eCol; j++) {
+        for (let j = sCol; j < eCol; j++) {
             let id = `cell_${currRow}_${j}`;
             tds.push(<td key={id} id={id} className="hs-td">{this.data[currRow][j].data}</td>)
         }
@@ -188,7 +188,7 @@ class BigTable extends Component {
     };
 
     getRenderPage = (page) => {
-        let startRow= page.startRow - this.cacheRow;
+        let startRow = page.startRow - this.cacheRow;
         let startCol = page.startCol - this.cacheCol;
         let endRow = page.endRow + this.cacheRow;
         let endCol = page.endCol + this.cacheCol;
@@ -206,14 +206,14 @@ class BigTable extends Component {
         let left = target.scrollLeft;
 
         // this.refs.headWrapper.left = top;
-        
+
         // 同步滚动的位置
         this.setState({
             scrollLeft: left,
             scrollTop: top
         });
 
-        if(top > 10) {
+        if (top > 10) {
             this.setState({
                 isTopFixed: true
             })
@@ -223,7 +223,7 @@ class BigTable extends Component {
             })
         }
 
-        if(left > 10) {
+        if (left > 10) {
             this.setState({
                 isLeftFixed: true
             })
@@ -234,7 +234,7 @@ class BigTable extends Component {
         }
 
         var viewPage = this.getViewPage(top, left);
-        if(this.inPageCache(viewPage)) {
+        if (this.inPageCache(viewPage)) {
             // do nothing
         } else {
             var renderPage = this.getRenderPage(viewPage);
@@ -254,32 +254,52 @@ class BigTable extends Component {
         let eCol = this.state.endCol;
         return (
             <div className="big-table">
-                <div className={'table-wrapper head-wrapper ' + (this.state.isTopFixed ? 'top-fixed' : '')}
-                     style={{width: this.width, height: this.cellHeight}}>
-                    <div className="table-inner"  style={{width: this.state.innerWidth, left: sCol * this.cellWidth}}>
-                        <table className="hs-table" style={{top: 0, left: - this.state.scrollLeft}}>
-                            <thead className="hs-head" style={{width: this.width, height: this.cellHeight}}>
-                            <tr className="hs-head-row" style={{ width: this.state.innerWidth }}>
-                                {this.getHead()}
-                            </tr>
-                            </thead>
-                        </table>
+                {/* 第一个单元格 */}
+                <div>
+                    <div className={(this.state.isLeftFixed || this.state.isTopFixed) ? "fir-col fixed" : "fir-col"}
+                         style={{width: colLeft, height: this.cellHeight}}></div>
+                    {/* 行表头 */}
+                    <div className={'table-wrapper head-wrapper row-wrapper ' + (this.state.isTopFixed ? 'top-fixed' : '')}
+                         style={{width: this.width, height: this.cellHeight}}>
+                        <div className="table-inner" style={{width: this.state.innerWidth, left: sCol * this.cellWidth}}>
+                            <table className="hs-table" style={{top: 0, left: - this.state.scrollLeft}}>
+                                <thead className="hs-row-head" style={{width: this.width, height: this.cellHeight}}>
+                                <tr className="hs-row" style={{ width: this.state.innerWidth }}>
+                                    {this.getRowHead()}
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <div className="table-wrapper"
-                     style={{width: this.width, height:this.height}}
-                     onScroll={this.onScroll}>
-                    <div className="table-inner"
-                         style={{width: this.state.innerWidth, height: this.state.innerHeight}}>
-                        <table className="hs-table"
-                               style={{top: sRow * this.cellHeight, left: sCol * this.cellWidth}}>
-                            <colgroup>
-                                {this.getColGroup(eCol)}
-                            </colgroup>
-                            <tbody className="hs-body">
+                <div>
+                    {/* 列表头 */}
+                    <div className={"table-wrapper head-wrapper col-wrapper " + (this.state.isLeftFixed ? 'left-fixed' : '')}
+                         style={{width: colLeft, height: this.height}}>
+                        <div className="table-inner">
+                            <table className="hs-table" style={{top: -this.state.scrollTop, left: 0}}>
+                                <tbody className="hs-col-head">
+                                {this.getColHead()}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {/* 表数据 */}
+                    <div className="table-wrapper body-wrapper"
+                         style={{width: this.width, height:this.height}}
+                         onScroll={this.onScroll}>
+                        <div className="table-inner"
+                             style={{width: this.state.innerWidth, height: this.state.innerHeight}}>
+                            <table className="hs-table"
+                                   style={{top: sRow * this.cellHeight, left: sCol * this.cellWidth}}>
+                                <colgroup>
+                                    {this.getColGroup(eCol)}
+                                </colgroup>
+                                <tbody className="hs-body">
                                 {this.getBody(sRow, sCol, eRow, eCol)}
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
