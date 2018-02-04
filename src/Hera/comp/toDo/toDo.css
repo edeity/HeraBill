@@ -1,0 +1,90 @@
+.quadrant-container .quadrant {
+  min-height: 280px;
+  position: relative;
+  padding: 30px; }
+
+.quadrant-container .quadrant:hover .tool-tips {
+  opacity: 1; }
+
+.quadrant-container .quadrant .tool-tips {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  transition: all 0.2s linear;
+  z-index: 2;
+  margin-right: 5px; }
+
+.quadrant-container .quadrant .tool-tips .tool-btn {
+  display: inline-block;
+  padding: 5px;
+  font-weight: bolder;
+  border-radius: 3px;
+  cursor: pointer; }
+
+.quadrant-container .quadrant .tool-tips .tool-btn:hover {
+  color: #5182bb; }
+
+.quadrant-container .quadrant ul.todo-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center; }
+
+.quadrant-container .quadrant ul.todo-list li.todo-li {
+  padding: 5px;
+  margin: 0 10px;
+  transition: all 0.2s linear; }
+
+.quadrant-container .quadrant ul.todo-list li.todo-li:hover {
+  color: #5182bb;
+  background: #f1f1f1;
+  border: 3px;
+  cursor: pointer;
+  transform: scale(1.04); }
+
+.quadrant-container .quadrant ul.todo-list input {
+  text-align: center; }
+
+.quadrant-container .quadrant div.tags {
+  position: absolute;
+  padding: 5px 10px; }
+
+.quadrant-container .quadrant div.tags .tag {
+  padding: 2px 5px; }
+
+.quadrant-container .first-quadrant {
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd; }
+
+.quadrant-container .first-quadrant div.tags {
+  left: 0;
+  bottom: 0;
+  color: #ffa39e; }
+
+.quadrant-container .beta-quadrant {
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd; }
+
+.quadrant-container .beta-quadrant div.tags {
+  right: 0;
+  bottom: 0;
+  color: #91d5ff; }
+
+.quadrant-container .third-quadrant {
+  border-right: 1px solid #ddd;
+  border-top: 1px solid #ddd; }
+
+.quadrant-container .third-quadrant div.tags {
+  right: 0;
+  top: 0;
+  color: #ffe58f; }
+
+.quadrant-container .delta-quadrant {
+  border-left: 1px solid #ddd;
+  border-top: 1px solid #ddd; }
+
+.quadrant-container .delta-quadrant div.tags {
+  left: 0;
+  top: 0;
+  color: #aaa; }

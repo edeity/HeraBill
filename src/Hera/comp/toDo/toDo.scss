@@ -1,0 +1,97 @@
+$border-color: #ddd;
+
+.quadrant-container {
+  .quadrant {
+    min-height: 280px;
+    position: relative;
+    padding: 30px;
+    &:hover {
+      .tool-tips {
+        opacity: 1;
+      }
+    }
+    .tool-tips {
+      position: absolute;
+      top: 0;
+      right: 0;
+      opacity: 0;
+      transition: all 0.2s linear;
+      z-index: 2;
+      margin-right: 5px;
+      .tool-btn {
+        display: inline-block;
+        padding: 5px;
+        font-weight: bolder;
+        border-radius: 3px;
+        cursor: pointer;
+        &:hover {
+          color: #5182bb;
+        }
+      }
+    }
+    ul.todo-list {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      text-align: center;
+      li.todo-li {
+        padding: 5px;
+        margin: 0 10px;
+        transition: all 0.2s linear;
+        &:hover {
+          color: #5182bb;
+          background: #f1f1f1;
+          border: 3px;
+          cursor: pointer;
+          transform: scale(1.04);
+        }
+      }
+      input {
+        text-align: center;
+      }
+    }
+    div.tags {
+      position: absolute;
+      padding: 5px 10px;
+      .tag {
+        padding: 2px 5px;
+      }
+    }
+  }
+  .first-quadrant {
+    border-left: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+    div.tags {
+      left: 0;
+      bottom: 0;
+      color: #ffa39e;
+    }
+  }
+  .beta-quadrant {
+    border-right: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+    div.tags {
+      right: 0;
+      bottom: 0;
+      color: #91d5ff;
+    }
+  }
+  .third-quadrant {
+    border-right: 1px solid $border-color;
+    border-top: 1px solid $border-color;
+    div.tags {
+      right: 0;
+      top: 0;
+      color: #ffe58f;
+    }
+  }
+  .delta-quadrant {
+    border-left: 1px solid $border-color;
+    border-top: 1px solid $border-color;
+    div.tags {
+      left: 0;
+      top: 0;
+      color: #aaa;
+    }
+  }
+}

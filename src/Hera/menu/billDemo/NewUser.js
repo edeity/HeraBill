@@ -3,11 +3,11 @@
  */
 
 import React from 'react';
-import Bill from '../bill_new/Bill';
+import Bill from '../../bill_new/Bill';
 
-import Consistence from '../tools/Consistence';
-import CommonRegex from '../tools/CommonRegex';
-import CommonFun from '../tools/CommonFun';
+import Consistence from '../../tools/Consistence';
+import CommonRegex from '../../tools/CommonRegex';
+import CommonFun from '../../tools/CommonFun';
 
 const PK = 'pk';
 // 实例:用户单据

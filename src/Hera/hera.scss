@@ -88,3 +88,8 @@ div.markdown-body {
     width: 100%;
   }
 }
+
+.inner-container {
+  height: calc(100vh - 130px);
+  overflow: auto;
+}

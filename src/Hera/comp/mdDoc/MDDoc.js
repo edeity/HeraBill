@@ -128,7 +128,6 @@ class MDDoc extends Component {
         return (
             <div className="md-doc" style={{margin: "10px 0"}}>
                 <Spin
-                    tip="Loading..."
                     size="large"
                     spinning={this.state.loading}
                     delay={500}
