@@ -3,13 +3,14 @@
  */
 
 import React, {Component} from 'react';
-import {Tabs} from 'antd';
+import {Tabs, Row, Col} from 'antd';
 
 import BigTable from '../comp/bigTable/BigTable';
 import BigNumberEditor from '../comp/bigNumber/BigNumberEditor';
 import MDDoc from '../comp/mdDoc/MDDoc';
 import BookContainer from '../comp/book/BookContainer';
-import Todo from '../comp/toDo/ToDo';
+import Quadrant from '../comp/toDo/Quadrant';
+import Todo from '../comp/toDo/Todo';
 
 const TabPane = Tabs.TabPane;
 const BookList = BookContainer.BookList;
@@ -35,7 +36,7 @@ class Comp extends Component {
     render() {
 
         return (
-            <Tabs defaultActiveKey={"bigTable"} tabPosition={"left"}>
+            <Tabs defaultActiveKey={"toDo"} tabPosition={"left"}>
                 <TabPane tab="表格" key={"bigTable"}>
                     <div className="inner-container">
                         <BigTable data={this.getTestData(100, 100)}/>
@@ -48,6 +49,22 @@ class Comp extends Component {
                         <BigNumberEditor/>
                         <MDDoc
                             docUrl="https://raw.githubusercontent.com/edeity/HeraBill/master/public/md/BigNumber.md"/>
+                    </div>
+                </TabPane>
+                <TabPane tab="Todo" key={"toDo"}>
+                    <div className="inner-container">
+                        <Row>
+                            <Col span={12}>
+                                <Todo defaultValue={["准备干一些事情"]}/>
+                            </Col>
+                            <Col span={24}>
+                                <MDDoc docUrl="/md/Todo.md"/>
+                            </Col>
+                            <Col span={24}>
+                                <h2>Todo应用__四象限规划</h2>
+                                <Quadrant/>
+                            </Col>
+                        </Row>
                     </div>
                 </TabPane>
                 <TabPane tab="读书" key={"bookList"}>
@@ -114,11 +131,6 @@ class Comp extends Component {
                                       date="2013-03"
                                       imgSrc="//img11.360buyimg.com/n1/s200x200_jfs/t19516/149/267450733/108062/9e6be753/5a6853e5Nacc4f056.jpg"/>
                         </BookContainer>
-                    </div>
-                </TabPane>
-                <TabPane tab="Todo" key={"toDo"}>
-                    <div className="inner-container">
-                        <Todo/>
                     </div>
                 </TabPane>
             </Tabs>

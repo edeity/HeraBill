@@ -1,0 +1,47 @@
+$border-color: #ddd;
+
+.quadrant-container {
+  div.tags {
+    position: absolute;
+    padding: 5px 10px;
+    .tag {
+      padding: 2px 5px;
+    }
+  }
+  .first-quadrant {
+    border-left: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+    div.tags {
+      left: 0;
+      bottom: 0;
+      color: #ffa39e;
+    }
+  }
+  .beta-quadrant {
+    border-right: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+    div.tags {
+      right: 0;
+      bottom: 0;
+      color: #91d5ff;
+    }
+  }
+  .third-quadrant {
+    border-right: 1px solid $border-color;
+    border-top: 1px solid $border-color;
+    div.tags {
+      right: 0;
+      top: 0;
+      color: #ffe58f;
+    }
+  }
+  .delta-quadrant {
+    border-left: 1px solid $border-color;
+    border-top: 1px solid $border-color;
+    div.tags {
+      left: 0;
+      top: 0;
+      color: #aaa;
+    }
+  }
+}

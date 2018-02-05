@@ -1,97 +1,98 @@
-$border-color: #ddd;
-
-.quadrant-container {
-  .quadrant {
-    min-height: 280px;
-    position: relative;
-    padding: 30px;
-    &:hover {
-      .tool-tips {
-        opacity: 1;
-      }
-    }
+.todo-container {
+  min-height: 280px;
+  position: relative;
+  padding: 30px;
+  &:hover {
     .tool-tips {
-      position: absolute;
-      top: 0;
-      right: 0;
-      opacity: 0;
-      transition: all 0.2s linear;
-      z-index: 2;
-      margin-right: 5px;
-      .tool-btn {
-        display: inline-block;
-        padding: 5px;
-        font-weight: bolder;
-        border-radius: 3px;
-        cursor: pointer;
-        &:hover {
-          color: #5182bb;
-        }
+      opacity: 1;
+    }
+  }
+  .tool-tips {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    transition: all 0.2s linear;
+    z-index: 2;
+    margin-right: 5px;
+    .tool-btn {
+      display: inline-block;
+      padding: 5px;
+      font-weight: bolder;
+      border-radius: 3px;
+      cursor: pointer;
+      &:hover {
+        color: #5182bb;
       }
     }
-    ul.todo-list {
-      padding: 0;
-      margin: 0;
-      list-style: none;
+  }
+  div.drag-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    color: #aaa;
+    background: #000;
+    opacity: 0.5;
+    transition: all 0.3s;
+    .drag-tips {
+      position: absolute;
+      top: 50%;
+      width: 100%;
       text-align: center;
-      li.todo-li {
-        padding: 5px;
-        margin: 0 10px;
-        transition: all 0.2s linear;
-        &:hover {
-          color: #5182bb;
-          background: #f1f1f1;
-          border: 3px;
-          cursor: pointer;
-          transform: scale(1.04);
+    }
+  }
+  ul.todo-list {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+    div.no-content {
+      height: 200px;
+      line-height: 200px;
+      color: #aaa;
+    }
+    li.todo-li {
+      position: relative;
+      padding: 5px;
+      margin: 0 10px;
+      transition: all 0.2s linear;
+      &:hover {
+        color: #5182bb;
+        background: #f1f1f1;
+        border: 3px;
+        cursor: pointer;
+        transform: scale(1.04);
+        .li-tool {
+          opacity: 1;
         }
       }
-      input {
-        text-align: center;
+      &.drag-over {
+        border: 1px dotted white;
+      }
+      .li-tool {
+        position: absolute;
+        top: 0;
+        opacity: 0;
+        margin: 0 5px;
+        transition: all 0.2s linear;
+        &.right {
+          right: 0;
+        }
+        &.left {
+          left: 0;
+        }
+        .li-btn {
+          display: inline-block;
+          padding: 5px 3px;
+        }
       }
     }
-    div.tags {
-      position: absolute;
-      padding: 5px 10px;
-      .tag {
-        padding: 2px 5px;
-      }
-    }
-  }
-  .first-quadrant {
-    border-left: 1px solid $border-color;
-    border-bottom: 1px solid $border-color;
-    div.tags {
-      left: 0;
-      bottom: 0;
-      color: #ffa39e;
-    }
-  }
-  .beta-quadrant {
-    border-right: 1px solid $border-color;
-    border-bottom: 1px solid $border-color;
-    div.tags {
-      right: 0;
-      bottom: 0;
-      color: #91d5ff;
-    }
-  }
-  .third-quadrant {
-    border-right: 1px solid $border-color;
-    border-top: 1px solid $border-color;
-    div.tags {
-      right: 0;
-      top: 0;
-      color: #ffe58f;
-    }
-  }
-  .delta-quadrant {
-    border-left: 1px solid $border-color;
-    border-top: 1px solid $border-color;
-    div.tags {
-      left: 0;
-      top: 0;
-      color: #aaa;
+    input {
+      text-align: center;
     }
   }
 }

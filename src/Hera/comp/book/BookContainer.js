@@ -23,14 +23,14 @@ class BookContainer extends Component {
 }
 
 class BookList extends Component {
-    constructor(props) {
-        super(props);
-    }
+    // constructor(props) {
+    //     super(props);
+    // }
 
     render() {
         let name = this.props.name;
         return (<div className="book-list">
-            <img className="book-img" src={this.props.imgSrc}/>
+            <img className="book-img" src={this.props.imgSrc} alt={this.props.name}/>
             <div className="book-name" title={name}>{this.props.name}</div>
             <div className="book-desc">
                 <span className="book-time">{this.props.date}</span>

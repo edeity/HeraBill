@@ -29,6 +29,10 @@ class Type {
         return typeof  obj === "undefined";
     }
 
+    static isString(obj) {
+        return typeof obj === 'string';
+    }
+    
     static isArray(obj) {
         return Array.isArray(obj);
     }
