@@ -106,7 +106,8 @@
   min-height: 100vh; }
 
 .ant-layout-aside .ant-layout-content {
-  padding: 10px 20px; }
+  margin: 10px 20px;
+  overflow: hidden; }
 
 .ant-layout-aside .ant-layout-footer {
   text-align: center;

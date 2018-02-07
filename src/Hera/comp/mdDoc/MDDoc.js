@@ -17,14 +17,13 @@ class MDDoc extends Component {
     constructor(props) {
         super(props);
 
-        let toc = [];
+        this.toc = [];
 
+        // 配置导航页渲染
         let renderer = (() => {
             var renderer = new marked.Renderer();
             renderer.heading = (text, level, raw) => {
-
                 var anchor = raw.replace(/[-<>]+/g, '-');
-
                 let currAnchorData = {
                     level: level,
                     anchor: anchor,
@@ -33,7 +32,7 @@ class MDDoc extends Component {
 
                 // 生成树级toc
                 if (level > 1) {
-                    toc.push(currAnchorData);
+                    this.toc.push(currAnchorData);
                 }
 
                 var resDOM = `
@@ -46,63 +45,75 @@ class MDDoc extends Component {
             return renderer;
         })();
 
+        // 配置mark渲染
         marked.setOptions({
             highlight: function (code) {
                 return hljs.highlightAuto(code).value;
             },
             renderer: renderer,
             gfm: true,
-            tables: true,
+            tables: true
         });
 
         if (this.props.docUrl) {
+            // 请求远程
+            this.state = {
+                loading: true, // 是否正在加载
+                markStr: '', // 需要被markdown的字符串
+                toc: [] // 目录
+            };
             fetch(this.props.docUrl)
                 .then(response => response.text())
                 .then(txt => {
+                    let markStr = marked(txt);
                     this.setState({
                         loading: false,
-                        markStr: marked(txt)
-                    }, () => {
-
-                        // 重新构建树
-                        let resultToc = [];
-                        let pre = null;
-
-                        function setRelative(now, pre, all) {
-                            if (!pre) {
-                                all.push(now)
-                            } else if (now.level > pre.level) {
-                                pre.child = pre.child || [];
-                                pre.child.push(now);
-                                now.parent = pre;
-                            } else {
-                                if (pre.parent) {
-                                    setRelative(now, pre.parent, all);
-                                } else {
-                                    all.push(now)
-                                }
-                            }
-                        }
-
-                        toc.forEach((now) => {
-                            setRelative(now, pre, resultToc);
-                            pre = now;
-                        });
-
+                        markStr: markStr,
+                    }, ()=> {
                         this.setState({
-                            toc: resultToc
+                            toc: this.__renderToc()
                         })
                     });
                 });
-        }
-
-        this.state = {
-            loading: true, // 是否正在加载
-            markStr: '', // 需要被markdown的字符串
-            toc: [] // 目录
+        } else {
+            // 渲染本地
+            this.state = {
+                loading: false, // 是否正在加载
+                markStr: marked(this.props.docStr), // 需要被markdown的字符串
+                toc: [] // 目录
+            };
         }
     }
 
+    __renderToc() {
+        // 重新构建树
+        let resultToc = [];
+        let pre = null;
+
+        this.toc.forEach((now) => {
+            setRelative(now, pre, resultToc);
+            pre = now;
+        });
+
+        return resultToc;
+
+        function setRelative(now, pre, all) {
+            if (!pre) {
+                all.push(now)
+            } else if (now.level > pre.level) {
+                pre.child = pre.child || [];
+                pre.child.push(now);
+                now.parent = pre;
+            } else {
+                if (pre.parent) {
+                    setRelative(now, pre.parent, all);
+                } else {
+                    all.push(now)
+                }
+            }
+        }
+    }
+    
     createMarkup = ()=> {
         return {__html: this.state.markStr};
     };
@@ -143,7 +154,8 @@ class MDDoc extends Component {
 
 MDDoc.propTypes = {
     isToc: PropTypes.bool,
-    docUrl: PropTypes.string
+    docUrl: PropTypes.string,
+    docStr: PropTypes.string
 };
 
 export default MDDoc;

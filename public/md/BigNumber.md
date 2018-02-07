@@ -1,6 +1,6 @@
 # BigNumber
 
-通过基本的**竖式计算**，以代替Js浮点型缺陷的工具类
+通过基本的**四则运算/竖式计算**，以代替Js浮点型缺陷的工具类
 
 ```javascript
 let a1 = new BigNumber("0.1");

@@ -5,6 +5,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Icon, Tooltip, Input, Popconfirm, message} from 'antd';
 import Type from '../../tools/Type';
+import * as db from 'localforage';
+import Log from '../../tools/Log';
 
 import './toDo.css';
 
@@ -13,9 +15,37 @@ const TRANS_KEY = '__dragData';
 class Todo extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            data: this.__getRenderData(this.props.defaultValue),
-            isDragOver: false
+        let defaultValue = this.props.defaultValue || [];
+        if(this.props.isStore) {
+            if(this.props.storeKey) {
+                this.state = {
+                    data: [],
+                    isDragOver: false
+                };
+                db.getItem(this.props.storeKey).then(table=> {
+                    if(table)  {
+                        this.setState({
+                            data: this.__getRenderData(table),
+
+                        });
+                    } else {
+                        // 证明还没有被初始化
+                        db.setItem(this.props.storeKey, defaultValue).then(()=> {
+                            this.setState({
+                                data: this.__getRenderData(defaultValue),
+
+                            });
+                        });
+                    }
+                })
+            } else {
+                Log.error('props: if [isStore] === true, that attribute [storeKey] is required');
+            }
+        } else {
+            this.state = {
+                data: this.__getRenderData(defaultValue),
+                isDragOver: false
+            }
         }
     }
 
@@ -37,10 +67,22 @@ class Todo extends Component {
         return data;
     }
 
-    empty() {
+    __refreshData(data) {
         this.setState({
-            data: []
-        })
+            data: data
+        });
+        // 同步到本地
+        if(this.props.isStore) {
+            let storeData = [];
+            data.forEach(function (eachData) {
+                storeData.push(eachData.content);
+            });
+            db.setItem(this.props.storeKey, storeData);
+        }
+    }
+
+    empty() {
+        this.__refreshData([]);
     }
 
     add(newData) {
@@ -53,9 +95,7 @@ class Todo extends Component {
                 isEditable: true
             });
         }
-        this.setState({
-            data: data
-        })
+        this.__refreshData(data);
     }
 
     insert(index) {
@@ -64,9 +104,7 @@ class Todo extends Component {
             content: '',
             isEditable: true
         });
-        this.setState({
-            data: data
-        });
+        this.__refreshData(data);
     }
 
     toTop(index) {
@@ -78,9 +116,7 @@ class Todo extends Component {
             let tempData = data[changeIndex];
             data[changeIndex] = data[index];
             data[index] = tempData;
-            this.setState({
-                data: data
-            })
+            this.__refreshData(data);
         }
     }
 
@@ -93,9 +129,7 @@ class Todo extends Component {
             let tempData = data[changeIndex];
             data[changeIndex] = data[index];
             data[index] = tempData;
-            this.setState({
-                data: data
-            })
+            this.__refreshData(data);
         }
     }
 
@@ -109,27 +143,21 @@ class Todo extends Component {
             let tempData = data[changeIndex];
             data[changeIndex] = data[index];
             data[index] = tempData;
-            this.setState({
-                data: data
-            })
+            this.__refreshData(data);
         }
     }
 
     delete(index) {
         let data = this.state.data;
         data.splice(index, 1);
-        this.setState({
-            data: data
-        })
+        this.__refreshData(data);
     }
 
     deleteIfEmpty(index) {
         let data = this.state.data;
         if(data[index].content === '') {
             data.splice(index, 1);
-            this.setState({
-                data: data
-            })
+            this.__refreshData(data);
         }
     };
 
@@ -151,17 +179,13 @@ class Todo extends Component {
     changeEditState(index, isEditable) {
         let data = this.state.data;
         data[index].isEditable = isEditable;
-        this.setState({
-            data: data
-        });
+        this.__refreshData(data);
     }
 
     changeContent(index, value) {
         let data = this.state.data;
         data[index].content = value;
-        this.setState({
-            data: data
-        });
+        this.__refreshData(data);
     }
 
     // onDrag(event) {
@@ -174,65 +198,69 @@ class Todo extends Component {
     // }
 
     onDragStart(event, index) {
-        let data = this.state.data;
-        window[TRANS_KEY] = data[index];
-        data.splice(index, 1);
-        // if(Type.isUndefined(index)) {
-        //     if(!this.state.isDragOver) {
-        //         this.setState({
-        //             isDragOver: true
-        //         })
-        //     }
-        //     event.preventDefault();
-        // } else {
-        //
-        // }
+        if(this.props.isDrag) {
+            let data = this.state.data;
+            window[TRANS_KEY] = data[index];
+            data.splice(index, 1);
+        }
     }
 
     onDragEnter(event) {
-        if(!this.state.isDragOver) {
-            this.setState({
-                isDragOver: true
-            })
+        if(this.props.isDrag) {
+            if(!this.state.isDragOver) {
+                this.setState({
+                    isDragOver: true
+                })
+            }
+            event.preventDefault();
         }
-        event.preventDefault();
     }
 
     onDragOver(event) {
-        if(!this.state.isDragOver) {
-            this.setState({
-                isDragOver: true
-            })
+        if(this.props.isDrag) {
+            if(!this.state.isDragOver) {
+                this.setState({
+                    isDragOver: true
+                })
+            }
+            event.preventDefault();
         }
-        event.preventDefault();
     }
 
     onDragLeave(event) {
-        if(this.state.isDragOver) {
-            this.setState({
-                isDragOver: false
-            })
+        if(this.props.isDrag) {
+            if(this.state.isDragOver) {
+                this.setState({
+                    isDragOver: false
+                })
+            }
+            event.preventDefault();
         }
-        event.preventDefault();
     }
 
     onDragEnd(event) {
-        if(this.state.isDragOver) {
-            this.setState({
-                isDragOver: false
-            })
+        if(this.props.isDrag) {
+            // 拖拽,但没有触发onDrop时的动作
+            if(this.state.isDragOver) {
+                this.setState({
+                    isDragOver: false
+                })
+            }
+            // this.add(window[TRANS_KEY]);
+            event.preventDefault();
         }
-        event.preventDefault();
     }
 
     onDrop(event) {
-        if(this.state.isDragOver) {
-            this.setState({
-                isDragOver: false
-            })
+        if(this.props.isDrag) {
+            if(this.state.isDragOver) {
+                this.setState({
+                    isDragOver: false
+                })
+            }
+            this.add(window[TRANS_KEY]);
+            event.preventDefault();
         }
-        this.add(window[TRANS_KEY]);
-        event.preventDefault();
     }
 
     getRenderList() {
@@ -250,7 +278,7 @@ class Todo extends Component {
                              onBlur={()=>{this.changeEditState(key, false); this.deleteIfEmpty(key)}} />
                     : <li className="todo-li"
                           key={"li-"+key}
-                          draggable
+                          draggable={this.props.isDrag}
                           onDragStart={(event)=>{this.onDragStart(event, key)}}>
                             <div className="li-content"
                                  onClick={()=>this.changeEditState(key, true)}>
@@ -277,7 +305,7 @@ class Todo extends Component {
                     </li>
             );
         });
-        // this.state.isDragOver 
+        // this.state.isDragOver
         // && renderList.push(<li className="todo-li drag-over" key="drag-over">{window[TRANS_KEY].content}</li>);
         return renderList;
     }
@@ -296,7 +324,7 @@ class Todo extends Component {
                     {
                         this.state.data && this.state.data.length > 0
                             ? this.getRenderList()
-                            : <div className="no-content">* 暂无内容 *</div>
+                            : <div className="no-content">暂无内容</div>
                     }
                 </ul>
                 {
@@ -311,7 +339,10 @@ class Todo extends Component {
 }
 
 Todo.propTypes = {
-    defaultValue: PropTypes.array
+    defaultValue: PropTypes.array,
+    isStore: PropTypes.bool,
+    storeKey: PropTypes.string,
+    isDrag: PropTypes.bool
 };
 
 export default Todo;
