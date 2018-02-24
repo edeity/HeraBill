@@ -5,32 +5,17 @@
 import React, {Component} from 'react';
 import {Tabs, Row, Col} from 'antd';
 
-import BigTable from '../comp/bigTable/BigTable';
-import BigNumberEditor from '../comp/bigNumber/BigNumberEditor';
+import BigTableDescPage from './comp/BigTableDescPage';
+import BigNumberDescPage from './comp/BigNumberDescPage';
 import MDDoc from '../comp/mdDoc/MDDoc';
 import Quadrant from '../comp/toDo/Quadrant';
 import Todo from '../comp/toDo/Todo';
 
 const TabPane = Tabs.TabPane;
 
-const isDev = true;
+const isDev = false;
 // 实例:用户单据
 class Comp extends Component {
-
-    getTestData = function (row, col) {
-        let data = [];
-        let dataRow = row; //
-        let dataCol = col; // 列
-        for (var i = 0; i < dataRow; i++) {
-            let tempArray = [];
-            data.push(tempArray);
-            for (var j = 0; j < dataCol; j++) {
-                let tempData = {data: i + ',' + j};
-                tempArray.push(tempData);
-            }
-        }
-        return data;
-    };
 
     getRenderDoc(url, isToc) {
         if(isDev) {
@@ -46,13 +31,13 @@ class Comp extends Component {
             <Tabs defaultActiveKey={"bigTable"} tabPosition={"left"}>
                 <TabPane tab="表格" key={"bigTable"}>
                     <div className="inner-container">
-                        <BigTable data={this.getTestData(100, 100)}/>
+                        <BigTableDescPage/>
                         { this.getRenderDoc('/md/BigTable.md') }
                     </div>
                 </TabPane>
                 <TabPane tab="大数" key={"bigNum"}>
                     <div className="inner-container">
-                        <BigNumberEditor/>
+                        <BigNumberDescPage/>
                         { this.getRenderDoc('/md/BigNumber.md') }
                     </div>
                 </TabPane>

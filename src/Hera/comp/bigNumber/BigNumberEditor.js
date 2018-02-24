@@ -6,7 +6,6 @@ import React, {Component} from 'react';
 import BigNumber from './BigNumber';
 import BigNumberBlock from './BigNumberBlock'
 
-
 class BigNumberEditor extends Component {
     constructor() {
         super();

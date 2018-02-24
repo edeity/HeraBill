@@ -3,9 +3,12 @@
  */
 
 import React from 'react';
-import BillDemo from '../menu/BillDemo';
-import Comp from '../menu/Comp';
-import Page from '../menu/Page';
+// import BillDemo from '../menu/BillDemo';
+import BillDemo from '../menu/async/AsyncBillDemo';
+// import Comp from '../menu/Comp';
+import Comp from '../menu/async/AsyncComp';
+// import Page from '../menu/Page';
+import Page from '../menu/async/AsyncPage';
 
 const menuConifg = [{
     key: 'bill',
@@ -24,7 +27,7 @@ const menuConifg = [{
     url: '/page',
     iconType: 'api',
     comp: <Page/>,
-    title: '静态页面'
+    title: '渐进学习计划'
 }];
 
 export default menuConifg;
