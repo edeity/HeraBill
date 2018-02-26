@@ -13,7 +13,7 @@ import Todo from '../comp/toDo/Todo';
 
 const TabPane = Tabs.TabPane;
 
-const isDev = false;
+const isDev = true;
 // 实例:用户单据
 class Comp extends Component {
 
@@ -32,13 +32,13 @@ class Comp extends Component {
                 <TabPane tab="表格" key={"bigTable"}>
                     <div className="inner-container">
                         <BigTableDescPage/>
-                        { this.getRenderDoc('/md/BigTable.md') }
+                        <MDDoc linkGithubDoc={!isDev} docUrl={"/md/BigTable.md"}/>
                     </div>
                 </TabPane>
                 <TabPane tab="大数" key={"bigNum"}>
                     <div className="inner-container">
                         <BigNumberDescPage/>
-                        { this.getRenderDoc('/md/BigNumber.md') }
+                        <MDDoc  linkGithubDoc={!isDev} docUrl={"/md/BigNumber.md"}/>
                     </div>
                 </TabPane>
                 <TabPane tab="Todo" key={"toDo"}>
@@ -72,14 +72,14 @@ class Comp extends Component {
                         </Row>
                         <Row>
                             <Col span={24}>
-                                { this.getRenderDoc('/md/Todo.md') }
+                                <MDDoc  linkGithubDoc={!isDev} docUrl={"/md/Todo.md"}/>
                             </Col>
                         </Row>
                     </div>
                 </TabPane>
                 <TabPane tab="MD" key="markdown">
                     <div className="inner-container">
-                        { this.getRenderDoc('/md/MDDoc.md', true) }
+                        <MDDoc isToc  linkGithubDoc={!isDev} docUrl={"/md/MDDoc.md"}/>
                     </div>
                 </TabPane>
             </Tabs>

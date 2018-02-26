@@ -14,6 +14,11 @@ export default class Book extends Component {
         return (
             <BookContainer>
                 <Col md={12} lg={8} xl={6}>
+                    <BookList name="javascript框架设计(第二版)"
+                              date="2017-08"
+                              imgSrc="//img12.360buyimg.com/n1/s200x200_jfs/t9181/230/827184604/59565/f5132a3a/59afa68dNc64af049.jpg"/>
+                </Col>
+                <Col md={12} lg={8} xl={6}>
                     <BookList name="上帝掷骰子吗？：量子物理史话"
                               recommended
                               date="2017-06"

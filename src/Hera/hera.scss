@@ -60,8 +60,32 @@ div.markdown-body {
 }
 
 .not-found {
-  font-size: 20vw;
-  text-align: center;
+  font-size: 15px;
+  .shell {
+    background: #000;
+    border-radius: 3px;
+    padding: 5px;
+    .tips {
+      color: #c7c7c7;
+      margin: 5px;
+    }
+    .pre {
+      display: inline-block;
+      margin: 5px;
+      color: #51E3F5;
+    }
+    .command {
+      display: inline-block;
+      color: #c7c7c7;
+    }
+    .underline {
+      display: inline-block;
+      background: #c7c7c7;
+      width: 12px;
+      height: 4px;
+      margin-left: 5px;
+    }
+  }
 }
 
 .hera-bill {

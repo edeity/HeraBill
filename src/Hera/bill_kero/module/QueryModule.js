@@ -4,7 +4,7 @@
 
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import DataTable from '../../data/DataTable';
+import DataTable from '../data/DataTable';
 import Meta from '../Meta';
 import {Row, Button} from 'antd';
 
@@ -41,7 +41,7 @@ class QueryModule extends Component {
         })
     };
     render() {
-        let currRow = this.state.dataTable.getCurrentRow();
+        let currRow = this.props.dataTable.getCurrentRow();
         return <Row gutter={16} style={{marginBottom: 20}}>
                 {
                     Object.keys(this.meta).map((key) => {

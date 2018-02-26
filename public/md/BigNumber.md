@@ -4,7 +4,9 @@
 
 ```javascript
 let a1 = new BigNumber("0.1");
+
 let b1 = new BigNumber("0.2");
+
 a1.add(b1).toString(); // "0.3"
 
 // other use

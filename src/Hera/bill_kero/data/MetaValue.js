@@ -1,5 +1,5 @@
-import Type from '../tools/Type';
-import Log from '../tools/Log';
+import Type from '../../tools/Type';
+import Log from '../../tools/Log';
 
 /**
  * 用来描述一个字段的值
@@ -11,11 +11,13 @@ class MetaValue  {
      **/
     static getMetaValue = function () {
         return {
+            // 基本属性
             value: null,
             type: 'str',
             desc: null,
             editable: true,
             isValid: true,
+            // 检测合法性
             __validConfig: {
                 matchReg: null,
                 matchFun: null,
@@ -25,11 +27,13 @@ class MetaValue  {
                 required: true,
                 isMatchWhenBlur: false
             },
+            // 在一下情况是否显示
             __renderConfig: {
                 isQuery: true,
                 isList: true,
                 isCard: true,
             },
+            // 解决依赖情况: 该点将暂时忽略
             __relyConfig: {
                 
             }

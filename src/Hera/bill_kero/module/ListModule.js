@@ -3,10 +3,12 @@
  */
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import DataTable from '../../data/DataTable';
-import DataRow from '../../data/DataRow';
+import DataTable from '../data/DataTable';
+import DataRow from '../data/DataRow';
 import {Row, Table, Button, Tooltip} from 'antd';
 import Meta from '../Meta';
+
+
 
 class ListModule extends Component {
     constructor(props) {
@@ -90,8 +92,8 @@ class ListModule extends Component {
     };
 
     onRow = (record, index) => {
-        ;
-    }
+
+    };
 
     __getTitleBtn = () => {
         return  <Row type="flex" justify="end">

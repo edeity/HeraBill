@@ -3,9 +3,12 @@
  */
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import DataTable from '../../data/DataTable';
+import DataTable from '../data/DataTable';
 import Meta from '../Meta';
-import {Row, Col, Button} from 'antd';
+import {Row, Col, Button, Tabs} from 'antd';
+import ListModule from './ListModule';
+
+const TabPane = Tabs.TabPane;
 
 class CardModule extends Component {
     constructor(props) {
@@ -13,7 +16,8 @@ class CardModule extends Component {
         let dataTable = props.dataTable;
         this.meta = dataTable.getMeta();
         this.state = {
-            dataTable: dataTable
+            dataTable: dataTable,
+            bodyTableMap: this.props.bodyTableMap
         }
     }
     onFieldChanged = (field, value) => {
@@ -40,6 +44,63 @@ class CardModule extends Component {
         this.props.onReturn();
     };
 
+    __resetBodyTableData = (tableId, dataTable) => {
+        let bodyTableMap = this.state.bodyTableMap;
+        bodyTableMap.set(tableId, dataTable);
+        this.setState({
+            bodyTableMap: bodyTableMap
+        })
+    }
+    onCardBodyDelete = (index, tableId) => {
+        let currTable = this.state.bodyTableMap.get(tableId);
+        let currRow = currTable.getRowByIndex(index);
+        currTable.removeRow(currRow);
+        this.__resetBodyTableData(tableId, currTable);
+    };
+
+    onCardBodyChange = (tableId, field, value) => {
+        let changeTable = this.state.bodyTableMap.get(tableId);
+        changeTable.setValue(field, value);
+        this.__resetBodyTableData(tableId, changeTable);
+    };
+
+    onCardBodyCell = (tableId, index) => {
+        let changeTable = this.state.bodyTableMap.get(tableId);
+        let currRow = changeTable.getRowByIndex(index);
+        changeTable.__setCurrentRow(currRow);
+        this.__resetBodyTableData(tableId, changeTable);
+    };
+
+    onCardBodyNew = (tableId) => {
+        let changeTable = this.state.bodyTableMap.get(tableId);
+        changeTable.createEmptyRow();
+        this.__resetBodyTableData(tableId, changeTable);
+    };
+    
+    __getCardBody = () => {
+        let self = this;
+        let child = [];
+        for (let key of this.state.bodyTableMap.keys()) {
+            let eachCardBodyTable = this.state.bodyTableMap.get(key);
+            child.push(
+                <TabPane tab={this.props.bodyTableAttr[key].title} key={key}>
+                    <ListModule
+                        key={key}
+                        tableId={key}
+                        dataTable={eachCardBodyTable}
+                        uniqKey={eachCardBodyTable.__getRefreshKey()}
+                        btnInPanel
+                        editable={self.props.editable}
+                        onDelete={self.onCardBodyDelete}
+                        onChange={self.onCardBodyChange}
+                        onCell={self.onCardBodyCell}
+                        onNew={self.onCardBodyNew}/>
+                </TabPane>
+            )
+        }
+        return child;
+    };
+    
     render() {
         let self = this;
         let currRow = this.state.dataTable.getCurrentRow();
@@ -76,11 +137,11 @@ class CardModule extends Component {
 
             }
             </Col>
-            {
-                React.Children.map(this.props.children, function (child) {
-                    return <Col className="child-list" span="24" style={{marginBottom: 20}}>{child}</Col>;
-                })
-            }
+            <Tabs defaultActiveKey={this.state.bodyTableMap.keys().next().value} >
+                {
+                    this.__getCardBody()
+                }
+            </Tabs>
         </Row>
     }
 }

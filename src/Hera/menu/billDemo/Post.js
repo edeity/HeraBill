@@ -5,7 +5,7 @@
 
 import React from 'react';
 
-import Bill from '../../bill/OldBill';
+import Bill from '../../bill/Bill';
 import Consistence from '../../tools/Consistence';
 
 const PK = 'pk';

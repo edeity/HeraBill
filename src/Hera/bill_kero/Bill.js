@@ -3,14 +3,11 @@ import React, {Component} from 'react';
 import QueryModule from './module/QueryModule';
 import ListModule from './module/ListModule';
 import CardModule from './module/CardModule';
-import DataTable from '../data/DataTable';
+import DataTable from './data/DataTable';
 import PropTypes from 'prop-types';
 import Type from '../tools/Type';
-
 import Log from '../tools/Log';
-
-import {message, Tabs} from 'antd';
-const TabPane = Tabs.TabPane;
+import {message} from 'antd';
 
 const PK = 'pk';
 
@@ -60,7 +57,7 @@ class Bill extends Component {
 
     componentWillUnMount = () => {
         this.isMount = false;
-    }
+    };
 
     __getRefreshHandle = () => {
         return () => {
@@ -194,28 +191,6 @@ class Bill extends Component {
         this.onQuery();
     };
 
-    onCardBodyDelete = (index, tableId) => {
-        let currTable = this.cardBodyTableMap.get(tableId);
-        let currRow = currTable.getRowByIndex(index);
-        currTable.removeRow(currRow);
-    };
-
-    onCardBodyChange = (tableId, field, value) => {
-        let changeTable = this.cardBodyTableMap.get(tableId);
-        changeTable.setValue(field, value);
-    };
-
-    onCardBodyCell = (tableId, index) => {
-        let changeTable = this.cardBodyTableMap.get(tableId);
-        let currRow = changeTable.getRowByIndex(index);
-        changeTable.__setCurrentRow(currRow);
-    };
-
-    onCardBodyNew = (tableId) => {
-        let changeTable = this.cardBodyTableMap.get(tableId);
-        changeTable.createEmptyRow();
-    };
-
     static handleRes = (res, successMsg, callback) => {
         if(res.success) {
             Type.isFunction(callback) && callback(res.data);
@@ -258,30 +233,6 @@ class Bill extends Component {
         })
     };
 
-    __getCardBody = () => {
-        let self = this;
-        let child = [];
-        for (let key of this.cardBodyTableMap.keys()) {
-            let eachCardBodyTable = this.cardBodyTableMap.get(key);
-            child.push(
-                <TabPane tab={this.props.bodyTableAttr[key].title} key={key}>
-                    <ListModule
-                    key={key}
-                    tableId={key}
-                    dataTable={eachCardBodyTable}
-                    uniqKey={eachCardBodyTable.__getRefreshKey()}
-                    btnInPanel
-                    editable={self.state.editable}
-                    onDelete={self.onCardBodyDelete}
-                    onChange={self.onCardBodyChange}
-                    onCell={self.onCardBodyCell}
-                    onNew={self.onCardBodyNew}/>
-                </TabPane>
-            )
-        }
-        return child;
-    };
-
     render() {
         return <div className="hera-bill">
             {this.state.isList ?
@@ -304,18 +255,14 @@ class Bill extends Component {
                 : <div id="card-panel">
                 <CardModule
                     dataTable={this.cardTable}
+                    bodyTableMap={this.cardBodyTableMap}
+                    bodyTableAttr={this.props.bodyTableAttr}
                     editable={this.state.editable}
                     isNewMode={this.state.isNew}
                     onSave={this.onSave}
                     onModify={this.onCardModify}
                     onCancel={this.onCancel}
-                    onReturn={this.onReturn}>
-                        <Tabs defaultActiveKey={this.cardBodyTableMap.keys().next().value} >
-                        {
-                            this.__getCardBody()
-                        }
-                        </Tabs>
-                </CardModule>
+                    onReturn={this.onReturn}/>
             </div>
             }
         </div>
@@ -334,6 +281,5 @@ Bill.propTypes = {
     onSave: PropTypes.func.isRequired,
     onInit: PropTypes.func
 };
-
 
 export default Bill;

@@ -9,8 +9,11 @@ import marked from 'marked';
 import 'github-markdown-css/github-markdown.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css'
+import './reset-markdown.css';
 
 const {Link} = Anchor;
+
+const gitHubDocUrl = 'https://raw.githubusercontent.com/edeity/HeraBill/master/public';
 
 // 实例:用户单据
 class MDDoc extends Component {
@@ -62,7 +65,8 @@ class MDDoc extends Component {
                 markStr: '', // 需要被markdown的字符串
                 toc: [] // 目录
             };
-            fetch(this.props.docUrl)
+            let url = this.props.linkGithubDoc ? gitHubDocUrl + this.props.docUrl : this.props.docUrl;
+            fetch(url)
                 .then(response => response.text())
                 .then(txt => {
                     let markStr = marked(txt);
@@ -122,9 +126,9 @@ class MDDoc extends Component {
         return data.map((eachData) => {
             let result = null;
             if (!eachData.child) {
-                result = <Link key={ Math.random()} href={'#'+eachData.anchor} title={ eachData.title }/>
+                result = <Link key={ eachData.anchor } href={'#'+eachData.anchor} title={ eachData.title }/>
             } else {
-                result = <Link key={ Math.random()} href={'#'+eachData.anchor} title={ eachData.title }>
+                result = <Link key={ eachData.anchor } href={'#'+eachData.anchor} title={ eachData.title }>
                     {
                         this.createTocByData(eachData.child)
                     }
@@ -143,8 +147,13 @@ class MDDoc extends Component {
                     spinning={this.state.loading}
                     delay={500}
                     style={{ 'marginTop': 100}}>
-                    <div className="markdown-body" dangerouslySetInnerHTML={ this.createMarkup() }/>
-                    {this.props.isToc && <Anchor className="home-anchor"> { this.createTocByData(this.state.toc) }</Anchor>}
+                    <div className="markdown-body" dangerouslySetInnerHTML={ this.createMarkup()}/>
+                    {
+                        this.props.isToc
+                        && <Anchor className="home-anchor">
+                            { this.createTocByData(this.state.toc) }
+                        </Anchor>
+                    }
                 </Spin>
             </div>
         )
@@ -154,6 +163,7 @@ class MDDoc extends Component {
 
 MDDoc.propTypes = {
     isToc: PropTypes.bool,
+    linkGithubDoc: PropTypes.bool,
     docUrl: PropTypes.string,
     docStr: PropTypes.string
 };

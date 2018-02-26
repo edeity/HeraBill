@@ -1,0 +1,10 @@
+.markdown-body p code {
+  color: #d14;
+  margin: 0 2px; }
+
+.ant-anchor-wrapper {
+  opacity: 0.5;
+  transition: all linear 0.2s; }
+
+.ant-anchor-wrapper:hover {
+  opacity: 1; }

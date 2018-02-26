@@ -5,7 +5,7 @@ import './layout.css'
 import './hera.css'
 
 import menuConfig from './config/MenuConfig';
-import NotFound from './exception/NotFound';
+import NotFound from './exception/404';
 
 import Log from './tools/Log';
 Log.isDebugger = true;

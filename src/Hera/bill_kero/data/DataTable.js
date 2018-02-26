@@ -4,8 +4,8 @@
 
 import DataRow from './DataRow';
 import MetaValue from './MetaValue';
-import Type from '../tools/Type';
-import Log from '../tools/Log';
+import Type from '../../tools/Type';
+import Log from '../../tools/Log';
 
 class DataTable {
 

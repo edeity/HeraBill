@@ -86,7 +86,8 @@ class Meta extends PureComponent {
                 case 'str':  return(<InputStrDecorator
                         value={ value }
                         onChange={ self.onChange }
-                        disabled={disabled}/>)
+                        disabled={disabled}/>
+                );
                 case 'date': return (
                     <DatePickerDecorator
                         value={ value }

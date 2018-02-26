@@ -3,7 +3,7 @@
  */
 
 import MetaValue from './MetaValue';
-import Type from '../tools/Type';
+import Type from '../../tools/Type';
 // import Log from '../tools/Log';
 
 const VALUE_KEY = MetaValue.VALUE_KEY;

@@ -18,7 +18,7 @@ export default class Page extends Component {
     }
     render() {
         return (
-            <Tabs defaultActiveKey={"bookList"} animated={false}>
+            <Tabs defaultActiveKey={"bookList"} tabPosition={"left"} animated={false}>
                 <TabPane tab="那些年读的书" key={"bookList"}>
                     <div className="inner-container">
                         <h2 style={{textAlign: 'center', marginTop: 20}}>

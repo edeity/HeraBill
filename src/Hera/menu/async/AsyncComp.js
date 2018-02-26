@@ -6,7 +6,7 @@ import React, {Component} from 'react';
 import Loadable from 'react-loadable';
 
 const TempLoadComponent = Loadable({
-    loader: () => import('../Comp'),
+    loader: () => {return import ('../Comp')},
     render(loaded, props) {
         let Component = loaded.default;
         return <Component {...props}/>;
