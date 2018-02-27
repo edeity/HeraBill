@@ -2,77 +2,94 @@
   min-height: 280px;
   position: relative;
   padding: 30px; }
-  .todo-container:hover .tool-tips {
-    opacity: 1; }
-  .todo-container .tool-tips {
-    position: absolute;
-    top: 0;
-    right: 0;
-    opacity: 0;
-    transition: all 0.2s linear;
-    z-index: 2;
-    margin-right: 5px; }
-    .todo-container .tool-tips .tool-btn {
-      display: inline-block;
-      padding: 5px;
-      font-weight: bolder;
-      border-radius: 3px;
-      cursor: pointer; }
-      .todo-container .tool-tips .tool-btn:hover {
-        color: #5182bb; }
-  .todo-container div.drag-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    color: #aaa;
-    background: #000;
-    opacity: 0.5;
-    transition: all 0.3s; }
-    .todo-container div.drag-overlay .drag-tips {
-      position: absolute;
-      top: 50%;
-      width: 100%;
-      text-align: center; }
-  .todo-container ul.todo-list {
-    position: relative;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    text-align: center; }
-    .todo-container ul.todo-list div.no-content {
-      height: 200px;
-      line-height: 200px;
-      color: #aaa; }
-    .todo-container ul.todo-list li.todo-li {
-      position: relative;
-      padding: 5px;
-      margin: 0 10px;
-      transition: all 0.2s linear; }
-      .todo-container ul.todo-list li.todo-li:hover {
-        color: #5182bb;
-        background: #f1f1f1;
-        border: 3px;
-        cursor: pointer;
-        transform: scale(1.04); }
-        .todo-container ul.todo-list li.todo-li:hover .li-tool {
-          opacity: 1; }
-      .todo-container ul.todo-list li.todo-li.drag-over {
-        border: 1px dotted white; }
-      .todo-container ul.todo-list li.todo-li .li-tool {
-        position: absolute;
-        top: 0;
-        opacity: 0;
-        margin: 0 5px;
-        transition: all 0.2s linear; }
-        .todo-container ul.todo-list li.todo-li .li-tool.right {
-          right: 0; }
-        .todo-container ul.todo-list li.todo-li .li-tool.left {
-          left: 0; }
-        .todo-container ul.todo-list li.todo-li .li-tool .li-btn {
-          display: inline-block;
-          padding: 5px 3px; }
-    .todo-container ul.todo-list input {
-      text-align: center; }
+
+.todo-container:hover .tool-tips {
+  opacity: 1; }
+
+.todo-container .tool-tips {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  transition: all 0.2s linear;
+  z-index: 2;
+  margin-right: 5px; }
+
+.todo-container .tool-tips .tool-btn {
+  display: inline-block;
+  padding: 5px;
+  font-weight: bolder;
+  border-radius: 3px;
+  cursor: pointer; }
+
+.todo-container .tool-tips .tool-btn:hover {
+  color: #5182bb; }
+
+.todo-container div.drag-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  color: #aaa;
+  background: #000;
+  opacity: 0.5;
+  transition: all 0.3s; }
+
+.todo-container div.drag-overlay .drag-tips {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  text-align: center; }
+
+.todo-container ul.todo-list {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center; }
+
+.todo-container ul.todo-list div.no-content {
+  height: 200px;
+  line-height: 200px;
+  color: #aaa; }
+
+.todo-container ul.todo-list li.todo-li {
+  position: relative;
+  padding: 5px;
+  margin: 0 10px;
+  transition: all 0.2s linear; }
+
+.todo-container ul.todo-list li.todo-li:hover {
+  color: #5182bb;
+  background: #f1f1f1;
+  border: 3px;
+  cursor: pointer;
+  transform: scale(1.04); }
+
+.todo-container ul.todo-list li.todo-li:hover .li-tool {
+  opacity: 1; }
+
+.todo-container ul.todo-list li.todo-li.drag-over {
+  border: 1px dotted white; }
+
+.todo-container ul.todo-list li.todo-li .li-tool {
+  position: absolute;
+  top: 0;
+  opacity: 0;
+  margin: 0 5px;
+  transition: all 0.2s linear; }
+
+.todo-container ul.todo-list li.todo-li .li-tool.right {
+  right: 0; }
+
+.todo-container ul.todo-list li.todo-li .li-tool.left {
+  left: 0; }
+
+.todo-container ul.todo-list li.todo-li .li-tool .li-btn {
+  display: inline-block;
+  padding: 5px 3px; }
+
+.todo-container ul.todo-list input {
+  text-align: center; }

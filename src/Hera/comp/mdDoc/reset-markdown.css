@@ -1,3 +1,6 @@
+.md-doc {
+  position: relative; }
+
 .markdown-body p code {
   color: #d14;
   margin: 0 2px; }

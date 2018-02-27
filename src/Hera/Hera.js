@@ -30,13 +30,23 @@ class Hera extends Component {
         })
     };
 
+    getHomeTitle = () => {
+        return this.menuData[0].title;
+    };
+    getHomeKey = () => {
+        return this.menuData[0].key;
+    };
+    getHomePage = () => {
+        return this.menuData[0].comp;
+    };
+
     // 获取当前页面渲染的路由组件
     getComp = (routeObj) => {
         let comp = routeObj.match.params.comp;
         let rendererComp = null;
         this.menuData.some((eachMenuData) => {
             if(eachMenuData.key === comp) {
-                rendererComp = eachMenuData.comp
+                rendererComp = eachMenuData.comp;
                 return true;
             }
             return false;
@@ -61,14 +71,14 @@ class Hera extends Component {
         let urlArray = document.location.pathname.split('/');
         let currKey = urlArray[urlArray.length - 1];
         let currentMenuData = this.getMenuData(currKey);
-        return currentMenuData ? [currentMenuData.key] : ['404'];
+        return currentMenuData ? [currentMenuData.key] : [this.getHomeKey()];
     };
 
     // 通过当前激活的页签获取名称
     getTitle = (key) => {
         let currentKey = this.getCurrentMenuSelectedKeys()[0];
         let currentMenuData = this.getMenuData(currentKey);
-        return currentMenuData ? currentMenuData.title : '404';
+        return currentMenuData ? currentMenuData.title : this.getHomeTitle();
     };
 
     // 通过选择页签更改名称
@@ -76,6 +86,7 @@ class Hera extends Component {
         const key = item.key;
         this.changeTitle(key);
     };
+
     changeTitle = (key) => {
         this.setState({
             title: this.getTitle(key)
@@ -123,6 +134,7 @@ class Hera extends Component {
                             <div className="ant-layout-content">
                                 <Route>
                                     <Switch>
+                                        <Route exact path={preMount + "/"} component={this.getHomePage}/>
                                         <Route path={preMount + "/:comp"} component={this.getComp}/>
                                     </Switch>
                                 </Route>

@@ -44,33 +44,39 @@ div.markdown-body code.lang-javascript {
 
 .not-found {
   font-size: 15px; }
-  .not-found .shell {
-    background: #000;
-    border-radius: 3px;
-    padding: 5px; }
-    .not-found .shell .tips {
-      color: #c7c7c7;
-      margin: 5px; }
-    .not-found .shell .pre {
-      display: inline-block;
-      margin: 5px;
-      color: #51E3F5; }
-    .not-found .shell .command {
-      display: inline-block;
-      color: #c7c7c7; }
-    .not-found .shell .underline {
-      display: inline-block;
-      background: #c7c7c7;
-      width: 12px;
-      height: 4px;
-      margin-left: 5px; }
+
+.not-found .shell {
+  background: #000;
+  border-radius: 3px;
+  padding: 5px; }
+
+.not-found .shell .tips {
+  color: #c7c7c7;
+  margin: 5px; }
+
+.not-found .shell .pre {
+  display: inline-block;
+  margin: 5px;
+  color: #51E3F5; }
+
+.not-found .shell .command {
+  display: inline-block;
+  color: #c7c7c7; }
+
+.not-found .shell .underline {
+  display: inline-block;
+  background: #c7c7c7;
+  width: 12px;
+  height: 4px;
+  margin-left: 5px; }
 
 .hera-bill .inline-btn {
   border-right: 2px solid #ccc;
   padding: 0 5px; }
-  .hera-bill .inline-btn.inline-btn:last-child {
-    border-right: none;
-    margin-right: 0; }
+
+.hera-bill .inline-btn.inline-btn:last-child {
+  border-right: none;
+  margin-right: 0; }
 
 .hera-bill .is-not-validate .ant-input {
   border: 1px solid red; }

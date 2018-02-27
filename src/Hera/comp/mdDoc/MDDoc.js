@@ -147,7 +147,7 @@ class MDDoc extends Component {
                     spinning={this.state.loading}
                     delay={500}
                     style={{ 'marginTop': 100}}>
-                    <div className="markdown-body" dangerouslySetInnerHTML={ this.createMarkup()}/>
+                    <div className="markdown-body" dangerouslySetInnerHTML={ this.createMarkup()}></div>
                     {
                         this.props.isToc
                         && <Anchor className="home-anchor">
