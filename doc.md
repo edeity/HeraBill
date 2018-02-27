@@ -1,8 +1,14 @@
-通过描述字段快速生成通用高级单据的React组件，也可认为是快速生成通用单据的一种解决方案
+## 什么是单据模板
+
+单据：基本形式为表单，用于描述一般业务凭证的结构。基本单据由列表态和卡片态组成，一般单据包含以下功能：表头及多表体关联的CRDU、查询模板、以及其他通用功能：打印模板，上下游单据数据关联等。
+
+单据模板：通过`模板模式`设计模式，基于`描述字段`，快速生成单据的方法。
+
+故`HeraBill`旨在构造通过描述字段，快速生成通用单据的React组件。
 
 ## 基本用法
 
-参见`Post.js`，该代码实现了一个字段的增删改查
+参见`Post.js`（即`职位`页签内容），该代码实现了一个字段的增删改查
 
 ```javascript
 const PK = 'pk';
@@ -62,11 +68,17 @@ export default Post;
 | isQueryWhenMount | 是否在加载时理科进行查询              | boolean                            | false |
 | isMatchWhenBlur  | 是否离开任意meta时校验该meta        | boolean                            | false |
 
-
-
 ### Meta
 
-Meta是用来描述一个字段的详细信息
+Meta是用来描述一个字段的详细信息，描述一个基本字段，一般将包括
+
+- 基本
+  - 值（含类型）
+- 其他属性
+  - 可编辑性
+  - 合法性和相关提示
+- 高级属性
+  - 各种公式：显示公式/编辑公式等
 
 #### 基本信息
 
@@ -106,8 +118,6 @@ Meta是用来描述一个字段的详细信息
 |          | matchTips       | 不匹配的提示       | string               | null  |
 |          | isMatchWhenBlur | 是否离开焦点后立即校验  | boolean              | false |
 
-
-
 ### 参照
 
 参照作为增强型`<Select>`组件，在企业级基本应用，关联档案中发挥着重要的作用；
@@ -139,13 +149,11 @@ __正在开发中，该API仅依据之前项目需求，未来可能变动频繁
 | view  |                      |            |        |         |                                |
 |       | isShowLineNumber     | 是否显示行号     |        |         |                                |
 |       | isCascade            | 是否级联       |        |         |                                |
-|       | isCheckAllNodes      | 是否全选       |        |         |                                |
-
-
+|       | isCheckAllNodes      | 是否全选       |        |         |       | |
 
 ## 例子
 
-参见`User.js`，该代码实现了关于用户的基本信息的增删改查：
+参见`User.js`（即`个人信息`内容），该代码实现了关于用户的基本信息的增删改查：
 
 ```javascript
 import React from 'react';
@@ -261,3 +269,49 @@ const User = () => {
 
 export default User;
 ```
+
+
+## 类Kero Api
+
+原kero框架中，对于`结构化数据`，提供统一的操作api，方便对行数据进行行或表级的创建，删除，复制等操作，极大地方便了个行内，表间的操作；因此，我尝试了构造这样的api，以方便表单的操作。
+
+其结构为`DataTable`、`DataRow`、`MetaValue`：
+
+| 结构      | api            | 参数         | 解析         |
+| --------- | -------------- | ------------ | ------------------------------------------------------------ |
+| DataTable | setValue       | filed, value | 设置当前行某个字段（field）的值（value），同DataTable.getCurrentRow().setValue() |
+|           | getValue       | field        | 获取当前行某个字段的值，同DataRow.getCurrentRow().getValue() |
+|           | setSimpleData  | data         | 设置dataTable的值                                            |
+|           | getSimpleData  | 空           | 获取dataTable的值                                            |
+|           | getAllRows     | 空           | 返回dataTable包含的所有DataRow                               |
+|           | removeAllRows  | 空           | 删除所有DataRow                                              |
+|           | getCurrentRow  | 空           | 获取当前显示的DataRow                                        |
+|           | createEmptyRow | 空           | 创建空的DataRow                                              |
+|           | getRowByIndex  | 空           | 通过index获取DataRow                                         |
+| DataRow   |                |                                                                            |
+|           | setValue       | filed, value | 设置本行的某个字段（field）的值（value）                     |
+|           | getValue       | field        | 获取本行的某个字段的值                                       |
+|           | setSimpleData  | data         | 设置本行的值                                                 |
+|           | getSimpleData  | 空           | 获取本行的值                                                 |
+
+其api的讲解可参考Kero的[api](http://docs.tinper.org/moy/kero-api.html)（后续将在单据中提供的类似于kero的api简称为`ki`），其用法可参考`NewUser.js`（即`【新】个人信息`）中的写法，例子：
+
+- 清空`查询模板`的数据：`queryTable.removeAllRows()`。
+- 设置`列表态`的数据：`listTable.setSimpleData([{name: '小明', age: 18}, {name: '小刚', age: 24}])`
+- 获得`列表态`当前行的数据：`listTable.getCurrentRow().getSimpleData(); // {name: '小明', age: 18}`
+- 将`列表态`当前行的数据复制给`卡片态`的表头：`cardTable.setSimpleData(listTable.getCurrentRow().getSimpleData())`
+
+## Redux？
+
+redux的应用，推荐将整个页面的组件归类为展示组件和容器组件，并强制将状态归一为store状态树，通过调用已声明的action（纯函数）来改变状态。
+
+与Kero的api相比，存在以下不同：
+
+|         | Redux                             | Kero                                     |
+| ------- | --------------------------------- | ---------------------------------------- |
+| 状态    | 一个应用有且只有单一的store状态树 | 一个应用有多个dataTable                  |
+| 变更    | 调用事先声明的纯函数action        | 调用kero表级或行级api                    |
+| 优点    | 适用性强，状态变更可预测、可追踪  | 切合结构化数据，适合不同容器间的数据流动 |
+| React化 | 通过redux-react，完美融入         | 未发现相关的api库，组件需要作一定的适配  |
+
+我将写一个基于redux的单据模板，在此之前，不再就两者的差异进入更深层的对比；
