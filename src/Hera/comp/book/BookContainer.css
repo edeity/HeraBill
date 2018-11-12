@@ -1,77 +1,63 @@
 .book-container {
   padding: 15px; }
-
-.book-container .book-list {
-  position: relative;
-  display: inline-block;
-  width: 240px;
-  padding: 30px 10px 10px 10px;
-  margin: 10px;
-  vertical-align: text-top;
-  text-align: center;
-  transition: transform 0.3s; }
-
-.book-container .book-list:hover {
-  z-index: 2;
-  box-shadow: 0px 5px 25px 0px #ccc;
-  transform: scale(1.02); }
-
-.book-container .book-list:hover .book-tag {
-  opacity: 0.6 !important; }
-
-.book-container .book-list .book-img {
-  display: block;
-  width: 200px;
-  height: 200px;
-  margin: 0 auto; }
-
-.book-container .book-list .book-name {
-  padding: 5px 10px;
-  font-size: 15px;
-  font-weight: bold;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; }
-
-.book-container .book-list .book-desc {
-  padding: 5px 10px; }
-
-.book-container .book-list .book-tags {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 5px 10px; }
-
-.book-container .book-list .book-tags .book-tag {
-  display: inline-block;
-  font-size: 12px;
-  border-radius: 3px;
-  padding: 0 3px;
-  margin: 0 3px;
-  color: white;
-  cursor: pointer; }
-
-.book-container .book-list .book-tags .book-tag.hover {
-  opacity: 0;
-  transition: all 0.2s linear; }
-
-.book-container .book-list .book-tags .book-tag.hover:hover {
-  opacity: 1 !important; }
-
-.book-container .book-list .book-tags .book-tag.douban-tag {
-  background: #072; }
-
-.book-container .book-list .book-tags .book-tag.jd-tag {
-  background-color: #e23a3a; }
-
-.book-container .book-list .book-tags .book-tag.amazon-tag {
-  background: #333; }
-
-.book-container .book-list .book-tags .recommended-tag {
-  display: inline-block;
-  padding: 0 3px;
-  margin: 0 3px;
-  color: #e23a3a;
-  border: 1px solid #e23a3a;
-  border-radius: 3px;
-  font-size: 12px; }
+  .book-container .book-list {
+    position: relative;
+    display: inline-block;
+    width: 240px;
+    padding: 30px 10px 10px 10px;
+    margin: 10px;
+    vertical-align: text-top;
+    text-align: center;
+    transition: transform 0.3s; }
+    .book-container .book-list:hover {
+      z-index: 2;
+      box-shadow: 0px 5px 25px 0px #ccc;
+      transform: scale(1.02); }
+      .book-container .book-list:hover .book-tag {
+        opacity: 0.6 !important; }
+    .book-container .book-list .book-img {
+      display: block;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto; }
+    .book-container .book-list .book-name {
+      padding: 5px 10px;
+      font-size: 15px;
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+    .book-container .book-list .book-desc {
+      padding: 5px 10px; }
+    .book-container .book-list .book-tags {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 5px 10px; }
+      .book-container .book-list .book-tags .book-tag {
+        display: inline-block;
+        font-size: 12px;
+        border-radius: 3px;
+        padding: 0 3px;
+        margin: 0 3px;
+        color: white;
+        cursor: pointer; }
+        .book-container .book-list .book-tags .book-tag.hover {
+          opacity: 0;
+          transition: all 0.2s linear; }
+          .book-container .book-list .book-tags .book-tag.hover:hover {
+            opacity: 1 !important; }
+        .book-container .book-list .book-tags .book-tag.douban-tag {
+          background: #072; }
+        .book-container .book-list .book-tags .book-tag.jd-tag {
+          background-color: #e23a3a; }
+        .book-container .book-list .book-tags .book-tag.amazon-tag {
+          background: #333; }
+      .book-container .book-list .book-tags .recommended-tag {
+        display: inline-block;
+        padding: 0 3px;
+        margin: 0 3px;
+        color: #e23a3a;
+        border: 1px solid #e23a3a;
+        border-radius: 3px;
+        font-size: 12px; }

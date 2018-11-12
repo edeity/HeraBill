@@ -4,87 +4,71 @@
   overflow: auto;
   zoom: 1;
   font-size: 0; }
-
-.big-table .fir-col {
-  display: inline-block;
-  background: #f1f1f1;
-  border-left: 1px solid #ddd;
-  border-top: 1px solid #ddd; }
-
-.big-table .fir-col.fixed {
-  z-index: 3;
-  box-shadow: 1px 1px 10px #ddd; }
-
-.big-table .table-wrapper {
-  position: relative;
-  overflow: auto;
-  border: 1px solid #ddd;
-  display: inline-block;
-  font-size: 14px; }
-
-.big-table .table-wrapper.head-wrapper {
-  overflow: hidden;
-  border-top: none;
-  border-bottom: none;
-  background: #f1f1f1;
-  z-index: 2; }
-
-.big-table .table-wrapper.row-wrapper.top-fixed {
-  box-shadow: 1px 1px 10px #ddd; }
-
-.big-table .table-wrapper.col-wrapper {
-  border: none;
-  border-top: 1px solid #ddd;
-  border-left: 1px solid #ddd;
-  border-bottom: 1px solid #ddd; }
-
-.big-table .table-wrapper.col-wrapper.left-fixed {
-  box-shadow: 1px 1px 10px #ddd; }
-
-.big-table .table-wrapper.col-wrapper .hs-th {
-  box-sizing: border-box;
-  height: 25px;
-  border-bottom: 1px solid #ddd;
-  padding: 1px 5px;
-  overflow: hidden;
-  outline-width: 0;
-  white-space: pre-line; }
-
-.big-table .table-wrapper.body-wrapper {
-  background: #fff; }
-
-.big-table .table-inner {
-  position: relative; }
-
-.big-table .hs-table {
-  position: absolute;
-  border-collapse: collapse;
-  overflow: scroll;
-  table-layout: fixed;
-  /*宽度由col决定的关键*/ }
-
-.big-table .hs-table .hs-row-head .hs-row {
-  overflow: auto; }
-
-.big-table .hs-table .hs-row-head .hs-row .hs-th {
-  height: 25px;
-  padding: 1px 5px;
-  border-top: 1px solid #ddd;
-  border-left: 1px solid #ddd; }
-
-.big-table .hs-table .hs-row-head .hs-row .hs-th:first-child {
-  border-left: none; }
-
-.big-table .hs-table .hs-col-head .hs-th {
-  width: 100px;
-  padding: 1px 5px; }
-
-.big-table .hs-table .hs-body .hs-tr .hs-td {
-  box-sizing: border-box;
-  height: 25px;
-  border-right: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  padding: 1px 5px;
-  overflow: hidden;
-  outline-width: 0;
-  white-space: pre-line; }
+  .big-table .fir-col {
+    display: inline-block;
+    background: #f1f1f1;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd; }
+    .big-table .fir-col.fixed {
+      z-index: 3;
+      box-shadow: 1px 1px 10px #ddd; }
+  .big-table .table-wrapper {
+    position: relative;
+    overflow: auto;
+    border: 1px solid #ddd;
+    display: inline-block;
+    font-size: 14px; }
+    .big-table .table-wrapper.head-wrapper {
+      overflow: hidden;
+      border-top: none;
+      border-bottom: none;
+      background: #f1f1f1;
+      z-index: 2; }
+    .big-table .table-wrapper.row-wrapper.top-fixed {
+      box-shadow: 1px 1px 10px #ddd; }
+    .big-table .table-wrapper.col-wrapper {
+      border: none;
+      border-top: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+      border-bottom: 1px solid #ddd; }
+      .big-table .table-wrapper.col-wrapper.left-fixed {
+        box-shadow: 1px 1px 10px #ddd; }
+      .big-table .table-wrapper.col-wrapper .hs-th {
+        box-sizing: border-box;
+        height: 25px;
+        border-bottom: 1px solid #ddd;
+        padding: 1px 5px;
+        overflow: hidden;
+        outline-width: 0;
+        white-space: pre-line; }
+    .big-table .table-wrapper.body-wrapper {
+      background: #fff; }
+  .big-table .table-inner {
+    position: relative; }
+  .big-table .hs-table {
+    position: absolute;
+    border-collapse: collapse;
+    overflow: scroll;
+    table-layout: fixed;
+    /*宽度由col决定的关键*/ }
+    .big-table .hs-table .hs-row-head .hs-row {
+      overflow: auto; }
+      .big-table .hs-table .hs-row-head .hs-row .hs-th {
+        height: 25px;
+        padding: 1px 5px;
+        border-top: 1px solid #ddd;
+        border-left: 1px solid #ddd; }
+      .big-table .hs-table .hs-row-head .hs-row .hs-th:first-child {
+        border-left: none; }
+    .big-table .hs-table .hs-col-head .hs-th {
+      width: 100px;
+      padding: 1px 5px; }
+    .big-table .hs-table .hs-body .hs-tr .hs-td {
+      box-sizing: border-box;
+      height: 25px;
+      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      padding: 1px 5px;
+      overflow: hidden;
+      outline-width: 0;
+      white-space: pre-line; }

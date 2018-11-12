@@ -5,6 +5,7 @@
 import React, {Component} from 'react';
 import BigNumber from './BigNumber';
 import BigNumberBlock from './BigNumberBlock'
+import Test from './Test';
 
 class BigNumberEditor extends Component {
     constructor() {
@@ -81,6 +82,7 @@ class BigNumberEditor extends Component {
         return (
                 <div className="editor">
                     {this.getBlockRender()}
+                    <Test/>
                     <div className="result">
                         <span className="desc">类库</span>
                         <span className="symbol">=</span> {this.getResult()} </div>

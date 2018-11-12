@@ -7,12 +7,10 @@
   margin: 10px;
   font-size: 15px;
   text-align: center; }
-
-.editor .input-block:first-child {
-  margin-left: 0; }
+  .editor .input-block:first-child {
+    margin-left: 0; }
 
 .editor .result {
   font-size: 20px; }
-
-.editor .result .desc {
-  font-size: 15px; }
+  .editor .result .desc {
+    font-size: 15px; }

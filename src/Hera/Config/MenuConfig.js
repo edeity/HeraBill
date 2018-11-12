@@ -22,12 +22,14 @@ const menuConifg = [{
     iconType: 'windows-o',
     comp: <Comp/>,
     title: '组件或其他'
-}, {
-    key: 'page',
-    url: '/page',
-    iconType: 'api',
-    comp: <Page/>,
-    title: '渐进学习计划'
-}];
+},
+//  {
+//     key: 'page',
+//     url: '/page',
+//     iconType: 'api',
+//     comp: <Page/>,
+//     title: '渐进学习计划'
+// }
+];
 
 export default menuConifg;

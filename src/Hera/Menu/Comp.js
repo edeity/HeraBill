@@ -10,31 +10,16 @@ import BigNumberDescPage from './comp/BigNumberDescPage';
 import MDDoc from '../comp/mdDoc/MDDoc';
 import Quadrant from '../comp/toDo/Quadrant';
 import Todo from '../comp/toDo/Todo';
+import GlobalConfig from '../config/GlobalConfig';
 
 const TabPane = Tabs.TabPane;
 
-const isDev = true;
+const isDev = GlobalConfig.isDev;
 // 实例:用户单据
 class Comp extends Component {
-
-    getRenderDoc(url, isToc) {
-        if(isDev) {
-            return <MDDoc isToc={isToc} docUrl={url}/>
-        } else {
-            let baseUrl = 'https://raw.githubusercontent.com/edeity/HeraBill/master/public';
-            return <MDDoc isToc={isToc} docUrl={baseUrl + url}/>
-        }
-    }
-
     render() {
         return (
-            <Tabs defaultActiveKey={"bigTable"} tabPosition={"left"}>
-                <TabPane tab="表格" key={"bigTable"}>
-                    <div className="inner-container">
-                        <BigTableDescPage/>
-                        <MDDoc linkGithubDoc={!isDev} docUrl={"/md/BigTable.md"}/>
-                    </div>
-                </TabPane>
+            <Tabs defaultActiveKey={"bigNum"} tabPosition={"left"}>
                 <TabPane tab="大数" key={"bigNum"}>
                     <div className="inner-container">
                         <BigNumberDescPage/>

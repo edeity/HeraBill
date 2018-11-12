@@ -10,6 +10,9 @@ import User from './billDemo/User';
 import KeroUser from './billDemo/KeroUser';
 import MetaList from './billDemo/MetaList';
 import Plan from './billDemo/Plan';
+import GlobalConfig from '../config/GlobalConfig';
+
+const isDev = GlobalConfig.isDev;
 const TabPane = Tabs.TabPane;
 
 class BillDemo extends Component {
@@ -18,7 +21,7 @@ class BillDemo extends Component {
             <Tabs defaultActiveKey={"document"} tabPosition={"left"}>
                 <TabPane tab="文档" key={"document"}>
                     <div className="inner-container">
-                        <MDDoc isToc linkGithubDoc={false} docUrl="/doc.md"/>
+                        <MDDoc isToc linkGithubDoc={!isDev} docUrl="/doc.md"/>
                     </div>
                 </TabPane>
                 <TabPane tab="职位" key={"post"}>
@@ -27,12 +30,9 @@ class BillDemo extends Component {
                 <TabPane tab="个人信息" key={"user"}>
                     <User/>
                 </TabPane>
-                <TabPane tab="【kero】个人信息" key={"kero-user"}>
+                {/* <TabPane tab="【kero】个人信息" key={"kero-user"}>
                     <KeroUser/>
-                </TabPane>
-                <TabPane tab="【redux】个人信息" key={"redux-user"}>
-                    
-                </TabPane>
+                </TabPane> */}
                 <TabPane tab="meta一览" key={"meta"}>
                     <MetaList/>
                 </TabPane>

@@ -1,42 +1,37 @@
 .quadrant-container div.tags {
   position: absolute;
   padding: 5px 10px; }
-
-.quadrant-container div.tags .tag {
-  padding: 2px 5px; }
+  .quadrant-container div.tags .tag {
+    padding: 2px 5px; }
 
 .quadrant-container .first-quadrant {
   border-left: 1px solid #ddd;
   border-bottom: 1px solid #ddd; }
-
-.quadrant-container .first-quadrant div.tags {
-  left: 0;
-  bottom: 0;
-  color: #ffa39e; }
+  .quadrant-container .first-quadrant div.tags {
+    left: 0;
+    bottom: 0;
+    color: #ffa39e; }
 
 .quadrant-container .beta-quadrant {
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd; }
-
-.quadrant-container .beta-quadrant div.tags {
-  right: 0;
-  bottom: 0;
-  color: #91d5ff; }
+  .quadrant-container .beta-quadrant div.tags {
+    right: 0;
+    bottom: 0;
+    color: #91d5ff; }
 
 .quadrant-container .third-quadrant {
   border-right: 1px solid #ddd;
   border-top: 1px solid #ddd; }
-
-.quadrant-container .third-quadrant div.tags {
-  right: 0;
-  top: 0;
-  color: #ffe58f; }
+  .quadrant-container .third-quadrant div.tags {
+    right: 0;
+    top: 0;
+    color: #ffe58f; }
 
 .quadrant-container .delta-quadrant {
   border-left: 1px solid #ddd;
   border-top: 1px solid #ddd; }
-
-.quadrant-container .delta-quadrant div.tags {
-  left: 0;
-  top: 0;
-  color: #aaa; }
+  .quadrant-container .delta-quadrant div.tags {
+    left: 0;
+    top: 0;
+    color: #aaa; }

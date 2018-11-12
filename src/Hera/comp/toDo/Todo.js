@@ -319,7 +319,6 @@ class Todo extends Component {
                  onDragLeave={(event) => {this.onDragLeave(event)}}
                  onDragEnd={(event)=>{this.onDragEnd(event)}}
                  onDrop={(event)=>{this.onDrop(event)}}>
-                {this.getRenderBar()}
                 <ul className="todo-list">
                     {
                         this.state.data && this.state.data.length > 0
